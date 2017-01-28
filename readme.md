@@ -2,13 +2,13 @@
 
 
 
-This repository contains the implementation of the api challenges for freecodecamp.
+This repository contains the implementation of the Dynamic webapps challenges for freecodecamp.
 The challenges are the following
-  - Timestamp Microservice
-  - Request Header Parser Microservice
-  - URL Shortener Microservice
-  - Image Search Abstraction Layer
-  - File Metadata Microservice
+  - Build a Voting App
+  - Build a Nightlife coordination app
+  - Chart the Stock Market
+  - Manage a Book Trading Club
+  - Build a Pinrest Clone
 
 # Methodology used
 Instead of creating a single repo for each challenge and as i'm familiar with github i condensed the api challenges in one package/repo.
