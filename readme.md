@@ -14,16 +14,16 @@ The challenges are the following
 Instead of creating a single repo for each challenge and as i'm familiar with github i condensed the api challenges in one package/repo.
 As it's not in direct contradiction of the rules and/or objective.
 In terms of development methodology i used the following:
-  - /Challenges/
-    - This folder contains the logic bits for the challenges that required some extra logic used.
+  
   - /src/
     - this folder contains all the view implementation and also the routing logic used. 
+  - /src/Challenges/
+    - This folder contains the logic bits for the challenges that required some extra logic used.
   - /src/components
     - Inside this folder are the components i.e views used for the challenges
   - /dist/
     - This folder contains the release(aka build files).
-  - /uploads/
-    - This folder contains the placeholder for the File Metadata challenge upload info
+  
 
 
 
@@ -43,7 +43,7 @@ And of course the implementation of the challenges themselves are open source wi
 
 freecodecamp api  requires [Node.js](https://nodejs.org/) v4+ to run.
 
-Download and extract the [latest pre-built release](https://github.com/jonniebigodes/freecodecampApiChallenges/releases).
+Download and extract the [latest pre-built release](https://github.com/jonniebigodes/freecodecampdynamicwebapps/releases).
 
 Install the dependencies and devDependencies and start the server.
 
@@ -68,11 +68,11 @@ MIT
 
 
    
-   [git-repo-url]: <https://github.com/jonniebigodes/freecodecampApiChallenges.git>
+   [git-repo-url]: <https://github.com/jonniebigodes/freecodecampdynamicwebapps.git>
    [node.js]: <http://nodejs.org>
    [express]: <http://expressjs.com>
    [React]: <https://facebook.github.io/react/>
    [Webpack]: <https://webpack.github.io/>
    [Mongodb]: <https://www.mongodb.com/>
-   [PlGh]:  <https://github.com/jonniebigodes/freecodecampApiChallenges/tree/master/plugins/github/readme.md>
+   [PlGh]:  <https://github.com/jonniebigodes/freecodecampdynamicwebapps/tree/master/plugins/github/readme.md>
    

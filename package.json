@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start":"node server.js",
     "watch":"webpack -d --watch",
-    "postinstall": "webpack -p --config webpack.prod.config.js"
+    "postinstall": "webpack -p --config webpack.prod.config.js",
+    "showerrors": "webpack --progress --color --watch --display-error-details",
+    "showinfo": "webpack --display-modules --display-reasons",
+    "showinfofile": "webpack --json>stats.json"
   },
   "repository": {
     "type": "git",
