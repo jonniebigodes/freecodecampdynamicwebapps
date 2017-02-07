@@ -1,5 +1,4 @@
-import '../Assets/styleSheets/base.scss';
-
+import '../Assets/stylesheets/base.scss';
 import React,{Component} from 'react';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 /**
