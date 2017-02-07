@@ -19,7 +19,7 @@ In terms of development methodology i used the following:
     - this folder contains all the view implementation and also the routing logic used. 
   - /src/Challenges/
     - This folder contains the logic bits for the challenges that required some extra logic used.
-  - /src/components
+  - /src/Challenges/components
     - Inside this folder are the components i.e views used for the challenges
   - /dist/
     - This folder contains the release(aka build files).
@@ -74,5 +74,7 @@ MIT
    [React]: <https://facebook.github.io/react/>
    [Webpack]: <https://webpack.github.io/>
    [Mongodb]: <https://www.mongodb.com/>
+   [Unirest]: <http://unirest.io/nodejs.html>
+   [Async]: <https://github.com/caolan/async>
    [PlGh]:  <https://github.com/jonniebigodes/freecodecampdynamicwebapps/tree/master/plugins/github/readme.md>
    
