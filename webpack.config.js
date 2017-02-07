@@ -9,19 +9,40 @@ module.exports = {
     loaders: [
       {
         test: /\.js?$/, 
-        loader: 'babel-loader',
+        loader: 'babel',
         exclude: /node_modules/ 
       },
       
       { 
-        test: /\.s?css$/, loader: 'style!css!sass'
-       },
-       {
-         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2)$/,
-         loader: 'url-loader?limit=10000'
-       }, {
-         test: /\.(eot|ttf|wav|mp3)$/,
-         loader: 'file-loader'
+        test: /\.scss$/, 
+        loader: 'style!css!sass'
+       },{ 
+        test: /\.css$/, 
+        loader: "style-loader!css-loader" 
+      },
+      { 
+        test: /\.png$/, 
+        loader: "url-loader?limit=100000" 
+      },
+      { 
+        test: /\.jpg$/, 
+        loader: "file-loader" 
+      },
+      {
+        test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/, 
+        loader: 'url?limit=10000&mimetype=application/font-woff'
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, 
+        loader: 'url?limit=10000&mimetype=application/octet-stream'
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, 
+        loader: 'file'
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, 
+        loader: 'url?limit=10000&mimetype=image/svg+xml'
       }
     ]
   },
