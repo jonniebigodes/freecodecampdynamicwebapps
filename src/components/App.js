@@ -75,7 +75,8 @@ class App extends Component {
         
         <hr/>
         <div className="footer voffset6">
-           Made by <a href="https://www.freecodecamp.com/jonniebigodes" target="_blank">Jonniebigodes</a>
+           Made by <a href="https://www.freecodecamp.com/jonniebigodes" target="_blank">Jonniebigodes</a><br/>
+           Github repository: <a href="https://github.com/jonniebigodes/freecodecampdynamicwebapps" target="_blank">Dynamic Challenges</a>
         </div>
         
       </div>

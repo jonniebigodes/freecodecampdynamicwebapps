@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css?family=Oswald|Roboto+Condensed');
+.votingAppTitle{
+    text-align: left;
+    font-size: 2.5rem;
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    margin-left: 2vh;
+}
+.appVoteJumbotronSkin{
+    background-color: lightgray !important;
+    margin-right: 4vh !important;
+    margin-left: 4vh !important;
+    border: 1px solid lightcoral;
+    
+    
+}
+
+.pollItemLine{
+    border: 1px solid #B3C2BF;
+    box-shadow: 0px 3px 0px 0px #B3C2BF , inset -1px -3px 10px 1px #B3C2BF;
+    margin-right: 2vh !important;
+    margin-left: 2vh !important;
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2rem; 
+    height: 5vh;
+    text-align: center;
+}
+.pollItemLine:hover{
+    background: #f9f9f9;
+}
+.customSearchInput{
+    padding: 3px !important;
+    border: solid 1px #E4E4E4;
+    border-radius: 6px !important;
+    background-color: #fff !important;
+}
+.customSearchInput input{
+    border: 0 !important;
+    box-shadow: none !important;
+}
+.customSearchInput button{
+    margin: 2px 0 0 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    color: #666666 !important;
+    padding: 0 8px 0 10px !important;
+    border-left: solid 1px #ccc !important;
+}
+.customSearchInput:hover{
+    border: 0 !important;
+    box-shadow: none !important;
+    border-left: solid 1px #ccc !important;
+}
+.customSearchInput .glyphicon-search{
+    font-size: 1rem !important;
+}
+.pollDetailsNamePoll{
+    font-family: 'Osvald',sans-serif;
+    font-size: 6rem;
+    text-align: left;
+
+}
+.pollDetailsChartText{
+    font-family: 'Osvald',sans-serif;
+    font-size: 2.5rem;
+    text-align: left;
+    margin-left: 6vh;
+}
+.pollDetailsColumn{
+    margin-left: 32vh;
+}

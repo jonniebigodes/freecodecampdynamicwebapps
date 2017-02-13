@@ -2,13 +2,13 @@
 
 .projectTitle {
     font-family: 'Roboto Condensed', sans-serif;
-    font-size: 32px;
+    font-size: 8rem;
     text-align: center;
 }
 .footer{
     text-align: center;
     font-family: 'Oswald', sans-serif;
-    font-size: 9px;
+    font-size: 2rem;
 }
 .textChallenges{
     font-family: 'Oswald',sans-serif;
@@ -91,3 +91,13 @@
     margin-top: 150px;
 }
 
+.notFoundText{
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 16vh;
+}
+.informativeText{
+    text-align: center;
+    font-family:  'Oswald',sans-serif;
+    font-size: 4vh;
+}

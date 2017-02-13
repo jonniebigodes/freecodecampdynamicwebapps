@@ -9,7 +9,12 @@ dist/bundle.js
 *.env
 *.dev
 .DS_Store
-
+stats.json
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.svg
 # Docker
 Dockerfile
 docker-compose.yml

@@ -1,4 +1,4 @@
-# freecodecamp Dynamic webapps
+# Freecodecamp Dynamic webapps
 
 
 
@@ -17,10 +17,12 @@ In terms of development methodology i used the following:
   
   - /src/
     - this folder contains all the view implementation and also the routing logic used. 
-  - /src/Challenges/
-    - This folder contains the logic bits for the challenges that required some extra logic used.
-  - /src/Challenges/components
+  - /src/Assets/
+    - This folder contains the stylesheets and other types of media
+  - /src/Challenges/components/
     - Inside this folder are the components i.e views used for the challenges
+  - /src/mockData/
+    - This folder contains the implementation of some mock data for testing purposes
   - /dist/
     - This folder contains the release(aka build files).
   
@@ -35,6 +37,8 @@ this set of challenges uses a number of open source projects to work properly:
 * [Express] - fast node.js network app framework 
 * [Webpack] - fast packaging framework for deployment
 * [Mongodb] - Best of relational with the innovations of NOSQL
+* [React] - Javascript library for building user interfaces
+* [React-Bootstrap] - The popular frontend framework built to be used with React
 
 And of course the implementation of the challenges themselves are open source with a [git-repo-url]
  on GitHub.
@@ -67,7 +71,7 @@ MIT
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
 
-   
+   [React-Bootstrap]: <https://react-bootstrap.github.io/>
    [git-repo-url]: <https://github.com/jonniebigodes/freecodecampdynamicwebapps.git>
    [node.js]: <http://nodejs.org>
    [express]: <http://expressjs.com>
