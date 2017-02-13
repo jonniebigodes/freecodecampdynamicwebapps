@@ -1,6 +1,5 @@
 var webpack = require('webpack');
 var path = require('path');
-var cleanWebpackPlugin = require('webpack-cleanup-plugin');
 module.exports = {
   entry: [
     './src/index'
@@ -62,10 +61,5 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new cleanWebpackPlugin(['dist'],{
-      verbose:true,
-      dry:false,
-      exclude:['index.html']
-    })
   ]
 };
