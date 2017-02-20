@@ -1,9 +1,22 @@
 var webpack = require('webpack');
 var path = require('path');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+
 module.exports = {
-  entry: [
-    './src/index'
+  entry: ['whatwg-fetch',
+    './src/index',
+    
   ],
+  /*
+  vendor:[
+    'history',
+    'react',
+    'react-dom',
+    'react-router',
+    'react-redux',
+    'redux'
+  ],*/
+
   module: {
     loaders: [
       {
@@ -61,5 +74,23 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    
+   /*
+    new CleanWebpackPlugin(['dist'], {
+     
+      verbose: true, 
+      dry: false,
+      exclude: ['index.html']
+    }),
+     
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js', Infinity)
+    /*
+    new webpack.optimize.CommonsChunkPlugin({
+      name:'vendor',
+      entries:['react'],
+      chunks:['vendor'],
+      minChunks:Infinity
+    })
+    */
   ]
 };

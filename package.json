@@ -10,7 +10,9 @@
     "postinstall": "webpack -p --config webpack.prod.config.js",
     "showerrors": "webpack --progress --color --watch --display-error-details",
     "showinfo": "webpack --display-modules --display-reasons",
-    "showinfofile": "webpack --json>stats.json"
+    "showinfofile": "webpack --json>stats.json",
+    "showfilesizefile": "webpack --display-modules --display-reasons --sort-modules-by size --json>stats.json",
+    "spiterror": "webpack --display-error-details --json>errors.json"
   },
   "repository": {
     "type": "git",
@@ -40,22 +42,30 @@
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
     "file-loader": "^0.10.0",
-    "mongodb": "^2.2.21",
+    "mongodb": "^2.2.24",
     "node-sass": "^3.4.2",
     "react": "^15.0.1",
     "react-bootstrap": "^0.30.7",
     "react-chartjs-2": "^2.0.0",
+    "react-date-picker": "^5.3.28",
     "react-dom": "^15.0.1",
+    "react-redux": "^5.0.2",
     "react-router": "^3.0.0",
+    "redux": "^3.6.0",
     "sass-loader": "^3.2.0",
+    "socket.io": "^1.7.2",
+    "socket.io-react": "^1.1.2",
     "style-loader": "^0.13.1",
     "unirest": "^0.5.1",
     "url-loader": "^0.5.7",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "whatwg-fetch": "^2.0.2"
   },
   "devDependencies": {
+    "clean-webpack-plugin": "^0.1.15",
     "css-loader": "^0.23.1",
     "file-loader": "^0.10.0",
+    "redux-devtools": "^3.3.2",
     "sass-loader": "^3.2.3",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",

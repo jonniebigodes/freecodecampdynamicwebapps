@@ -1,10 +1,8 @@
-import '../../../Assets/stylesheets/votingApp.scss';
+//import '../../../Assets/stylesheets/votingApp.scss';
+import '../../../../Assets/stylesheets/votingApp.scss';
 import React,{Component} from 'react';
 import { browserHistory } from 'react-router';
-/*import Button from 'react-bootstrap/lib/Button';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import Well from 'react-bootstrap/lib/Well';
-*/
+
 import {Grid,Col,Row,Well,Button,Glyphicon,ButtonGroup} from 'react-bootstrap'; 
 class VoteAppHeader extends Component{
     constructor(props){

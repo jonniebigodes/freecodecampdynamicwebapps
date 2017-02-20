@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { browserHistory } from 'react-router';
 
-import '../../../Assets/stylesheets/votingApp.scss';
+//import '../../../Assets/stylesheets/votingApp.scss';
+import '../../../../Assets/stylesheets/votingApp.scss';
 
 class PollItem extends Component{
     constructor(props){

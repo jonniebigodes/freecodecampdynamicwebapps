@@ -1,7 +1,9 @@
-import '../../../Assets/stylesheets/votingApp.scss';
-import '../../../Assets/stylesheets/base.scss';
+//import '../../../Assets/stylesheets/votingApp.scss';
+//import '../../../Assets/stylesheets/base.scss';
+import '../../../../Assets/stylesheets/votingApp.scss';
+import '../../../../Assets/stylesheets/base.scss';
 import React,{Component} from 'react';
-import {Jumbotron,Button,Glyphicon,Grid,Col,Row,InputGroup,ButtonGroup} from 'react-bootstrap';
+import {Jumbotron,Button,Glyphicon,Grid,Col,Row,InputGroup,ButtonGroup,InputGroupAddon,FormControl} from 'react-bootstrap';
 import * as MockVoteData from '../../../mockData/mockVoting';
 import PollItem from './voteMachinePollItem';
 import PollDetails from './voteMachinePollDetails';
@@ -33,16 +35,9 @@ class VoteMachineList extends Component{
                                 </ButtonGroup>  
                             </Col>
                             <Col xs={6} md={4}>
-                                <div className="customSearchInput">
-                                    <InputGroup >
-                                        <input type="text" className="form-control input-lg" placeholder="search" />
-                                        <span>
-                                            <Button bsClass="btn-info" bsSize="small">
-                                                <Glyphicon glyph="glyphicon glyphicon-search"/>
-                                            </Button>
-                                        </span>
-                                        
-                                    </InputGroup>
+                                <div className="input-group">
+                                    <span className="input-group-addon">Polls Search:</span>
+                                    <input type="text" className="form-control" id="searchBox"/>
                                 </div>
                             </Col>
                         </Row>

@@ -1,5 +1,7 @@
-import '../../../Assets/stylesheets/votingApp.scss';
-import '../../../Assets/stylesheets/base.scss';
+//import '../../../Assets/stylesheets/votingApp.scss';
+//import '../../../Assets/stylesheets/base.scss';
+import '../../../../Assets/stylesheets/votingApp.scss';
+import '../../../../Assets/stylesheets/base.scss';
 import React,{Component} from 'react';
 import {Grid,Col,Row,Button,DropdownButton,MenuItem,ButtonGroup} from 'react-bootstrap';
 import {Doughnut} from 'react-chartjs-2';
@@ -14,9 +16,7 @@ class PollDetails extends Component{
     constructor(props){
         super(props);
         this.state={pollAdd:false};
-        if(this.props.isNewPoll){
-            
-        }
+        
     }
     generateDataSetChart(value){
         var datasetResult={labels:[],datasets:[]};
@@ -45,9 +45,9 @@ class PollDetails extends Component{
     }
     generatePollDetails(){
 
-        console.log("generatePollDetails:\n"+ this.props.params.idPoll);
+        //console.log("generatePollDetails:\n"+ this.props.params.idPoll);
         let tmpItemPoll= MockData.getItemById(this.props.params.idPoll);
-        console.log("item Found: "+ tmpItemPoll.idPoll+" pollnmame: " +tmpItemPoll.pollname+"\noptions" +tmpItemPoll.pollOptions.length );
+        //console.log("item Found: "+ tmpItemPoll.idPoll+" pollnmame: " +tmpItemPoll.pollname+"\noptions" +tmpItemPoll.pollOptions.length );
         return(
             <Grid fluid={true} className="appVoteJumbotronSkin">
                 <Row>
@@ -86,7 +86,16 @@ class PollDetails extends Component{
         );
     }
     generateNewPoll(){
-      
+        return(
+            <Grid fluid={true}>
+                <Row>
+                    <Col xs={6} md={4}>
+                        
+                    </Col>
+
+                </Row>
+            </Grid>
+        );
     }
     render(){
         console.log("poll details is new poll: "+this.props.isNewPoll);

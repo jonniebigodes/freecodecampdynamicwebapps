@@ -1,5 +1,6 @@
 (function(){
-    var itemsApp=[];
+    let itemsApp=[];
+    let userInformation={username:"dummy"};
     module.exports={
         /**
          * function to return the mock data
@@ -40,6 +41,9 @@
             while(itemsApp.length>0){
                 itemsApp.pop();
             }
+        },
+        getDummyUserName:function(){
+            return userInformation;
         },
         /**
          * function to generate mock item for the votting app challenge based on number of items and options provided

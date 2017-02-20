@@ -2,6 +2,9 @@ var fs = require('fs');
 var express = require('express');
 var path = require('path');
 var app = express();
+var Factorydb= require('./src/server/dbFactory');
+var service= require('./src/server/httpService');
+
 app.set('port',(process.env.PORT)||5000);
 
 if(process.env.NODE_ENV!=='production'){
@@ -17,9 +20,48 @@ if(process.env.NODE_ENV!=='production'){
     }));
     app.use(webpackHotMiddleware(compiler));
 }
+
+
+if (process.env.NODE_ENV === 'production') {
+    app.set('MONGODB', process.env.PROD_MONGODB);
+
+} else {
+    app.set('MONGODB', 'mongodb://localhost:27017/freecodecampdyn');
+}
+
+
+app.set('KEY_QUANDL',process.env.QUANDL_KEY);
+
 app.use(express.static(path.join(__dirname, 'dist')));
 
+app.get('/api/data/pollinfo', function (request, response) {
+    
+    try {
+        
+    } catch (error) {
+        
+    }
 
+});
+
+app.get('/api/data/stocksearch',function(request,response){
+    //console.log("startdate:"+ request.query.startdate+" enddate:"+ request.query.enddate+ "data to search: "+ request.query.stockName);
+    let tmpKey= app.get('KEY_QUANDL');
+    //console.log("KEY GOT FROM SERVER: "+ tmpKey);
+    let tmpObj={queryStock:request.query.stockName,startDate:request.query.startdate,endDate:request.query.enddate,keyQuandl:tmpKey};
+    service.getStockInformation(tmpObj,function(err,data){
+        if (data.error){
+            response.writeHead(500,{'Content-Type':'application/json'});
+            response.end("ERROR ON DATA");
+            return ;
+        }
+        response.writeHead(200, {
+                'Content-Type': 'application/json'
+        });
+        response.end(JSON.stringify(data.dataRecieved));
+            
+        });
+});
 /**
  * entry point for the "server"
  */
@@ -36,7 +78,7 @@ app.get('*', function (request, response) {
  */
 app.listen(app.get('port'), function (error) {
     if (error) {
-        console.log("error freecodecampApi: " + error)
+        console.log("error freecodecampdyn: " + error)
     } else {
         console.info("freecodecamp app is running on port", app.get('port'));
 

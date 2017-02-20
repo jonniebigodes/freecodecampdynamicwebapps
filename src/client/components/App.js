@@ -1,4 +1,5 @@
-import '../Assets/stylesheets/base.scss';
+//import '../Assets/stylesheets/base.scss';
+import '../../Assets/stylesheets/base.scss';
 import React,{Component} from 'react';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import Panel from 'react-bootstrap/lib/Panel';
@@ -11,7 +12,7 @@ class App extends Component {
   
  clickHandler(e){
    e.stopPropagation();
-   console.log("APP Click Handler: " + e.currentTarget.id);
+   //console.log("APP Click Handler: " + e.currentTarget.id);
    switch (e.currentTarget.id) {
      case "pVoting":
        console.log("case pVoting");

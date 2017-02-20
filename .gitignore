@@ -15,6 +15,7 @@ stats.json
 *.eot
 *.ttf
 *.svg
+
 # Docker
 Dockerfile
 docker-compose.yml

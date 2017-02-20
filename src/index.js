@@ -1,17 +1,22 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {Router,Route,browserHistory} from 'react-router';
-import App from './components/App';
-import votingApp from './components/Challenges/vottingapp/voteMachineApp';
-import pollDetails from './components/Challenges/vottingapp/voteMachinePollDetails';
-import nightLifeApp from './components/Challenges/nightlife/nightLifeApp';
-import stocksApp from './components/Challenges/stocks/stocksApp';
-import bookTrade from './components/Challenges/books/booksApp';
-import pinrestApp from './components/Challenges/pinClone/pinRestCloneApp';
-import NotFound from './components/notFound';
+
+
+import App from './client/components/App';
+import votingApp from './client/components/Challenges/vottingapp/voteMachineApp';
+import pollDetails from './client/components/Challenges/vottingapp/voteMachinePollDetails';
+import nightLifeApp from './client/components/Challenges/nightlife/nightLifeApp';
+import stocksApp from './client/components/Challenges/stocks/stocksApp';
+import bookTrade from './client/components/Challenges/books/booksApp';
+import pinrestApp from './client/components/Challenges/pinClone/pinRestCloneApp';
+import NotFound from './client/components/notFound';
+
+
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
+
 render(
-    <Router history={browserHistory}>
+    <Router history={browserHistory}> 
         <Route path="/voting" component={votingApp}/>
         <Route path="/voting/poll/(:idPoll)" component={pollDetails}/>
         <Route path="/nightlife" component={nightLifeApp}/>
@@ -23,3 +28,4 @@ render(
     </Router>,
     document.getElementById('root')
 );
+
