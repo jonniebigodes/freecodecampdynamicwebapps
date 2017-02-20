@@ -31,11 +31,11 @@ config.plugins.push(
     }
   })
 );
-/*
+
 config.plugins.push(
   new webpack.optimize.DedupePlugin()
 );
-*/
+/*
 config.plugins.push(
   new webpack.optimize.CommonsChunkPlugin({
       name:'vendor',
@@ -48,5 +48,5 @@ config.plugins.push(
       chunks:['vendor'],
       minChunks:Infinity
     })
-);
+);*/
 module.exports = config;
