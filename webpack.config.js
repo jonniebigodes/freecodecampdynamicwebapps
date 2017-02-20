@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+//var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: ['whatwg-fetch',
