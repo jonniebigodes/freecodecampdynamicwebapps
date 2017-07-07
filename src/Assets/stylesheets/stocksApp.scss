@@ -13,3 +13,18 @@
    //left: 50%;
    
 }
+.GridError{
+    opacity: .5;
+    z-index: -1;
+}
+.SearchError{
+    
+    width: 44vh;
+    height: 44vh;
+    background-color: #7E8F7C;
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    transform: translate(-30%, -40%);
+    z-index: 3;
+}

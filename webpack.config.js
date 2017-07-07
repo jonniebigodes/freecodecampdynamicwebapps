@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-//var CleanWebpackPlugin = require('clean-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: ['whatwg-fetch',
@@ -24,7 +24,11 @@ module.exports = {
         loader: 'babel',
         exclude: /node_modules/ 
       },
-      
+      {
+        test:/\.jsx$/, 
+        loader: 'babel',
+        exclude: /node_modules/ 
+      },
       { 
         test: /\.scss$/, 
         loader: 'style!css!sass'
@@ -74,7 +78,12 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    
+    new CleanWebpackPlugin(['dist'], {
+     
+      verbose: true, 
+      dry: false,
+      exclude: ['index.html']
+    })
    /*
     new CleanWebpackPlugin(['dist'], {
      

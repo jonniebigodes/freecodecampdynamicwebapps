@@ -15,9 +15,9 @@
             if (itemsApp.length>0){
                 module.exports.destroyItems();
             }
-            for (var i=0;i<100;i++){
+            for (var i=0; i<100; i++){
                 let tmpPollItem={idPoll:"poll_id_"+i,pollname:"MockPoll_"+i,pollOptions:[],pollCreator:"Dummy User"};
-                for (var x=0;x<3;x++){
+                for (var x=0; x<3; x++){
                     tmpPollItem.pollOptions.push({optionPoll:"option_"+x,numVotes:module.exports.randomizePollVotes(1,100)});
                 }
                 itemsApp.push(tmpPollItem);
@@ -56,9 +56,9 @@
                 module.exports.destroyItems();
             }
 
-            for (var i=0;i<value;i++){
+            for (var i=0; i<value; i++){
                 let tmpPollItem={idPoll:"poll_id_"+i,pollname:"MockPoll_"+i,pollOptions:[],pollCreator:"Dummy User"};
-                for (var x=0;x<valueNumOptions;x++){
+                for (var x=0; x<valueNumOptions; x++){
                     tmpPollItem.pollOptions.push({optionPoll:"option_"+x,numVotes:module.exports.randomizePollVotes(1,100)});
                 }
                 itemsApp.push(tmpPollItem);
@@ -70,7 +70,7 @@
             try {
                 if (itemsApp.length>0){
                     
-                    for (var i =0;i<itemsApp.length;i++){
+                    for (var i =0; i<itemsApp.length; i++){
                         if (itemsApp[i].idPoll.toLowerCase()===value.toLowerCase()){
                             result=itemsApp[i];
                             return result;

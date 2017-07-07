@@ -10,28 +10,23 @@
             var resultInfo={error:false,messageError:"",dataRecieved:{}};
            try {
                
-               //console.log("PRE REQUEST stockname: "+ value.queryStock+ " quandlkey: "+value.keyQuandl);
+                //console.log("PRE REQUEST stockname: "+ value.queryStock+ " quandlkey: "+value.keyQuandl);
                 unirest.get("https://www.quandl.com/api/v3/datasets/WIKI/"+value.queryStock+".json")
                         .query({"api_key":value.keyQuandl})
                         .query({"start_date":value.startDate})
                         .query({"end_date":value.endDate})
                         .end(function(result){
-                            if(result.status=="404"){
+                            if(result.status==="404"){
                                 //console.log("error:\n"+ responseRequest);
                                 resultInfo.error=true;
                                 resultInfo.messageError="The stock "+ value.stockname+" to be searched does not exist";
                                 callback(null,resultInfo)
                             }
                             else{
-                                console.log("Result:\n"+ result.status);
+                                //console.log("Result:\n"+ result.status);
                                 //console.log(JSON.stringify(result));
                                 //console.log("name of stuff searched: "+result.body.dataset.dataset_code);
-                                let stockinfo={stockName:"",
-                                        stockCode:"",
-                                        refreshDate:"",
-                                        stockQueryStart:"",
-                                        StockQueryEnd:"",
-                                        stockData:[]};
+                                let stockinfo={stockName:"",stockCode:"",refreshDate:"",stockQueryStart:"",StockQueryEnd:"",stockData:[]};
                                 stockinfo.stockName= result.body.dataset.name;
                                 stockinfo.stockCode= result.body.dataset.dataset_code;
                                 stockinfo.refreshDate= result.body.dataset.refreshed_at;

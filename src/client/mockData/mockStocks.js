@@ -5,7 +5,7 @@
         randomizeColors:function(){
             return itemColors[module.exports.randomizeStockNums(1,itemColors.length-1)];
         },
-            /**
+        /**
          * function to generate mock stock items results
          * @param minvalue the floor value to generate random number
          * @param maxValue the ceiling value to generate random number

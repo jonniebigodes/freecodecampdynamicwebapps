@@ -11,7 +11,7 @@ class VoteAppHeader extends Component{
     }
     onHomeButtonClickHandler(e){
         e.stopPropagation();
-        browserHistory.push('/voting');
+        browserHistory.push('/');
     }
     ComponentWillMount(){
         //this.setState({loggedIn:true});
