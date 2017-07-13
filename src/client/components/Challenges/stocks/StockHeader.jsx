@@ -15,14 +15,11 @@ export class StockHeader extends Component {
             <Row>
                 <Col xs={12} md={8}>
                     <div className="StockTitleHeader" id="ProjectTitle">
-                        Supercalifragilistic Voting Machine
+                        Supercalifragilistic Stock Search
                     </div>
                 </Col>
                 <Col xs={6} md={4}>
-                    <Button variant="flat" onClick={() => this.handleHomeButtonClick()}>
-                        <i className="material-icons">home</i>
-                        Home
-                    </Button>
+                    <i className="material-icons"onClick={() => this.handleHomeButtonClick()} >home</i>
                 </Col>
             </Row>
         );

@@ -100,7 +100,7 @@ app.get('*', function (request, response) {
  */
 app.listen(app.get('port'), function (error) {
     if (error) {
-        console.log("error freecodecampdyn: " + error)
+        console.log("error freecodecampdyn: " + error);
     } else {
         console.info("freecodecamp app is running on port", app.get('port'));
 
