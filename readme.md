@@ -23,15 +23,22 @@ In terms of development methodology i used the following:
   - /src/client/components/challenges/
     - Inside this folder are the components i.e views used for the challenges.
   - /src/client/mockData/
-    - This folder contains the implementation of some mock data for testing purposes
+    - This folder contains the implementation of some mock data for testing purposes.
   - /src/server/
     - This folder contains the the bits that are the responsability of the server i.e db operations.
   - /dist/
     - This folder contains the release(aka build files).
-  
-
-
-
+  - /src/common/actions
+    - This folder is the placeholder for redux actions defined for the challenges.
+  - /src/common/api
+    - This folder is the placeholder for external calls, namely rest calls to the server for the various challenges.
+ - /src/common/constants
+  - This folder is the placeholder for defining the constants(i.e action types) for the challenges.
+  - /src/common/reducers
+    - This folder is the placeholder for the redux reducers for the challenges
+  - /src/common/store
+    - This folder is the placeholder for the redux stores for the challenges 
+    
 ### Tech
 
 This set of challenges uses a number of open source projects to work properly:

@@ -6,8 +6,8 @@ import votes from '../reducers/votingAppReducer';
 
 export default createStore(
     combineReducers({
-        stocks,
-        votes
+        stocks
+        
     }),
     {},
     applyMiddleware(thunk,promise())

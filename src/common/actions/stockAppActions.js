@@ -1,75 +1,93 @@
 import StockApi from '../api/stocksApi';
+import * as types from '../constants/Actiontypes';
 
-export function loadStockSucess(stocks){
-    return {
-        type:"LOAD_STOCK_OK",
-        payload:stocks
-    };
-}
-export function ErrorLoadStocks(value){
-    return {
-        type:"LOAD_STOCK_ERROR",
-        payload:value
-    };
-}
-export function stocksLoading(value){
-    return {
-        type:'STOCK_SEARCHING',
-        Isloading:value
-    };
-}
-export function LoadStocks(value){
-    return (dispatch)=>{
-        dispatch(stocksLoading(true));
-        return StockApi.getStock(value.stockName,value.star
-        ,value.enddate).then(result=>{
-            dispatch(loadStockSucess(result));
-        })
-        .catch(error=>{
-            console.log('There has been a problem with your fetch operation: ' + error.message);
-            dispatch(ErrorLoadStocks(e.message));
-        });
-    };
-   
-}
-/*export function LoadStocks(stockName,startdate,enddate){
-    console.log("stockAppActions LoadActions: name"+stockName+" dates: "+ startdate+" enddate: "+ enddate);
-    return (dispatch)=>{
-        dispatch(stocksLoading(true));
-        fetch(`http://localhost:5000/api/data/stocksearch?stockName=${stockName}&startDate=${startdate}&enddate=${enddate}`)
-            .then(response=>{
-                if (!response.ok){
-                    throw Error(response.statusText);
-                }
-                dispatch(stocksLoading(false));
-                return response.json();
-            })
-            .then(result=>{
-                console.log("result: " + result);
-                return result;
-            })
-            .catch(error=>{
-                console.log('There has been a problem with your fetch operation: ' + error.message);
-                return error;
+export const requestDataStocks = value => ({
+  type: types.REQUEST_STOCKS,
+  value
+})
+export const recieveData=result=>({
+    type:types.RECIEVE_STOCKS,
+    result
+})
+
+export const recieveDataNOK=error=>({
+    type:types.RECIEVE_STOCKS_NOK,
+    error
+
+})
+export const setAppError=value=>({
+    type:types.APP_ERROR,
+    value
+})
+export const resetAppError=value=>({
+    type:types.APP_ERROR_RESET,
+    value
+})
+export const setValueStock=valueQuery=>({
+    type:types.SET_STOCK_VALUE,
+    valueQuery
+})
+
+export const setDataInit=valueDi=>({
+    type:types.SET_DATA_START,
+    valueDi
+})
+export const setDataFinal=valueFD=>({
+    type:types.SET_DATA_END,
+    valueFD
+})
+/**
+ * "private" function to process the request information
+ * 
+ */
+const fetchData=stockData=>dispatch=>{
+    
+    dispatch(requestDataStocks(stockData));
+    StockApi.getStock(stockData.stockName,stockData.startDate,stockData.endDate)
+            .then((result)=>{
                 
+                console.log("item got here: data is ok");
+                dispatch(recieveData(result));
+                
+            })
+            .catch((err)=>{
+                console.log("got here: data is nok: "+ err);
+                dispatch(recieveDataNOK(err));
             });
+}
+
+/**
+ * checks the state to see if the date exists
+ * @param {*} state the state of the app
+ * @param {object} stockData information to be searched
+ */
+const shouldGetDataStock=(state,stockData)=>{
+    
+    if (!state.items){
+        console.log("no items");
+        return true;
     }
-}*/
-export function setStock(stockName){
-    return{
-        type:"SET_NAME_STOCK",
-        payload:stockName
+    
+    const datainState=state.items.find(x=>x.searchIndex.toUpperCase()===stockData.stockName+"-"+stockName.startDate+"-"+stockName.endDate);
+    console.log("exists item: "+datainState);
+
+    if (!datainState){
+        return true;
+    }
+    if (datainState.isSearching){
+        return false;
+    }
+    return datainState.didInvalidate;
+
+}
+/**
+ * entry point operation for searching data
+ * @param {object} stockData data to be searched
+ */
+export const fetchStocksIfNeeded=stockData=>(dispatch, getState)=>{
+    
+    if (shouldGetDataStock(getState(),stockData)){
+        return dispatch(fetchData(stockData));
     }
 }
-export function setInitialData(initDate){
-    return {
-        type:"SET_INITIAL_DATE",
-        payload:initDate
-    }
-}
-export function setFinalDate(finalDate){
-    return {
-        type:"SET_END_DATE",
-        payload:dateFinal
-    }
-}
+

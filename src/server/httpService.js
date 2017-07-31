@@ -26,10 +26,11 @@
                         "end_date": value.endDate
                     })
                     .end(function (result) {
-                        if (result.status === "404") {
+                        
+                        if (result.status === 404) {
                             //console.log("error:\n"+ responseRequest);
                             resultInfo.error = true;
-                            resultInfo.messageError = "The stock " + value.stockname + " to be searched does not exist";
+                            resultInfo.messageError = "The stock " + value.queryStock + " to be searched does not exist";
                             callback(null, resultInfo)
                         } else {
                             //console.log("Result:\n"+ result.status);

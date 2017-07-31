@@ -1,36 +1,119 @@
+import {REQUEST_STOCKS,
+    RECIEVE_STOCKS,
+    RECIEVE_STOCKS_NOK,
+    SET_STOCK_VALUE,
+    SET_DATA_START,
+    SET_DATA_END,
+    APP_ERROR,
+    APP_ERROR_RESET
+} from '../constants/Actiontypes'
+
 const StockAppReducer= (state = {
-    result: {},
-    lastValues: []
+    isSearching:false,
+    didInvalidate:false,
+    stockQuery:'',
+    initialDate:'',
+    finalDate:'',
+    items: [],
+    onError:false,
+    errorMessage:''
 }, action) => {
-    switch (action.type) {
-        case "LOAD_STOCK_OK":
-            state = {
+    switch (action.type) {  
+        case REQUEST_STOCKS:
+            console.log("reducer REQUEST_STOCKS: "+action.value);
+            return {
                 ...state,
-                //result: state.result + action.payload,
-                lastValues: [...state.lastValues, action.payload]
-            };
+                isSearching: true,
+                didInvalidate: false,
+            }
             break;
-        case "SET_NAME_STOCK":
-            state = {
+        
+        case RECIEVE_STOCKS:
+            //console.log("reducer RECIEVE_STOCKS: "+action.result.stockName);    
+            return {
                 ...state,
-                result: state.result - action.payload,
-                lastValues: [...state.lastValues, action.payload]
-            };
+                items: [...state.items, {searchIndex: action.result.stockCode+"-"+action.result.stockQueryStart+"-"+action.result.StockQueryEnd,searchResults:action.result}],
+                isSearching:false,
+                didInvalidate:false,
+                stockQuery:'',
+                initialDate:'',
+                finalDate:''
+            }
             break;
-        case "SET_INITIAL_DATE":
-            state={
+        case RECIEVE_STOCKS_NOK:
+            console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
+            return{
                 ...state,
+                isSearching:false,
+                didInvalidate:false,
+                isSearching:false,
+                didInvalidate:false,
+                stockQuery:'',
+                initialDate:'',
+                finalDate:'',
+                onError:true,
+                errorMessage:action.error
+            }
+            break;
+        case APP_ERROR_RESET:
+            console.log("reducer APP_ERROR_RESET");
+             return{
+                ...state,
+                isSearching:false,
+                didInvalidate:false,
+                isSearching:false,
+                didInvalidate:false,
+                stockQuery:'',
+                initialDate:'',
+                finalDate:'',
+                onError:false,
+                errorMessage:''
+            }
+            break;
+        case APP_ERROR:
+            console.log("reducer app error");
+            return{
+                ...state,
+                onError:true,
+                errorMessage:action.value
+            }
+        case SET_DATA_START:
+            //console.log("reducer SET_DATA_START: "+action.valueDi);
+            return {
+                ...state,
+                isSearching:false,
+                didInvalidate:false,
+                initialDate:action.valueDi
+            }
+            
+            break;
+        case SET_STOCK_VALUE:
+            //console.log("reducer SET_STOCK_VALUE: "+action.valueQuery);
+            return {
+                ...state,
+                isSearching:false,
+                didInvalidate:false,
+                stockQuery:action.valueQuery
                 
-            };
+            }
+            
             break;
-        case "SET_END_DATE":
-            state={
+        case SET_DATA_END:
+            //console.log("reducer SET_DATA_END: "+action.valueFD);
+            return {
                 ...state,
+                isSearching:false,
+                didInvalidate:false,
+                finalDate:action.valueFD
 
             }
-
+            break;
+        
+        default:
+            return state;
+            
     }
-    return state;
+    
 };
 
 

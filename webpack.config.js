@@ -1,6 +1,6 @@
-var webpack = require('webpack');
-var path = require('path');
-//var CleanWebpackPlugin = require('clean-webpack-plugin');
+const webpack = require('webpack');
+const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: ['whatwg-fetch',
@@ -77,30 +77,15 @@ module.exports = {
   plugins: [
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
     /*
     new CleanWebpackPlugin(['dist'], {
      
       verbose: true, 
       dry: false,
       exclude: ['index.html']
-    })
-   
-    new CleanWebpackPlugin(['dist'], {
-     
-      verbose: true, 
-      dry: false,
-      exclude: ['index.html']
-    }),
-     
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js', Infinity)
-    /*
-    new webpack.optimize.CommonsChunkPlugin({
-      name:'vendor',
-      entries:['react'],
-      chunks:['vendor'],
-      minChunks:Infinity
     })
     */
+   
   ]
 };

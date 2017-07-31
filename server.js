@@ -2,15 +2,9 @@ const fs= require('fs');
 const express= require('express');
 const path= require('path');
 const passport= require('passport');
-const strategy= require('passport-twitter').Strategy;
 const app= express();
-
-//var fs = require('fs');
-//var express = require('express');
-//var path = require('path');
-//var app = express();
-//var Factorydb= require('./src/server/dbFactory');
-var service= require('./src/server/httpService');
+//const mConverter= require('moment');
+const service= require('./src/server/httpService');
 
 
 
@@ -69,12 +63,17 @@ app.get('/api/data/stocksearch',function(request,response){
     }
     let tmpKey= app.get('KEY_QUANDL');
     
-    //console.log("KEY GOT FROM SERVER: "+ tmpKey);
+
+    
+
     let tmpObj={queryStock:request.query.stockName,startDate:request.query.startdate,endDate:request.query.enddate,keyQuandl:tmpKey};
+    
+    
+    
     service.getStockInformation(tmpObj,function(err,data){
         if (data.error){
             response.writeHead(500,{'Content-Type':'application/json'});
-            response.end("ERROR ON DATA");
+            response.end(JSON.stringify({code:"fccda001",reason:data.messageError}));
             return ;
         }
         response.writeHead(200, {
