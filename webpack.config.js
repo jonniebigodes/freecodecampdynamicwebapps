@@ -78,14 +78,14 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    /*
-    new CleanWebpackPlugin(['dist'], {
+    
+    /* new CleanWebpackPlugin(['dist'], {
      
       verbose: true, 
       dry: false,
       exclude: ['index.html']
-    })
-    */
+    }) */
+    
    
   ]
 };

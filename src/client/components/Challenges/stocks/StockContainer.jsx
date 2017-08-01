@@ -1,24 +1,22 @@
 import React, {Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import {DateField, DatePicker} from 'react-date-picker';
-
-import moment from 'moment';
+import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-/* import Container from 'muicss/lib/react/container';
-import Form from 'muicss/lib/react/form';
-import Input from 'muicss/lib/react/input';
-import Textarea from 'muicss/lib/react/textarea';
-import Button from 'muicss/lib/react/button';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col'; */
+import {GridList} from 'material-ui/GridList';
+import moment from 'moment';
+
 import {setDataInit,setDataFinal,setValueStock,fetchStocksIfNeeded,resetAppError,setAppError} from '../../../../common/actions/stockAppActions';
 import '../../../../Assets/stylesheets/base.scss';
 import '../../../../Assets/stylesheets/stocksApp.scss';
+import {stockInformationStyles} from '../../../../Assets/styles/stockStyles';
 import 'react-date-picker/index.css';
-
-//import {StockInformation} from './stockInformation';
+import {StockInformation} from './stockInformation';
 class StockContainer extends Component {
+    
     
     /**
      * fat arrow function to generate the current date
@@ -32,7 +30,7 @@ class StockContainer extends Component {
      */
     handleStartDate=(e)=>{
         let newDateRecieved= moment(e).format("YYYY-MM-DD");
-        //console.log("start date: "+ newDateRecieved+" "+ moment(newDateRecieved).format("YYYY-MM-DD"));
+        console.log("start date: "+ newDateRecieved+" "+ moment(newDateRecieved).format("YYYY-MM-DD"));
 
         this.props.setInitDate(newDateRecieved);
     }
@@ -42,20 +40,47 @@ class StockContainer extends Component {
      */
     handleEndDate=(e)=>{
         let newDateRecieved= moment(e).format("YYYY-MM-DD");
-        //console.log("endate date: "+ newDateRecieved);
+        //console.log("end date: "+ newDateRecieved+" "+ moment(newDateRecieved).format("YYYY-MM-DD"));
         this.props.setFinalDate(newDateRecieved);
         
     }
+     isStockAlreadyAdded=(value)=>{
+         if (this.props.items.length===0){
+             return false;
+         }
+        let tmpItem=value.stockName.toUpperCase()+"-"+value.startDate+"-"+value.endDate;
 
+        //console.log("search item: "+ tmpItem);
+        let datainState=this.props.items.find(x=>x.searchIndex.toUpperCase()===tmpItem);
+        //console.log("exists item: "+datainState);
+        return datainState;
+    }
+    /**
+     * function to set the data and get it from the server
+     */
     searchStockInformation=(e)=>{
         e.preventDefault();
-        let tmpStock={stockName:this.props.nameofStock,startDate:this.props.startingDate,endDate:this.props.endingDate};
-        //console.log("container search stock date init:"+ this.props.startingDate+" date final: "+ this.props.endingDate+" item: "+ this.props.nameofStock);
-        //console.log("object to search: stockname:"+ tmpStock.stockName+" start:"+tmpStock.startDate+ " end:"+ tmpStock.endDate);
+        
+        
 
-        //console.log("len items: "+ this.props.items.length);
+        let tmpStock={stockName:this.props.nameofStock,startDate:this.props.startingDate,endDate:this.props.endingDate};
+        if(this.isStockAlreadyAdded(tmpStock)){
+            this.props.setError("Someone forgot something, didn't you?\nThis one was already added");
+            return;
+        }
+
+
+        let tmpDateCompare= tmpStock.endDate<tmpStock.startDate;
+        //console.log("end date minor than start date"+ tmpDateCompare);
+        
         if (tmpStock.stockName&& tmpStock.startDate &&tmpStock.endDate){
-            this.props.searchItemsNeeded(tmpStock);
+            if (tmpDateCompare){
+                this.props.setError("What's the matter cupcake can't read dates????");
+            }
+            else{
+                this.props.searchItemsNeeded(tmpStock);
+            }
+            
         }
         else{
             this.props.setError("Someone forgot something, didn't you?\nCheck the search items again");
@@ -71,10 +96,17 @@ class StockContainer extends Component {
         //console.log("update term: "+ e.target.value);
         this.props.setValueStock(e.target.value);
     }
+    /**
+     * event handler for canceling the form submition
+     */
     cancelFormSubmit=(e)=>{
         e.preventDefault();
         return false;
     }
+    /**
+     * fat arrow event handler to reset the app error
+     * @param {*} event handler
+     */
     resetError=(e)=>{
         e.preventDefault();
         this.props.setErrorReset(true);
@@ -83,144 +115,120 @@ class StockContainer extends Component {
      * fat arrow function to render the ui
      */
     renderSearch = () => {
-        const styles={};
+      
         return (
-
-
-            <form onSubmit={(e)=>this.cancelFormSubmit(e)} style="display: inline-block;">
-                <TextField hintText="Hint Text"
+            <form onSubmit={(e)=>this.cancelFormSubmit(e)} className="form-inline">
+                <div className="form-group">
+                    <TextField hintText="Fill in with a valid stock code"
                            errorText="This field is required"
-                           onChange={(e)=>this.updateSearchTerm(e)}/>
-                <label>Dates:</label>
-                <DateField
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    updateOnDateClick={true}
-                    collapseOnDateClick={true}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}>
-                    <DatePicker
-                        id="startDate"
-                        navigation={true}
+                           floatingLabelText="Stock Code"
+                           value={this.props.nameofStock}
+                           onChange={(e)=>this.updateSearchTerm(e)}
+                           inputStyle={stockInformationStyles.searchStyles.buttonSearchlabel}
+                           errorStyle={stockInformationStyles.searchStyles.errorStyle}
+                           underlineStyle={stockInformationStyles.searchStyles.underlineStyle}
+                           underlineFocusStyle={stockInformationStyles.searchStyles.underlineStyle}
+                           floatingLabelStyle={stockInformationStyles.searchStyles.floatingLabelStyle}
+                           floatingLabelFocusStyle={stockInformationStyles.searchStyles.floatingLabelFocusStyle}
+                           />
+                </div>
+                <div className="form-group">
+                    <label className="textLabel">From:</label>
+                    <DateField
+                        dateFormat="YYYY-MM-DD"
+                        defaultValue={this.getCurrentDate()}
+                        updateOnDateClick={true}
+                        collapseOnDateClick={true}
                         forceValidDate={true}
-                        highlightToday={true}
-                        highlightWeekends={true}
-                        weekNumbers={false}
-                        weekStartDay={0}
-                        onChange={(e)=>this.handleStartDate(e)}
-                        selected={this.props.startDate}/>
-                </DateField>
-                <label>TO:</label>
-                <DateField
-                    id="endate"
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    updateOnDateClick={true}
-                    collapseOnDateClick={true}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}>
-                    <DatePicker
-                        navigation={true}
+                        footer={false}
+                        showClock={false}>
+                        <DatePicker
+                            id="startDate"
+                            navigation={true}
+                            forceValidDate={true}
+                            highlightToday={true}
+                            highlightWeekends={true}
+                            weekNumbers={false}
+                            weekStartDay={0}
+                            onChange={(e)=>this.handleStartDate(e)}
+                            selected={this.props.startDate}/>
+                    </DateField>
+                    <label className="textLabel">TO:</label>
+                    <DateField
+                        id="endate"
+                        dateFormat="YYYY-MM-DD"
+                        defaultValue={this.getCurrentDate()}
                         forceValidDate={true}
-                        highlightToday={true}
-                        highlightWeekends={true}
-                        weekNumbers={false}
-                        weekStartDay={0}
-                        onChange={(e) =>this.handleEndDate(e)}
-                        selected={this.props.endDate}/>
-                </DateField>
+                        footer={false}
+                        showClock={false}
+                        dateFormat="YYYY-MM-DD"
+                        defaultValue={this.getCurrentDate()}
+                        updateOnDateClick={true}
+                        collapseOnDateClick={true}
+                        forceValidDate={true}
+                        footer={false}
+                        showClock={false}>
+                        <DatePicker
+                            navigation={true}
+                            forceValidDate={true}
+                            highlightToday={true}
+                            highlightWeekends={true}
+                            weekNumbers={false}
+                            weekStartDay={0}
+                            onChange={(e) =>this.handleEndDate(e)}
+                            selected={this.props.endDate}/>
+                    </DateField>
+                </div>
+                
+            <RaisedButton 
+                key="btnSearch" buttonStyle={stockInformationStyles.searchStyles.buttonSearch}
+                label="Search" labelStyle={stockInformationStyles.searchStyles.buttonSearchlabel} 
+                onClick={(e) =>{this.searchStockInformation(e)}} 
+                
+                />
             </form>
-            /* <Form inline={true} onSubmit={(e)=>this.cancelFormSubmit(e)}>
-                <legend>Search Stocks:</legend>
-                <Input label="Stock code" floatingLabel={true} required={true} onChange={(e)=>this.updateSearchTerm(e)}/>
-                <label>Dates:</label>
-                <DateField
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    updateOnDateClick={true}
-                    collapseOnDateClick={true}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}>
-                    <DatePicker
-                        id="startDate"
-                        navigation={true}
-                        forceValidDate={true}
-                        highlightToday={true}
-                        highlightWeekends={true}
-                        weekNumbers={false}
-                        weekStartDay={0}
-                        onChange={(e)=>this.handleStartDate(e)}
-                        selected={this.props.startDate}/>
-                </DateField>
-                <label>TO:</label>
-                <DateField
-                    id="endate"
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}
-                    dateFormat="YYYY-MM-DD"
-                    defaultValue={this.getCurrentDate()}
-                    updateOnDateClick={true}
-                    collapseOnDateClick={true}
-                    forceValidDate={true}
-                    footer={false}
-                    showClock={false}>
-                    <DatePicker
-                        navigation={true}
-                        forceValidDate={true}
-                        highlightToday={true}
-                        highlightWeekends={true}
-                        weekNumbers={false}
-                        weekStartDay={0}
-                        onChange={(e) =>this.handleEndDate(e)}
-                        selected={this.props.endDate}/>
-                </DateField>
-                <Button variant="fab" color="D9853B" size="small" onClick={(e) =>{this.searchStockInformation(e)}}>S</Button>
-            </Form> */
+            
         );
     }
    
-
+    /**
+     * component render function
+     */
     render(){
-        //console.log("len items container: " +this.props.items.length);
-        //console.log("IS ERROR: "+ this.props.isError);
         
+        const actionsDialog = [
+                <FlatButton
+                    label="Ok"
+                    primary={true}
+                    onTouchTap={(e)=>this.resetError(e)}
+                />,
+                ];
         return(
-            <div >
+            <div className="container-fluid containerApp" key="containerContentAppStocks">
                 {this.renderSearch()}
+                <Dialog key="errorDialog"
+                        actions={actionsDialog}
+                        modal={false}
+                        open={this.props.isError}
+                        onRequestClose={(e)=>this.resetError(e)}>
+                <h3>Ups!!!!<br/> Something went wrong with the search!<br/>Check out the problem bellow</h3>
+                <br/>
+                <h4>{this.props.errorMessageApp}</h4>
+                </Dialog>
                 <div className="voffset3"/>
+                <div style={stockInformationStyles.gridStyles.root}>
+                    <GridList style={ stockInformationStyles.gridStyles.gridList}>
+                        {this.props.items.map((elementResult,i)=>{
+                            return(
+                              <StockInformation key={"StockInformation_"+i} chartData={elementResult.searchResults}/>
+                            )
+                            })
+                        }
+                </GridList>
                 </div>
-            // <Container id="containerStocks" key="containerStocks" fluid={true} className="containerApp">
-               
-            //    <div className={this.props.isError?"SearchError":"SearchErrorhidden"}>
-            //        <h3>{this.props.errorMessageApp}</h3>  
-            //        <Button variant="raised" onClick={(e) =>{this.resetError(e)}}>Ok</Button>
-            //    </div>
-            //    <div key="row_item_search" className="containerElements" style={{opacity:this.props.isError?0.5:1}}>
-            //        {
-            //            this.props.items.map((elementResult,i)=>{
-            //                return(
-            //                    <Col xs="6" md="4" key={"col_"+ i}>
-            //                        <StockInformation key={"StockInformation_"+i} chartData={elementResult.searchResults}/>
-            //                    </Col>
-            //                )
-            //            })
-            //        }
-            //    </div>
-
-               
-              
-            // </Container>
+                
+            </div>
+           
         );
     }
     
@@ -228,7 +236,10 @@ class StockContainer extends Component {
 
 
 }
-
+/**
+ * fat arrow function to map the state of the app to props for the component
+ * @param {*} state current state 
+ */
 const mapStateToProps =(state)=>{
      return {
         items:state.stocks.items,
@@ -239,6 +250,11 @@ const mapStateToProps =(state)=>{
         errorMessageApp:state.stocks.errorMessage
      };
 }
+
+/**
+ * funtion to connect the actions to the ui
+ * @param {*} dispatch function send to store 
+ */
 const mapDispatchToProps = (dispatch) => {
     return {
         setValueStock: (name) => {
@@ -261,6 +277,5 @@ const mapDispatchToProps = (dispatch) => {
         }
     };
 };
-//export default StockContainer;
+
 export default connect(mapStateToProps,mapDispatchToProps)(StockContainer)
-//export default connect(mapStateToProps,mapDispatchToProps)(StockContainer);

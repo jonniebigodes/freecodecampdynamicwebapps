@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import {Line} from 'react-chartjs-2';
 import '../../../../Assets/stylesheets/stocksApp.scss';
-import Panel from 'muicss/lib/react/panel';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import { PropTypes } from 'prop-types';
 export class StockInformation extends Component {
- 
+    /**
+     * class constructor
+     * @param {*} props object sent from the server to construct the chart and feed it 
+     */
      constructor(props){
         super(props);
         this.state={
@@ -14,13 +17,23 @@ export class StockInformation extends Component {
             highestStockPrice:0
         }
     }
+    
+    /**
+     * chart color randomizer
+     */
     randomizeColors=()=>{
         return this.state.itemColors[this.randomizeStockNums(1,this.state.itemColors.length-1)];
     }
+    /**
+     * number randomizer
+     */
     randomizeStockNums=(minValue,maxValue)=>{
             let item= Math.floor(Math.random()*maxValue)+minValue;
             return item;
     }
+    /**
+     * guard method for the component to check if it was mounted
+     */
     componentDidMount=()=>{
         
         let tmpColor= this.randomizeColors();
@@ -65,10 +78,13 @@ export class StockInformation extends Component {
         });
         this.setState({infoChart:tmpObj,highestStockPrice:tmphigh});
     }
-    
+
+    /**
+     * event handler to change the state and show the chart
+     */
     chartShow=(e)=>{
         e.preventDefault();
-        //console.log("current State: "+this.state.showChart);
+        
         if (this.state.showChart){
             this.setState({showChart:false});
         }
@@ -76,36 +92,34 @@ export class StockInformation extends Component {
             this.setState({showChart:true});
         }
     }
-    renderStockInfo=()=>{
-        if (this.state.showChart){
-            return(
-               
-                <Line data={this.state.infoChart} 
-                options={{maintainAspectRatio:false}} 
-                />
-                
-            );
-        }
-        else{
-            return (
-                <div>
-                    <h4> {this.props.chartData.stockCode}</h4>
-                    <hr/>
-                    {this.props.chartData.stockName}
-                    <br/>
-                    <h5>Highest Stock Price: {this.state.highestStockPrice}</h5>
-                    
-                    
 
-                </div>
-            );
-        }
-    }
+   
+    /**
+     * component render function
+     */
     render() {
+        const stockInfo={
+            CardInfo:{
+                zIndex:1000,
+                
+            }
+        }
         return (
-            <Panel onClick={(e)=>this.chartShow(e)} className={this.state.showChart?'chartVis':'noChart'}>
-                {this.renderStockInfo()}
-            </Panel>
+            <Card style={stockInfo.CardInfo}>
+                <CardHeader title={this.props.chartData.stockCode}
+                    subtitle={"Stocks for: "+ this.props.chartData.stockName}
+                    actAsExpander={true}
+                    showExpandableButton={true}
+                    />
+                     
+                <CardText expandable={true}>
+                    <Line data={this.state.infoChart}
+                          width={200}
+                          height={200}
+                          options={{maintainAspectRatio:false}}/>
+                </CardText>
+            </Card>
+           
         );
     }
 }

@@ -3,7 +3,7 @@ node_modules/
 .vscode/
 
 #buildfiles
-#dist/bundle.js
+dist/bundle.js
 
 # Local development
 *.env
@@ -15,7 +15,7 @@ stats.json
 *.eot
 *.ttf
 *.svg
-
+*.old
 # Docker
 Dockerfile
 docker-compose.yml

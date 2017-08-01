@@ -1,16 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather');
-.ChartContainer {
-    //-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.39);
-    //-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.39);
-    //box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.39);
-    // -webkit-box-shadow: 2vh 2vh 1.5vh 0 rgba(0,0,0,0.39);
-    // -moz-box-shadow: 2vh 2vh 1.5vh 0vh rgba(0,0,0,0.39);
-    //box-shadow: 2vh 2vh 1.5vh 0vh rgba(0,0,0,0.39);
-    width: 160vh;
-    height: 40vh; //position: absolute;
-    //top: 20%;
-    //left: 50%;
-}
+
+
 
 .GridError {
     opacity: .5;
@@ -18,7 +8,8 @@
 }
 
 .containerApp {
-    background: #74AFAD;
+    background: #558C89;
+    
 }
 
 .containerElements {
@@ -43,49 +34,19 @@
 }
 
 .headerText {
-    font-size: 6vh;
-    font-family: 'Merriweather', serif;
+    font-size: 4ex !important;
+    font-family: 'Merriweather', serif !important;
+    background-color: #558C89 !important;
+    color: white;
 }
-
-.noChart {
+.textLabel{
+    color: white;
+}
+.cardCollapsed{
     width: 40vh;
-    height: 30vh;
-    background-color: #ECECEA;
+    height: 20vh;
 }
-
-.chartVis {
-    background-color: #ECECEA;
-    width: 80vh;
+.cardExpanded{
+    width: 60vh;
     height: 40vh;
-    // sent to above container
-    &:nth-child(odd) {
-        align-items: flex-end;
-        justify-content: flex-end;
-    }
-    &:nth-child(even) {
-        align-items: flex-start;
-        justify-content: flex-start;
-    }
-    &.first-child {
-        //border-top:none;
-        border-top: 1vh;
-    }
-    &.last-child {
-        //border-bottom:none;
-        border-bottom: 2vh;
-    }
-    &:nth-child(odd) {
-        z-index: 100; //background:#EBEBEB;
-        margin-left: 2vh;
-        transform: translate(2vh, 2vh);
-        transition: all 1s;
-    }
-    &:nth-child(even) {
-        margin-right: 2vh;
-        z-index: 100;
-        transform: translate(4vh, 4vh);
-        transition: all 1s;
-    }
-
-    //
 }

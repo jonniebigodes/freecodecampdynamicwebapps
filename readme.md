@@ -48,7 +48,7 @@ This set of challenges uses a number of open source projects to work properly:
 * [Express] - fast node.js network app framework 
 * [Webpack] - fast packaging framework for deployment
 * [Mongodb] - Best of relational with the innovations of NOSQL
-* [MuiCSS] - Google inspired material design framework
+* [Material-UI] - Google inspired material design framework
 * [whatwg-fetch]- A Promise-based mechanism for programatically making web requests in the browser, 
                     cause bad..bad move to try and get stuff from mongo directly from client code, that's the server responsability right kids?
 * [React-Chart] - A react wrapper for [Chart2] library.
@@ -96,6 +96,6 @@ MIT
    [Unirest]: <http://unirest.io/nodejs.html>
    [Async]: <https://github.com/caolan/async>
    [Chart2]: <http://www.chartjs.org/>
-   [MuiCSS]:<https://www.muicss.com/>
+   [Material-UI]:<http://www.material-ui.com>
    [PlGh]:  <https://github.com/jonniebigodes/freecodecampdynamicwebapps/tree/master/plugins/github/readme.md>
    

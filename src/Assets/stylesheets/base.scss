@@ -8,8 +8,21 @@
 .footer{
     text-align: center;
     font-family: 'Oswald', sans-serif;
-    font-size: 2rem;
+    font-size: 3ch;
 }
+.footer-stocks{
+    @extend .footer;
+    color: white;
+}
+a.linksStocks:link{
+    color: white;
+
+}
+a.linksStocks:visited, .linksStocks:hover,.linksStocks:active {
+    color:#FF3D00;
+}
+
+
 .textChallenges{
     font-family: 'Oswald',sans-serif;
     font-size: 14px;

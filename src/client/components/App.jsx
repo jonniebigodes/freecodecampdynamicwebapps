@@ -78,7 +78,7 @@ class App extends Component {
             </div>
           
           <hr/>
-          <AppFooter></AppFooter>
+          <AppFooter appName="none"/>
           
         </div>
         
