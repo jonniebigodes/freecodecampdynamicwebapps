@@ -42,11 +42,58 @@
 .textLabel{
     color: white;
 }
+.cardInformation{
+    position: relative;
+    z-index: 1 !important;
+    box-shadow: 1vh 1vh 1vh #888888 !important;
+    color:white !important;
+    background-color: #74AFAD !important;
+    margin: 2vh;
+}
 .cardCollapsed{
+    @extend .cardInformation;
     width: 40vh;
     height: 20vh;
+    opacity: .7;
 }
 .cardExpanded{
-    width: 60vh;
-    height: 40vh;
+    @extend .cardInformation;
+    width: 100vh;
+    height: 60vh;
+    opacity: 1;
+}
+.chartInformation{
+    width: 90vh!important;
+    height: 50vh !important;
+    margin-left: 3vh!important;
+}
+.sticker{
+    position: relative;
+    width: 10vh !important;
+    height:3vh !important;
+    text-align: center;
+    top:3.5vh;
+    transition-duration: .8s;
+    background-color: #26C6DA !important;
+    z-index: 2 !important;
+    
+}
+.stickerCollapsed{
+    @extend .sticker;
+    left: 15vh !important;
+    
+}
+.stickerCollapsed:hover{
+    width: 40vh;
+    height: 20vh;  
+}
+.stickerExpanded{
+    @extend .sticker;
+   
+    left: 45vh !important;
+      
+}
+.stickerExpanded:hover{
+    width: 100vh;
+    height: 60vh; 
 }

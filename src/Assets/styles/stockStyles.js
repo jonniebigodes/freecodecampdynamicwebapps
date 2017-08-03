@@ -14,7 +14,8 @@ export const stockInformationStyles={
                 borderColor:red200
             },
             floatingLabelStyle:{
-                color:lime500
+                color:'#ffffff',
+                opacity:0.6
             },
             floatingLabelFocusStyle:{
                 color:lime500
@@ -24,8 +25,8 @@ export const stockInformationStyles={
             root: {
                 display: 'flex',
                 flexDirection: 'row wrap',
-                justifyContent: 'space-around',
-                alignContent: 'space-around',
+                justifyContent: 'space-between',
+                alignContent: 'space-between',
                 width: '100%',
                 height: '100%',
             }, 
@@ -34,7 +35,7 @@ export const stockInformationStyles={
                 height: '100%',
                 overflowY: 'auto',
                 overflowX:'auto',
-                
+                overflow:'auto'
             }
             
         }

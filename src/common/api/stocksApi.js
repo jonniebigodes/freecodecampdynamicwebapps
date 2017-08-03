@@ -7,8 +7,8 @@ class StockApi{
      */
     static getStock(nameofStock,startdate,enddate){
         return new Promise((resolve,reject)=>{
-             /* fetch(`http://localhost:5000/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) */
-             fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`)
+             /* fetch(`http://localhost:5000/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`)  */
+              fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`)
             .then(response=>{
                 //console.log("getStock status: " +response.status);
                 return response.json();
@@ -32,25 +32,7 @@ class StockApi{
             });
         });
         
-        /* fetch(`http://localhost:5000/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`)
-            .then(response=>{
-                return response.json();
-            })
-            .then(result=>{
-                //console.log("result: " + JSON.stringify(result));
-                return {isDataOK:true,ErrorInfo:'',resultData:{
-                    stockName:result.stockName,
-                    stockCode:result.stockCode,
-                    QueryStart: result.stockQueryStart,
-                    QueryStart:result.StockQueryEnd,
-                    stockDataResult: result.stockData
-                }};
-            })
-            .catch(error=>{
-                console.log('There has been a problem with your fetch operation: ' + error.message);
-                return {isDataOK:false,ErrorInfo:error,resultData:{}};
-                
-            }); */
+        
     }
     
 }

@@ -6,7 +6,7 @@ This repository contains the implementation of the Dynamic webapps challenges fo
 The challenges are the following
   - Build a Voting App
   - Build a Nightlife coordination app
-  - Chart the Stock Market
+  - [Chart the Stock Market]
   - Manage a Book Trading Club
   - Build a Pinrest Clone
 
@@ -83,6 +83,7 @@ MIT
 **Free Software, Hell Yeah!**
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
+   [Chart the Stock Market]: <https://freecodecampdynprojects.herokuapp.com/stocks>
    [React-Chart]: <https://github.com/gor181/react-chartjs-2>
    [React-Redux]: <https://github.com/reactjs/react-redux>
    [whatwg-fetch]: <https://github.com/github/fetch>

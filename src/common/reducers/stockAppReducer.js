@@ -1,11 +1,13 @@
-import {REQUEST_STOCKS,
+import {
+    REQUEST_STOCKS,
     RECIEVE_STOCKS,
     RECIEVE_STOCKS_NOK,
     SET_STOCK_VALUE,
     SET_DATA_START,
     SET_DATA_END,
     APP_ERROR,
-    APP_ERROR_RESET
+    APP_ERROR_RESET,
+    DELETE_STOCK
 } from '../constants/Actiontypes'
 
 const StockAppReducer= (state = {
@@ -20,7 +22,7 @@ const StockAppReducer= (state = {
 }, action) => {
     switch (action.type) {  
         case REQUEST_STOCKS:
-            console.log("reducer REQUEST_STOCKS: "+action.value);
+            //console.log("reducer REQUEST_STOCKS: "+action.value);
             return {
                 ...state,
                 isSearching: true,
@@ -41,7 +43,7 @@ const StockAppReducer= (state = {
             }
             break;
         case RECIEVE_STOCKS_NOK:
-            console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
+            //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
             return{
                 ...state,
                 isSearching:false,
@@ -56,7 +58,7 @@ const StockAppReducer= (state = {
             }
             break;
         case APP_ERROR_RESET:
-            console.log("reducer APP_ERROR_RESET");
+             //console.log("reducer APP_ERROR_RESET");
              return{
                 ...state,
                 isSearching:false,
@@ -71,11 +73,18 @@ const StockAppReducer= (state = {
             }
             break;
         case APP_ERROR:
-            console.log("reducer app error");
+            //console.log("reducer app error");
             return{
                 ...state,
                 onError:true,
                 errorMessage:action.value
+            }
+        case DELETE_STOCK:
+            //console.log("reduce delete stock: "+ action.value);
+            return {
+                ...state,
+                items:state.items.filter(item=>action.value!==item.searchIndex)
+
             }
         case SET_DATA_START:
             //console.log("reducer SET_DATA_START: "+action.valueDi);

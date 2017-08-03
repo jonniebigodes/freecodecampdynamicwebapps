@@ -9,7 +9,13 @@ import TextField from 'material-ui/TextField';
 import {GridList} from 'material-ui/GridList';
 import moment from 'moment';
 
-import {setDataInit,setDataFinal,setValueStock,fetchStocksIfNeeded,resetAppError,setAppError} from '../../../../common/actions/stockAppActions';
+import {setDataInit,
+    setDataFinal,
+    setValueStock,
+    fetchStocksIfNeeded,
+    resetAppError,
+    setAppError,
+    delStocks} from '../../../../common/actions/stockAppActions';
 import '../../../../Assets/stylesheets/base.scss';
 import '../../../../Assets/stylesheets/stocksApp.scss';
 import {stockInformationStyles} from '../../../../Assets/styles/stockStyles';
@@ -30,7 +36,7 @@ class StockContainer extends Component {
      */
     handleStartDate=(e)=>{
         let newDateRecieved= moment(e).format("YYYY-MM-DD");
-        console.log("start date: "+ newDateRecieved+" "+ moment(newDateRecieved).format("YYYY-MM-DD"));
+        //console.log("start date: "+ newDateRecieved+" "+ moment(newDateRecieved).format("YYYY-MM-DD"));
 
         this.props.setInitDate(newDateRecieved);
     }
@@ -190,7 +196,10 @@ class StockContainer extends Component {
             
         );
     }
-   
+   deleteItem=(e)=>{
+       console.log("item marked deletion;  "+e);
+       this.props.removeitem(e);
+   }
     /**
      * component render function
      */
@@ -217,10 +226,10 @@ class StockContainer extends Component {
                 </Dialog>
                 <div className="voffset3"/>
                 <div style={stockInformationStyles.gridStyles.root}>
-                    <GridList style={ stockInformationStyles.gridStyles.gridList}>
+                    <GridList style={ stockInformationStyles.gridStyles.gridList} >
                         {this.props.items.map((elementResult,i)=>{
                             return(
-                              <StockInformation key={"StockInformation_"+i} chartData={elementResult.searchResults}/>
+                              <StockInformation key={"StockInformation_"+i} chartData={elementResult.searchResults} deleteitem={(e)=>this.deleteItem(elementResult.searchIndex)}/>
                             )
                             })
                         }
@@ -274,6 +283,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setError:(value)=>{
             dispatch(setAppError(value));
+        },
+        removeitem:(value)=>{
+            dispatch(delStocks(value));
         }
     };
 };

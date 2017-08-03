@@ -7,16 +7,7 @@ module.exports = {
     './src/index',
     
   ],
-  /*
-  vendor:[
-    'history',
-    'react',
-    'react-dom',
-    'react-router',
-    'react-redux',
-    'redux'
-  ],*/
-
+  
   module: {
     loaders: [
       {

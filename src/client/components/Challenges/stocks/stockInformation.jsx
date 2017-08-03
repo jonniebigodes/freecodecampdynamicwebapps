@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
+import { connect } from 'react-redux';
+import {delStocks} from '../../../../common/actions/stockAppActions';
 import {Line} from 'react-chartjs-2';
 import '../../../../Assets/stylesheets/stocksApp.scss';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import { PropTypes } from 'prop-types';
 export class StockInformation extends Component {
     /**
      * class constructor
@@ -14,7 +17,8 @@ export class StockInformation extends Component {
             showChart:false,
             infoChart:{},
             itemColors:["#D44E3D","#EBAA13","#c5d5cb","#9fa8a3","#b3c2bf","#e9ece5","#edd9c0","#9068be","#3fb0ac","#173e43"],
-            highestStockPrice:0
+            highestStockPrice:0,
+            dateHigh:''
         }
     }
     
@@ -40,19 +44,18 @@ export class StockInformation extends Component {
         //console.log("color: "+ tmpColor);
         let tmpObj={
             labels:[],
-            datasets:[],
-            
-            
+            datasets:[]
         }
         let tmpDataArray=[];
         let tmphigh=0;
-        
+        let tmpWhenHigh='';
         this.props.chartData.stockData.map((element)=>{
             
             tmpObj.labels.push(element.stockDate);
             tmpDataArray.push(element.closePrice)
             if (tmphigh<element.closePrice){
                 tmphigh= element.closePrice;
+                tmpWhenHigh=element.stockDate
             }
         });
         tmpObj.datasets.push({
@@ -76,14 +79,13 @@ export class StockInformation extends Component {
             pointHitRadius: 10,
             data: tmpDataArray
         });
-        this.setState({infoChart:tmpObj,highestStockPrice:tmphigh});
+        this.setState({infoChart:tmpObj,highestStockPrice:tmphigh,dateHigh:tmpWhenHigh});
     }
 
     /**
      * event handler to change the state and show the chart
      */
     chartShow=(e)=>{
-        e.preventDefault();
         
         if (this.state.showChart){
             this.setState({showChart:false});
@@ -95,34 +97,40 @@ export class StockInformation extends Component {
 
    
     /**
-     * component render function
+     * component render function 
      */
     render() {
-        const stockInfo={
-            CardInfo:{
-                zIndex:1000,
-                
-            }
-        }
+        
         return (
-            <Card style={stockInfo.CardInfo}>
-                <CardHeader title={this.props.chartData.stockCode}
-                    subtitle={"Stocks for: "+ this.props.chartData.stockName}
-                    actAsExpander={true}
-                    showExpandableButton={true}
-                    />
+            <div>
+                
+                <div className={this.state.showChart?'stickerExpanded':'stickerCollapsed'}
+                     onClick={this.props.deleteitem}>X</div>
+                
+                <Card className={this.state.showChart?'cardExpanded':'cardCollapsed'} 
+                        expanded={this.state.showChart}
+                        onExpandChange={()=>this.chartShow()}>
+                    <CardHeader title={this.props.chartData.stockCode}
+                        subtitle={`Entity:${this.props.chartData.stockName} `}
+                        actAsExpander={true}
+                        showExpandableButton={false}/>
                      
-                <CardText expandable={true}>
-                    <Line data={this.state.infoChart}
-                          width={200}
-                          height={200}
+                    <CardText className="chartInformation" expandable={true}>
+                        <Line data={this.state.infoChart}
+                          
                           options={{maintainAspectRatio:false}}/>
-                </CardText>
-            </Card>
+                          
+                         
+                    </CardText>
+                   
+                </Card>
+            </div>
+            
            
         );
     }
 }
 StockInformation.propTypes={
-    chartData:PropTypes.object.isRequired
+    chartData:PropTypes.object.isRequired,
+    deleteitem:PropTypes.func
 }

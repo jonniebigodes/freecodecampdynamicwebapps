@@ -32,6 +32,12 @@ export const setDataInit=valueDi=>({
     type:types.SET_DATA_START,
     valueDi
 })
+
+export const delStocks=value=>({
+    type:types.DELETE_STOCK,
+    value
+})
+
 export const setDataFinal=valueFD=>({
     type:types.SET_DATA_END,
     valueFD
@@ -46,12 +52,12 @@ const fetchData=stockData=>dispatch=>{
     StockApi.getStock(stockData.stockName,stockData.startDate,stockData.endDate)
             .then((result)=>{
                 
-                console.log("item got here: data is ok");
+                //console.log("item got here: data is ok");
                 dispatch(recieveData(result));
                 
             })
             .catch((err)=>{
-                console.log("got here: data is nok: "+ err);
+                //console.log("got here: data is nok: "+ err);
                 dispatch(recieveDataNOK(err));
             });
 }
@@ -69,7 +75,7 @@ const shouldGetDataStock=(state,stockData)=>{
     }
     
     const datainState=state.items.find(x=>x.searchIndex.toUpperCase()===stockData.stockName+"-"+stockName.startDate+"-"+stockName.endDate);
-    console.log("exists item: "+datainState);
+    //console.log("exists item: "+datainState);
 
     if (!datainState){
         return true;
