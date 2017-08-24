@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import {setNightQuery, setLocationNight, fetchNightDataIfNeeded, setnightAppError} from '../../../../common/actions/nightLifeAppActions';
 class NightLifeContainer extends Component {
+    
     handleChange = (event) =>{
         console.log('====================================');
         console.log(`selected item:${value}`);

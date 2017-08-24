@@ -7,8 +7,8 @@ class StockApi{
      */
     static getStock(nameofStock,startdate,enddate){
         return new Promise((resolve,reject)=>{
-             fetch(`http://localhost:5000/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) 
-              /* fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) */
+             /* fetch(`http://localhost:5000/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`)  */
+              fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) 
             .then(response=>{
                 //console.log("getStock status: " +response.status);
                 return response.json();
