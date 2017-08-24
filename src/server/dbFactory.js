@@ -1,77 +1,120 @@
 //to be refactored into proper factory pattern
 /**
  * module to handle the db logc for the challenges
+ 
+*/
+import * as dbClient from 'mongodb';
+let urlServer = '';
+let dbInstance = {};
+
+
+export const setUrl = value => {
+    urlServer = value;
+}
+export const getUrl = () => {
+    return urlServer;
+}
+/**
+ * es6 fat arrow function exported and exposed to connect to the db
  */
 
-(function(){
-    // variables to contain the information of the import and the dbobject instance
-    var client= require('mongodb').MongoClient,mongoInstance;
-    
+export const connect = () => {
+    return new Promise((resolve, reject) => {
+        dbClient.MongoClient.connect(urlServer, (err, db) => {
+            if (err) reject(`Error on connect: ${err.code} \nstatus message:${err.message}`);
+            dbInstance = db;
+            resolve(true);
+        })
 
-    module.exports={
-        /**
-         * function to connect to the mongo db instance
-         * @param dburl connection string
-         * @param callback callback to be activated whenn the connection is done/error
-         */
-        connect:function(dbUrl,callback){
-            client.connect(dbUrl,function(err,db){
-                mongoInstance= db;
-                if (callback){return callback();}
-            });
-        },
-        /**
-         * getter function for the object containing db instance
-         */
-        getInstance:function(){
-            return mongoInstance;
-        },
-        /**
-         * function to cloose the the connection to the db
-         */
-        close:function(){
-            mongoInstance.close();
-        },
-       countRecords:function(valueItem,callback){
-           try {
-               module.exports.getInstance().collection(valueItem.collection).find().count(function(err,data){
-                   if (err){
-                       callback(err,null);
-                   }
-                   callback(null,data);
-               });
-               
-           } catch (error) {
-            console.log("erro dbfactory:\searchById"+ err);
-            callback(err,null);   
-           }
-       },
-       insertDocument:function(valueItem,callback){
-           try {
-               if (valueItem.numRecords>1){
-                   module.exports.getInstance().collection(valueItem.collection).insertMany(valueItem.records,function(err,data){
-                       if (err){
-                           callback(err,null);
-                       }
+    })
+}
 
-                   });
-               }
-               else{
-                   module.exports.getInstance().collection(valueItem.collection).insert(valueItem.record,function(err,data){
-                       if (err){
-                           callback(err,null);
-                        }
+/**
+ * es6 fat arrow function exported and exposed to test the connection to the db
+ */
+export const testConnection=()=>{
+    console.log(`Testing connection....`);
+    return new Promise((resolve,reject)=>{
+        connect(urlServer).then((result)=>{
+            disconnect();
+            resolve(result);
+            }).catch((error)=>{
+                reject(error);
+            })
+    })
+}
+/**
+ * es6 fat arrow function exported and exposed to create collections
+ */
+export const createCollections=(collections)=>{
+    return new Promise((resolve,reject)=>{
+        if (!dbInstance){
+                reject(`Connect first to the database then create the collections`);
+        }
+        for (const item of collections){
+            console.log(`Creating item in collections: ${item}`);
+            dbInstance.createCollection(item,{autoIndexID:true},(err,db)=>{
+                if (err) reject(`Error creating collection:${item}\nReason:${err.code} \nstatus message:${err.message}`);
 
-                    });
-               }
-               
-               
-           } catch (error) {
-               console.log("erro dbfactory:\ninsertDocument"+ err);
-               callback(err,null);
-           }
-       }
+            })
+        }
+        resolve(true); 
+    })
+
         
+}
 
+
+/**
+ * es6 fat arrow function exported and exposed to disconnect to the db
+ */
+export const disconnect=()=>{
+    
+    if (dbInstance){
+        console.log(`Now closing connection`);
+        dbInstance.close();
+        dbInstance={};
     }
-})();
+        
+}
+/**
+ * es6 fat arrow function exported and exposed to inject data passed as object
+ */
+export const injectData=(value)=>{
+    return new Promise((resolve,reject)=>{
+        if (!dbInstance){
+                reject(`Connect first to the database then inject the data`);
+        }
+        dbInstance.collection(value.collectionName).insertOne(value.Data,(err,data)=>{
+                if (err) reject(`Error on insert item:${value.collectionName} \n${err.code} \nstatus message:${err.message}`);
+                resolve(true);
+        })
+             
+    })
+}
+/**
+ * es6 fat arrow function exported and exposed to query data passed as an object
+ * @param {object} value object containing the information to be searched on the db 
+ */
+export const search=value=>{
+    return new Promise((resolve,reject)=>{
+        if (!dbInstance){
+            reject(`Connect first to the database then search the data`);
+        }
+        dbInstance.collection(value.collectionName).find({userid:value.data.userID},(err,data)=>{
+            if(err){
+                reject(`Error on querying data:${value.collectionName}\n${err.code}\nstatus message:${err.message}`);
+            }
+            resolve(data);
+        });
+    })
+}
+
+export const checkCollections=value=>{
+    return new Promise((resolve,reject)=>{
+        if (!dbInstance){
+            reject(`Connect first to the database then search the data`);
+        }
+        
+    })
+}

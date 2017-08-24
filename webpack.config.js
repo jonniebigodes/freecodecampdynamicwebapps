@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
-//const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: ['whatwg-fetch',
@@ -70,12 +70,12 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     
-    /* new CleanWebpackPlugin(['dist'], {
+     new CleanWebpackPlugin(['dist'], {
      
       verbose: true, 
       dry: false,
       exclude: ['index.html']
-    }) */
+    }) 
     
    
   ]

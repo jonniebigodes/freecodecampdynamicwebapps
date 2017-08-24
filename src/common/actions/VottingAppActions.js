@@ -1,11 +1,1 @@
-module.exports.addNewPoll=function addNewPoll(){
-    return {
-        type:types.ADDPOLL
-
-    };
-}
-module.exports.showLogin= function showLogin(){
-    return {
-        type:types.LOGIN
-    };
-}
+import * as types from '../constants/Actiontypes';

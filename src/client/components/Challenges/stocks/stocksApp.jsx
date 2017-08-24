@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {StockHeader} from './StockHeader';
 import StockContainer from './StockContainer';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppFooter from '../../AppFooter';
+import AppHeader from '../../AppHeader';
 import '../../../../Assets/stylesheets/stocksApp.scss';
 export default class stocksApp extends Component{
     /**
@@ -20,7 +20,7 @@ export default class stocksApp extends Component{
             return (
                 <MuiThemeProvider>
                     <div className="container-fluid containerApp" id="ContainerAppStocks" key="AppStocks">
-                        <StockHeader/>
+                        <AppHeader appName="Supercalifragilistic Stock Search" appStyle="stocks"/>
                         <StockContainer/>
                         <AppFooter appName="stocks"/>
                     </div>

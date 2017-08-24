@@ -1,5 +1,6 @@
 export const APP_ERROR='ERROR_APP';
 export const APP_ERROR_RESET='RESET_APP_ERROR';
+// stocks challenge
 export const REQUEST_STOCKS='REQUEST_STOCKS';
 export const RECIEVE_STOCKS='RECIEVE_STOCKS';
 export const RECIEVE_STOCKS_NOK='RECIEVE_STOCKS_NOK';
@@ -8,3 +9,25 @@ export const INVALIDATE_STOCK='INVALIDATE_STOCK';
 export const SET_DATA_START='DATA_START';
 export const SET_DATA_END='DATA_END';
 export const SET_STOCK_VALUE='STOCK_SET';
+//
+//auth events
+export const LOGIN_REQUEST='REQUEST_LOGIN';
+export const LOGIN_OK='OK_LOGIN';
+export const LOGIN_NOK='NOK_LOGIN';
+//
+
+// nightlife
+export const REQUEST_NIGHT='REQUEST_NIGHT';
+export const RECIEVE_NIGHT='RECIEVE_NIGHT';
+export const RECIEVE_NIGHT_NOK='RECIEVE_NIGHT_NOK';
+export const ADD_TO_NIGHT='ADD_NIGHT';
+export const REMOVE_FROM_NIGHT='REMOVE_FROM_NIGHT';
+export const SET_LOCATION_NIGHT='SET_LOCATION_NIGHT';
+export const SET_NIGHT_SEARCH='SET_NIGHT_SEARCH';
+//
+//voting
+export const REQUEST_POLLS='REQUEST_POLLS';
+export const RECIEVE_POLLS='RECIEVE_POLLS';
+export const RECIEVE_POLLS_NOK='RECIEVE_POLLS_NOK';
+
+//
