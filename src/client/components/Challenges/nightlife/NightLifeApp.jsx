@@ -11,6 +11,9 @@ export default class NightlifeApp extends Component{
      * component guard method to check the component was mounted
      */
     componentDidMount(){
+        console.log('====================================');
+        console.log("did mount night life");
+        console.log('====================================');
         injectTapEventPlugin();
     }
 

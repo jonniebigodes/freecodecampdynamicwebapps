@@ -68,8 +68,14 @@ export const getStockInformation = value => {
 
 }
 export const getToken = (clientId, clientSecret) => {
+    let resultInfo = {
+        error: false,
+        messageError: "",
+        dataRecieved: {}
+    }
     return new Promise((resolve, reject) => {
-        yelp.accessToken(clientId, clientSecret)
+       try {
+           yelp.accessToken(clientId, clientSecret)
             .then(response => {
                 console.log('====================================');
                 console.log(`token: ${response.jsonBody.access_token}`);
@@ -80,25 +86,55 @@ export const getToken = (clientId, clientSecret) => {
                 console.log('====================================');
                 console.log(`there was an error getting the goken:\n ${e}`);
                 console.log('====================================');
-                reject('nok_token');
+                resultInfo.error= true;
+                resultInfo.messageError= e;
+                reject(resultInfo);
             });
+           
+       } catch (error) {
+           console.log("ERROR HTTP SERVICE YELP TOKEN:\n" + error);
+           resultInfo.error = true;
+           resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + err;
+           reject(resultInfo);
+       }
+        
     });
 }
-export const searchYelp=(token,searchItem)=>{
-    const yelpclient= yelp.client(token);
+export const searchYelp=(token,searchItem,searchLocation)=>{
+    let resultInfo = {
+        error: false,
+        messageError: "",
+        dataRecieved: {}
+    }
+    console.log('====================================');
+    console.log(`args:\ntoken:${token} searchitem:${searchItem} location:${searchLocation}`);
+    console.log('====================================');
     return new Promise((resolve,reject)=>{
-        yelpclient.search({
-            term:searchItem.type,
-            location:searchItem.Location,
-            limit:50
-        }).then(response=>{
-            console.log('====================================');
-            console.log(`resposta:\n${response.jsonBody}`);
-            console.log('====================================');
-        }).catch(e=>{
-            console.log('====================================');
-            console.log(`Error searching:\n${e}`);
-            console.log('====================================');
-        })
+        try {
+            const yelpclient= yelp.client(token);
+            yelpclient.search({
+                term:searchItem,
+                location:searchLocation,
+                limit:50
+            }).then(response=>{
+                console.log('====================================');
+                console.log(`resposta:\n${response.jsonBody}`);
+                console.log('====================================');
+                resolve(response.jsonBody);
+            }).catch(e=>{
+                console.log('====================================');
+                console.log(`Error searching:\n${e}`);
+                console.log('====================================');
+                resultInfo.error= true;
+                resultInfo.messageError= e;
+                reject(resultInfo);
+            })
+            
+        } catch (error) {
+            console.log("ERROR HTTP SERVICE YELP TOKEN:\n" + error);
+            resultInfo.error = true;
+            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + err;
+            reject(resultInfo);
+        }
     });
 }

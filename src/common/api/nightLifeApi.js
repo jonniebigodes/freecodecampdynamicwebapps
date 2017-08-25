@@ -9,14 +9,13 @@ class nightApi{
      */
     static search(query,location){
         return new Promise((resolve,reject)=>{
-            return new Promise((resolve,reject)=>{
-                fetch(`http://localhost:5000/api/data/stocksearch?query=${query}&location=${location}`) 
+            fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}`) 
                  /* fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) */
-               .then(response=>{
+            .then(response=>{
                    //console.log("getStock status: " +response.status);
                    return response.json();
                })
-               .then(result=>{
+            .then(result=>{
                    //console.log("result: " + JSON.stringify(result));
                    //return result;
                    if (result.code){
@@ -27,16 +26,16 @@ class nightApi{
                    resolve(result);
                    
                })
-               .catch(error=>{
+            .catch(error=>{
                    console.log('====================================');
                    console.log('There has been a problem with your fetch operation: ' + error.message);
                    console.log('====================================');
                    //return {isDataOK:false,ErrorInfo:error,resultData:{}};
                    //reject(error.message)
                    throw new Error(error.message);
-               });
-           });
+            });
         });
+        
     }
 
 }

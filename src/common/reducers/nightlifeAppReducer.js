@@ -8,7 +8,9 @@ import {
     RECIEVE_NIGHT,
     RECIEVE_NIGHT_NOK,
     ADD_TO_NIGHT,
-    REMOVE_FROM_NIGHT
+    REMOVE_FROM_NIGHT,
+    SET_LOCATION_NIGHT,
+    SET_NIGHT_SEARCH
 } from '../constants/Actiontypes'
 
 const nightAppReducer = (state = {
@@ -84,7 +86,18 @@ const nightAppReducer = (state = {
                 onError: true,
                 errorMessage: action.value
             }
-        
+            break;
+        case SET_LOCATION_NIGHT:
+            return{
+                ...state,
+                location:action.valueLocation
+            }
+            break;
+        case SET_NIGHT_SEARCH:
+            return{
+                ...state,
+                nightvenueQuery:action.valueQuery
+            }
         default:
             return state;
 

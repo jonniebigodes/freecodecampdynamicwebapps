@@ -7,8 +7,14 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const app = express();
 
+
+//const httpService = require('./httpService');
+//const dbService= require('./dbFactory');
+
+//dev
 const httpService = require('./src/server/httpService');
 const dbService= require('./src/server/dbFactory');
+//
 // adds the compiled version
 //const service =require('./src/server/httpService.bundle.js');
 //
@@ -19,6 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
     var webpackDevMiddleware = require('webpack-dev-middleware');
     var webpackHotMiddleware = require('webpack-hot-middleware');
     var webpack = require('webpack');
+    //var config = require('../webpack.config');
     var config = require('./webpack.config');
     var compiler = webpack(config);
     var configEnv = require('dotenv').config();
@@ -55,15 +62,61 @@ app.use(express.static(path.join(__dirname, 'dist')));
 /**
  * endpoints for night challenge
  */
+
+    
  app.get('/api/data/nightsearch',(request,response)=>{
+     console.log('====================================');
+     console.log(`token yelp:${app.get('YELP_TOKEN')}`);
+     console.log('====================================');
      if (!app.get('YELP_TOKEN')){
          httpService.getToken(app.get('YELP_KEY'),app.get('YELP_CONSUMER'))
          .then(result=>{
-
+            console.log('====================================');
+            console.log("got token: "+ result);
+            console.log('====================================');
+            app.set('YELP_TOKEN',result);
+         })
+         .then(resulttoken=>httpService.searchYelp(app.get('YELP_TOKEN'),request.query.what,request.query.where))
+         .then(searchresult=>{
+             console.log('====================================');
+             console.log(`searchResults:\n${searchresult}`);
+             console.log('====================================');
+             response.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify(searchresult));
          })
          .catch(err=>{
-
+            response.writeHead(500, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify({
+                code: "fccda001",
+                reason: err.messageError
+            }));
          })
+
+     }
+     else{
+        httpService.searchYelp(app.get('YELP_TOKEN'),result,request.query.what,request.query.where)
+        .then(result=>{
+            console.log('====================================');
+            console.log(`got results:\n`+ result);
+            console.log('====================================');
+            response.writeHead(200, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify("OK_NIGHTS"));
+        })
+        .catch(err=>{
+            response.writeHead(500, {
+                'Content-Type': 'application/json'
+            });
+            response.end(JSON.stringify({
+                code: "fccda001",
+                reason: err.messageError
+            }));
+        })
      }
 
  });
