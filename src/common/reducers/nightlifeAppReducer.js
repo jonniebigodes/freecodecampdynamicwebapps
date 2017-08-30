@@ -10,13 +10,16 @@ import {
     ADD_TO_NIGHT,
     REMOVE_FROM_NIGHT,
     SET_LOCATION_NIGHT,
-    SET_NIGHT_SEARCH
+    SET_NIGHT_SEARCH,
+    SET_NIGHT_NUMBER,
+    SET_NIGHT_EXIT
 } from '../constants/Actiontypes'
 
 const nightAppReducer = (state = {
     userInfo:{},
     isLoggedin: false,
     nightvenueQuery: 'default',
+    numberOfItems:0,
     location:'',
     items: [],
     onError: false,
@@ -33,20 +36,24 @@ const nightAppReducer = (state = {
             break;
 
         case RECIEVE_NIGHT:
-            //console.log("reducer RECIEVE_STOCKS: "+action.result.stockName);
+            
+            let resultIndex=state.isLoggedin?state.userInfo.userId:'anon-'+state.nightvenueQuery+"-"+state.location;
+            //console.log(`recieve nigth index:${resultIndex}`);
+            //console.log('====================================');
+            
             return {
                 ...state,
                 items: [
                     ...state.items, {
-                        searchIndex: action.result.stockCode + "-" + action.result.stockQueryStart + "-" + action.result.StockQueryEnd,
+                        searchIndex: resultIndex,
                         searchResults: action.result
                     }
                 ],
                 isSearching: false,
-                didInvalidate: false,
-                stockQuery: '',
-                initialDate: '',
-                finalDate: ''
+                nightvenueQuery: 'default',
+                location:'',
+                numberOfItems:0
+                
             }
             break;
         case RECIEVE_NIGHT_NOK:
@@ -54,12 +61,9 @@ const nightAppReducer = (state = {
             return {
                 ...state,
                 isSearching: false,
-                didInvalidate: false,
-                isSearching: false,
-                didInvalidate: false,
-                stockQuery: '',
-                initialDate: '',
-                finalDate: '',
+                nightvenueQuery: 'default',
+                location:'',
+                numberOfItems:0,
                 onError: true,
                 errorMessage: action.error
             }
@@ -69,12 +73,6 @@ const nightAppReducer = (state = {
             return {
                 ...state,
                 isSearching: false,
-                didInvalidate: false,
-                isSearching: false,
-                didInvalidate: false,
-                stockQuery: '',
-                initialDate: '',
-                finalDate: '',
                 onError: false,
                 errorMessage: ''
             }
@@ -98,9 +96,30 @@ const nightAppReducer = (state = {
                 ...state,
                 nightvenueQuery:action.valueQuery
             }
+            break;
+        case SET_NIGHT_NUMBER:
+            return{
+                ...state,
+                numberOfItems:action.valueNumber
+            }
+            break;
+        case SET_NIGHT_EXIT:
+            
+            return{
+                ...state,
+                userInfo:{},
+                isLoggedin: false,
+                nightvenueQuery: 'default',
+                numberOfItems:0,
+                location:'',
+                items: [],
+                onError: false,
+                errorMessage: ''
+            }
+            break;
         default:
             return state;
-
+            break;
     }
 
 };

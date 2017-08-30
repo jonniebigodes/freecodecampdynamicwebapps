@@ -4,15 +4,16 @@ import React,{Component} from 'react';
 import Jumbotron from 'react-bootstrap/lib/Jumbotron';
 import Panel from 'react-bootstrap/lib/Panel';
 import { browserHistory } from 'react-router';
-
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import AppFooter from './AppFooter';
 /**
  * base component for the app
  */
 class App extends Component {
- 
   
-   
+  componentDidMount(){
+        injectTapEventPlugin();
+ }
  clickHandler(e){
    e.stopPropagation();
    //console.log("APP Click Handler: " + e.currentTarget.id);

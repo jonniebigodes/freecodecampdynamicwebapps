@@ -1,0 +1,65 @@
+.triangle {
+  width: 2vw;
+  height: 2vw;
+  position: relative;
+  margin-left: 2vw;
+  margin-bottom: 20vw;
+  fill: blue;
+  stroke: black;
+  stroke-width: 6;
+  -ms-transform: scale(0.5, 0.5); /* IE 9 */
+  -webkit-transform: scale(0.5, 0.5); /* Safari */
+  transform: scale(0.5, 0.5);
+ 
+}
+.containerTriangleDrawer{
+  width: 5vh;
+  
+  transition: margin 2s;
+  -moz-transition: margin .2s; 
+  -webkit-transition: margin .2s; 
+  -o-transition: margin .2s;
+  z-index: 2 !important;
+}
+.containerTriangleExpanded{
+  @extend .containerTriangleDrawer;
+  margin-left: 33vh;
+  transition: margin 2s;
+  -moz-transition: margin .2s; 
+  -webkit-transition: margin .2s; 
+  -o-transition: margin .2s;
+}
+.loginButtons{
+  margin-top: 4vh;
+  margin-left: 12vh;
+}
+.img_night{
+  height: 60vh !important;
+  width: 60vh !important;
+  
+}
+.searchButton{
+  margin-top: 3vw !important;
+  margin-right: 50vw !important;
+}
+.selectFields{
+  width: 25vh !important;
+}
+.textSearch{
+  width: 30vw !important;
+}
+.searchInit{
+  
+  margin-top: 20vh;
+  margin-left: 20vh;
+  
+}
+.searchItemsResult{
+  margin-top: 2vh;
+  margin-left: 1vh;
+  transition: margin 2700ms;
+  transition-duration: 0.6;
+}
+.containerItemNight{
+  box-shadow: 10px 10px grey;
+}

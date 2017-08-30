@@ -74,7 +74,7 @@ module.exports = {
      
       verbose: true, 
       dry: false,
-      exclude: ['index.html']
+      exclude: ['index.html','server.bundle.js','dbFactory.js','httpService.js']
     }) 
     
    

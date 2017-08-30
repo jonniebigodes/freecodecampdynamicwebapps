@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import StockContainer from './StockContainer';
-import injectTapEventPlugin from 'react-tap-event-plugin';
+//import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppFooter from '../../AppFooter';
 import AppHeader from '../../AppHeader';
@@ -9,9 +9,9 @@ export default class stocksApp extends Component{
     /**
      * component guard method to check the component was mounted
      */
-    componentDidMount(){
+   /*  componentDidMount(){
         injectTapEventPlugin();
-    }
+    } */
     /**
      * component render function
      */

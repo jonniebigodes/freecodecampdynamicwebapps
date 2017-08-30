@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "debugserver": "nodemon server.js --exec babel-node",
-    "start": "node ./lib/server.bundle.js",
+    "start": "node ./dist/server.bundle.js",
     "watch": "webpack -d --watch",
     "buildserverdeps": "babel ./src/server/ --out-dir ./dist --presets minify",
     "buildserver": "babel server.js -o ./dist/server.bundle.js --presets minify",
@@ -42,6 +42,7 @@
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.6.0",
     "babel-preset-react": "^6.5.0",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "chart.js": "^2.4.0",

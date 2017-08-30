@@ -15,11 +15,11 @@ export const recieveNightDataNOK=error=>({
     type:types.RECIEVE_NIGHT_NOK,
     error
 })
-export const setnightAppError=value=>({
+export const setNightAppError=value=>({
     type:types.APP_ERROR,
     value
 })
-export const resetnightAppError=value=>({
+export const resetNightAppError=value=>({
     type:types.APP_ERROR_RESET,
     value
 })
@@ -31,11 +31,18 @@ export const setNightQuery=valueQuery=>({
     type:types.SET_NIGHT_SEARCH,
     valueQuery
 })
-
-
+export const setNumberItems=valueNumber=>({
+    type:types.SET_NIGHT_NUMBER,
+    valueNumber
+})
+export const nightExit=value=>({
+    type:types.SET_NIGHT_EXIT,
+    value
+})
 const fetchDataNight=nightData=>dispatch=>{
     dispatch(requestNightData(nightData));
-    nightApi.search(nightData.query, nightData.where)
+    
+    nightApi.search(nightData.query, nightData.where,nightData.who,nightData.howMany)
     .then(result=>{
         dispatch(recieveNightData(result));
     })
@@ -45,6 +52,10 @@ const fetchDataNight=nightData=>dispatch=>{
 }
 
 const shouldFetchData=(state,nightData)=>{
+    if (!state.items){
+        console.log("no items");
+        return true;
+    }
     const items= state.items[nightData.query+"-"+nightData.where];
     if (!items){
         return true;
@@ -55,15 +66,4 @@ export const fetchNightDataIfNeeded=nightData=>(dispatch,getState)=>{
     if (shouldFetchData(getState(),nightData)){
         return dispatch(fetchDataNight(nightData));
     }
-}
-const shouldLogin=(state,userInfo)=>{
-    console.log('====================================');
-    console.log(`isloggedin:${state.isLoggedin}`);
-    console.log('====================================');
-
-}
-export const loginIfNeeded=userInfo=>(dispatch,getState)=>{
-    console.log('====================================');
-    console.log(shouldLogin(getState(),userInfo));
-    console.log('====================================');
 }
