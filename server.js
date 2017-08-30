@@ -114,7 +114,7 @@ passport.use('local-login',new LocalStrategy(
                 .then(result=>dbService.searchSingle('local_email',{collectionName:'users',data:mail}))
                 .then(resultsearch=>{
                     console.log('====================================');
-                    console.log(`resultsearch:${resultsearch}`);
+                    console.log(`resultsearch:${resultsearch.local_email}`);
                     console.log('====================================');
                     if (!resultsearch){
                         

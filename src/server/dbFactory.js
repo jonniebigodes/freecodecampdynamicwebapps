@@ -164,7 +164,7 @@ export const searchSingle=(whatToSearch,value)=>{
         if (!dbInstance){
             reject(`Connect first to the database then search the data`);
         }
-        dbInstance.collection(value.collectionName).findOne({whatToSearch:value.data},(err,data)=>{
+        dbInstance.collection(value.collectionName).find({whatToSearch:value.data},(err,data)=>{
             if(err){
                 reject(`Error on querying data:${value.collectionName}\n${err.code}\nstatus message:${err.message}`);
             }
@@ -172,7 +172,7 @@ export const searchSingle=(whatToSearch,value)=>{
             console.log(`data returned:${data}`);
             console.log('====================================');
             resolve(data);
-        });
+        }).limit(1);
     })
 }
 
