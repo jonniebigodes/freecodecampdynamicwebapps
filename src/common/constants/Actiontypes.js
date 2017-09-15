@@ -9,19 +9,30 @@ export const INVALIDATE_STOCK='INVALIDATE_STOCK';
 export const SET_DATA_START='DATA_START';
 export const SET_DATA_END='DATA_END';
 export const SET_STOCK_VALUE='STOCK_SET';
+export const SET_STOCK_EXIT='SET_STOCK_EXIT';
 //
 //auth events
 export const LOGIN_REQUEST='REQUEST_LOGIN';
 export const LOGIN_OK='OK_LOGIN';
 export const LOGIN_NOK='NOK_LOGIN';
+export const REGISTER_REQUEST='REQUEST_REGISTER';
+export const REGISTER_OK='OK_REGISTER';
+export const REGISTER_NOK='NOK_REGISTER';
+export const USER_LOGOUT='LOGOUT_USER';
+export const SET_USER_INFORMATION='USER_INFORMATION_CHANGE';
+
+
 //
 
 // nightlife
 export const REQUEST_NIGHT='REQUEST_NIGHT';
 export const RECIEVE_NIGHT='RECIEVE_NIGHT';
+export const RECIEVE_USER_SEARCH='USER_SEARCH_RECIEVE';
 export const RECIEVE_NIGHT_NOK='RECIEVE_NIGHT_NOK';
 export const ADD_TO_NIGHT='ADD_NIGHT';
+export const ADDED_TO_NIGHT='NIGHT_ADDED';
 export const REMOVE_FROM_NIGHT='REMOVE_FROM_NIGHT';
+export const REMOVED_FROM_NIGHT='REMOVED_NIGHT';
 export const SET_LOCATION_NIGHT='SET_LOCATION_NIGHT';
 export const SET_NIGHT_SEARCH='SET_NIGHT_SEARCH';
 export const SET_NIGHT_NUMBER='SET_NIGHT_NUMBER';
@@ -32,4 +43,17 @@ export const REQUEST_POLLS='REQUEST_POLLS';
 export const RECIEVE_POLLS='RECIEVE_POLLS';
 export const RECIEVE_POLLS_NOK='RECIEVE_POLLS_NOK';
 
+//
+
+//books
+export const REQUEST_BOOKS='BOOKS_REQUEST';
+export const RECIEVE_BOOKS='RECIEVE_BOOKS';
+export const RECIEVE_BOOKS_NOK='RECIEVE_BOOKS_NOK';
+export const ADD_BOOK='BOOK_ADD';
+export const DEL_BOOK='BOOK_DEL';
+export const EDIT_BOOK='BOOK_EDIT';
+export const BOOK_TRADE='TRADE_BOOK';
+export const BOOK_TRADE_OK='OK_BOOK_TRADE';
+export const BOOK_TRADE_NOK='NOK_BOOK_TRADE';
+export const SET_BOOK_EXIT='SET_BOOK_EXIT';
 //

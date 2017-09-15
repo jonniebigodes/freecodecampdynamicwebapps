@@ -8,15 +8,19 @@ import FontIcon from 'material-ui/FontIcon';
 import FloatingActionButton  from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-
-
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import {setNightQuery, 
     setLocationNight,
     setNumberItems,
     fetchNightDataIfNeeded, 
     setNightAppError,
     resetNightAppError,
-    nightExit
+    nightExit,
+    authenticateServer,
+    registerServer,
+    disconnectUser,
+    removeUserFromNight,
+    addUserToNight
 } from '../../../../common/actions/nightLifeAppActions';
 
 import '../../../../Assets/stylesheets/nightApp.scss';
@@ -24,27 +28,52 @@ import '../../../../Assets/stylesheets/base.scss';
 import NightItemsContainer from './NightItemsContainer';
 import NightLifeLoginContainer from './NightLifeLoginContainer';
 class NightLifeContainer extends Component {
+    /**
+     * react guard method to handle the component unload
+     */
+    componentWillUnmount(){
+        
+        this.props.exitNight(true);
+    }
     
+    /**
+     * event handler for select field onChange
+     * @param {*} event the event triggered by the componentWillUnmount
+     * @param {String} index the index selected to be updated
+     * @param {String} value the value to be updated
+     */
     handleChange = (event, index, value) =>{
         
         this.props.setQueryItem(value);
     }
-
+    /**
+     * event handler for select field onChange
+     * @param {*} event the event triggered by the componentWillUnmount
+     * @param {String} index the index selected to be updated
+     * @param {String} value the value to be updated
+     */
     handleNumberChanged=(event,index,value)=>{
         this.props.setNumberOfItemsToSearch(value);
     }
-
+    
+    /**
+     * function to open/close drawer on the side
+     */
     openCloseDrawer = () => {
         this.setState({openDrawer: !this.state.openDrawer});
     }
-        
+    /**
+     * @param {*} e html element that triggers the update(textinput)
+     */ 
     updateSearchTerm=(e)=>{
         e.preventDefault();
         //console.log("update term: "+ e.target.value);
         this.props.setLocation(e.target.value);
     }
 
-    
+    /**
+     * handler function to handle the query to the server via user input/selection
+     */
     searchNightInformation=(e)=>{
         e.preventDefault();
         if (this.props.nightvenue=='default'){
@@ -61,26 +90,56 @@ class NightLifeContainer extends Component {
             return;
         }
         let tmpNight={query:this.props.nightvenue,where:this.props.location,who:'',howMany:this.props.itemsQueried};
+        if (this.props.loggedIn){
+            console.log('====================================');
+            console.log(`user token before query:${this.props.id}`);
+            console.log('====================================');
+            tmpNight.who= this.props.loginData.id
+        }
+        
         this.props.searchItems(tmpNight);
     }
-    onAddNight=()=>{
 
-    }
-    onRemoveNight=()=>{
-
-    }
-    resetError=(e)=>{
+    onAddNight=(e)=>{
+        this.props.loggedIn?this.props.addUserToNightEvent({userToken:this.props.loginData.id,idPlace:e}):this.props.setError('You need to be authenticated on the server first before adding yourself to a event');
         
+    }
+
+    onRemoveNight=(e)=>{
+        this.props.loggedIn?this.props.removeUserFromNightEvent({userToken:this.props.loginData.id,idPlace:e}):this.props.setError('You need to be authenticated on the server first before adding yourself to a event')
+    }
+    /**
+     * handler function to reset the errors on the app
+     */
+    resetError=(e)=>{
         e.preventDefault();
         this.props.resetError(true);
     }
-
-    componentWillUnmount(){
-        console.log('====================================');
-        console.log("unmounted nights");
-        console.log('====================================');
-        this.props.exitNight(true);
+    /**
+     * handler function for login/register user
+     */
+    loginRegSend=(e)=>{
+        console.log(`auth information:${e.isLogin}\ndata: mail=${e.email} password:${e.password}`);
+        if (e.isLogin){
+            this.props.setLogin(e);
+        }
+        else{
+            this.props.setRegistry(e);
+        }
     }
+    /**
+     * handler function for user logout
+     */
+    logoutHandler=()=>{
+        console.log('====================================');
+        console.log(`logout handler: id user${this.props.loginData.id}`);
+        console.log('====================================');
+        this.props.unpluguser(this.props.loginData.id);
+    }
+
+    /**
+     * aux method for rendering the ui if no items are present(no queries done)
+     */
     renderNoItems(){
         return(
             <div className="searchInit" key="containerSearch">
@@ -135,6 +194,9 @@ class NightLifeContainer extends Component {
             </div>
         );
     }
+    /**
+     * aux method for rendering the ui if items are present(queried)
+     */
     renderItems=()=>{
         return(
             <div key="ContainerApp">
@@ -189,14 +251,17 @@ class NightLifeContainer extends Component {
                         </div>
                 </div>
                 <div className="voffset3"/>
-                <NightItemsContainer items={this.props.items} onAddNight={()=>this.onAddNight()} onRemoveNight={()=>this.onRemoveNight()}/>
+                <NightItemsContainer items={this.props.items} onAddNight={(e)=>this.onAddNight(e)} onRemoveNight={(e)=>this.onRemoveNight(e)} userLogged={this.props.loggedIn}/>
             </div>
             
         );
     }
+    /**
+     * react render method
+     */
     render() {
         const actionsDialog = [
-            <FlatButton
+            <FlatButton key="dialogError_nightLife"
                 label="Ok"
                 primary={true}
                 onTouchTap={(e)=>this.resetError(e)}
@@ -209,11 +274,11 @@ class NightLifeContainer extends Component {
                         modal={false}
                         open={this.props.isError}
                         onRequestClose={(e)=>this.resetError(e)}>
-                        <h3>Ups!!!!<br/> Something went wrong with the search!<br/>Check out the problem bellow</h3>
+                        <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
                         <br/>
                         <h4>{this.props.errorMessageApp}</h4>
                 </Dialog>
-                <NightLifeLoginContainer islogged={this.props.loggedIn}/>
+                <NightLifeLoginContainer islogged={this.props.loggedIn} loginreg={(e)=>this.loginRegSend(e)} userInformation={this.props.loginData} userLogout={()=>this.logoutHandler()} dataItems={this.props.items}/>
                 {this.props.items.length?this.renderItems():this.renderNoItems()}
                 
                 
@@ -232,10 +297,11 @@ const mapStateToProps = state => {
         itemsQueried:state.night.numberOfItems,
         isError: state.night.onError, 
         errorMessageApp: state.night.errorMessage,
-        loggedIn:state.night.isLoggedin
-    }
+        loggedIn:state.night.isLoggedin,
+        loginData:state.night.userInfo
+    };
 
-}
+};
 const mapDispatchToProps = dispatch => {
     return {
         setLocation: (value) => {
@@ -246,6 +312,12 @@ const mapDispatchToProps = dispatch => {
         },
         searchItems: (value) => {
             dispatch(fetchNightDataIfNeeded(value));
+        },
+        addUserToNightEvent:(value)=>{
+            dispatch(addUserToNight(value));
+        },
+        removeUserFromNightEvent:(value)=>{
+            dispatch(removeUserFromNight(value));
         },
         setError:(value)=>{
             dispatch(setNightAppError(value));
@@ -258,7 +330,16 @@ const mapDispatchToProps = dispatch => {
         },
         exitNight:(value)=>{
             dispatch(nightExit(value));
+        },
+        setLogin:(value)=>{
+            dispatch(authenticateServer(value));
+        },
+        setRegistry:(value)=>{
+            dispatch(registerServer(value));
+        },
+        unpluguser:(value)=>{
+            dispatch(disconnectUser(value));
         }
     }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(NightLifeContainer)
+};
+export default connect(mapStateToProps, mapDispatchToProps)(NightLifeContainer);

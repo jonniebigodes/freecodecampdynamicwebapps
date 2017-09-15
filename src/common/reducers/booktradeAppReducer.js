@@ -8,36 +8,27 @@ import {
     REGISTER_NOK,
     REGISTER_OK,
     USER_LOGOUT,
-    REQUEST_NIGHT,
-    RECIEVE_NIGHT,
-    RECIEVE_NIGHT_NOK,
-    ADD_TO_NIGHT,
-    REMOVE_FROM_NIGHT,
-    SET_LOCATION_NIGHT,
-    SET_NIGHT_SEARCH,
-    SET_NIGHT_NUMBER,
-    SET_NIGHT_EXIT,
-    RECIEVE_USER_SEARCH
+    REQUEST_BOOKS,
+    RECIEVE_BOOKS,
+    RECIEVE_BOOKS_NOK,
+    SET_BOOK_EXIT
+    
 } from '../constants/Actiontypes';
 
-
-const nightAppReducer = (state = {
+const bookAppReducer = (state = {
     userInfo:{
         id:'',
         email:'',
         password:''
     },
     isLoggedin: false,
-    nightvenueQuery: 'default',
-    numberOfItems:0,
-    location:'',
+    
     items: [],
     onError: false,
     errorMessage: ''
 }, action) => {
     switch (action.type) {
-        case REQUEST_NIGHT:{
-            //console.log("reducer REQUEST_STOCKS: "+action.value);
+        case REQUEST_BOOKS:{
             return {
                 ...state,
                 isSearching: true
@@ -45,39 +36,10 @@ const nightAppReducer = (state = {
             };
             break;
         }
-        case ADD_TO_NIGHT:{
-            return{
-                ...state,
-                
-            };
-            break;
-        }
-        case REMOVE_FROM_NIGHT:{
-            return{
-                ...state,
-                
-            };
-            break;
-        }
-        case RECIEVE_USER_SEARCH:{
-            return {
-                ...state,
-                items:[
-                    ...state.items,
-                    {
-                        searchIndex:state.userInfo.id+"-"+action.value.what+"-"+action.value.where,
-                        searchQuery:{
-                            where:action.value.where,
-                            what:action.value.what,
-                            howmany:action.value.howmany
-                        },
-                        searchResults:action.value.searchResults
-                    }
-                ]
-            };
-            break;
-        }
-        case RECIEVE_NIGHT:{
+            //console.log("reducer REQUEST_STOCKS: "+action.value);
+            
+       
+        case RECIEVE_BOOKS:
             
             let resultIndex=state.isLoggedin?state.userInfo.id+'-'+state.nightvenueQuery+"-"+state.location:'anon-'+state.nightvenueQuery+"-"+state.location;
             //console.log(`recieve nigth index:${resultIndex}`);
@@ -104,8 +66,7 @@ const nightAppReducer = (state = {
                 
             };
             break;
-        }
-        case LOGIN_REQUEST:{
+        case LOGIN_REQUEST:
             console.log('====================================');
             console.log(`reducer request email:${action.value.email} password:${action.value.password}`);
             console.log('====================================');
@@ -121,8 +82,7 @@ const nightAppReducer = (state = {
 
             };
             break;
-        }
-        case REGISTER_REQUEST:{
+        case REGISTER_REQUEST:
             console.log('====================================');
             console.log(`reduce register request email:${action.value.email} password:${action.value.password}`);
             console.log('====================================');
@@ -138,8 +98,7 @@ const nightAppReducer = (state = {
 
             };
             break;
-        }
-        case LOGIN_OK:{
+        case LOGIN_OK:
             console.log('====================================');
             console.log(`reducer login ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
             console.log('====================================');
@@ -154,8 +113,7 @@ const nightAppReducer = (state = {
                 items:[]
             };
             break;
-        }
-        case REGISTER_OK:{
+        case REGISTER_OK:
             console.log('====================================');
             console.log(`reducer register ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
             console.log('====================================');
@@ -169,8 +127,7 @@ const nightAppReducer = (state = {
                 }
             };
             break;
-        }
-        case LOGIN_NOK:{
+        case LOGIN_NOK:
             return {
                 ...state,
                 userInfo:{
@@ -180,8 +137,7 @@ const nightAppReducer = (state = {
                 }
             };
             break;
-        }
-        case REGISTER_NOK:{
+        case REGISTER_NOK:
             return {
                 ...state,
                 userInfo:{
@@ -191,8 +147,7 @@ const nightAppReducer = (state = {
                 }
             };
             break;
-        }
-        case USER_LOGOUT:{
+        case USER_LOGOUT:
             return {
                 ...state,
                 userInfo:{
@@ -204,21 +159,16 @@ const nightAppReducer = (state = {
                 isLoggedin:false
             }
             break;
-        }
-        case RECIEVE_NIGHT_NOK:{
+        case RECIEVE_BOOKS_NOK:
             //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
             return {
                 ...state,
                 isSearching: false,
-                nightvenueQuery: 'default',
-                location:'',
-                numberOfItems:0,
                 onError: true,
                 errorMessage: action.error
             };
             break;
-        }
-        case APP_ERROR_RESET:{
+        case APP_ERROR_RESET:
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
@@ -227,8 +177,7 @@ const nightAppReducer = (state = {
                 errorMessage: ''
             };
             break;
-        }
-        case APP_ERROR:{
+        case APP_ERROR:
             //console.log("reducer app error");
             return {
                 ...state,
@@ -236,48 +185,23 @@ const nightAppReducer = (state = {
                 errorMessage: action.value
             };
             break;
-        }
-        case SET_LOCATION_NIGHT:{
-            return{
-                ...state,
-                location:action.valueLocation
-            };
-            break;
-        }
-        case SET_NIGHT_SEARCH:{
-            return{
-                ...state,
-                nightvenueQuery:action.valueQuery
-            };
-            break;
-        }
-        case SET_NIGHT_NUMBER:{
-            return{
-                ...state,
-                numberOfItems:action.valueNumber
-            };
-            break;
-        }
-        case SET_NIGHT_EXIT:{
+        
+        case SET_BOOK_EXIT:
             
             return{
                 ...state,
                 userInfo:{},
                 isLoggedin: false,
-                nightvenueQuery: 'default',
-                numberOfItems:0,
-                location:'',
+                
                 items: [],
                 onError: false,
                 errorMessage: ''
             };
             break;
-        }
-        default:{
+        default:
             return state;
             break;
-        }
     }
 
 };
-export default nightAppReducer;
+export default bookAppReducer;

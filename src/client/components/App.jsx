@@ -10,16 +10,16 @@ import AppFooter from './AppFooter';
  * base component for the app
  */
 class App extends Component {
-  
+
   componentDidMount(){
         injectTapEventPlugin();
- }
+  }
  clickHandler(e){
    e.stopPropagation();
-   //console.log("APP Click Handler: " + e.currentTarget.id);
+   
    switch (e.currentTarget.id) {
      case "pVoting":
-       console.log("case pVoting");
+       
        browserHistory.push('/voting');
        break;
      case "pNight":
@@ -85,7 +85,7 @@ class App extends Component {
         
     )
   }
-};
+}
 
 
 export default App;

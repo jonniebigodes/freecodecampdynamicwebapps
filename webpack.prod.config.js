@@ -1,5 +1,5 @@
-var config = require('./webpack.config.js');
-var webpack = require('webpack');
+const config = require('./webpack.config.js');
+const webpack = require('webpack');
 
 config.plugins.push(
   new webpack.DefinePlugin({
@@ -19,13 +19,13 @@ config.plugins.push(
       warnings: false,
       //added for compression
       sequences: true,
-		  dead_code: true,
-		  conditionals: true,
-		  booleans: true,
-		  unused: true,
-		  if_return: true,
-		  join_vars: true,
-		  drop_console: true,
+      dead_code: true,
+      conditionals: true,
+      booleans: true,
+      unused: true,
+      if_return: true,
+      join_vars: true,
+      drop_console: true,
       screw_ie8: true, 
     }
   })

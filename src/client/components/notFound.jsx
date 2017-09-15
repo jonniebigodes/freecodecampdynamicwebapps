@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import '../../Assets/stylesheets/base.scss'
+import '../../Assets/stylesheets/base.scss';
 
 class NotFound extends Component {
 
@@ -21,7 +21,7 @@ class NotFound extends Component {
                                     <h4>Side Car</h4>
                                 </div>
                             </div>
-                            <div class="panel-body">
+                            <div className="panel-body">
                                 <ul>
                                     <li>5 cl cognac</li>
                                         <li>2 cl triple sec</li>
@@ -50,7 +50,7 @@ class NotFound extends Component {
                             <div className="panel-heading">
                                 Black russian
                             </div>
-                            <div class="panel-body">
+                            <div className="panel-body">
                                 <ul>
                                      <li>5 cl vodka</li>
                                     <li>2 cl coffee liqueur</li>
@@ -59,13 +59,13 @@ class NotFound extends Component {
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div className="row">
                     <div className="col-xs-6 col-md-4">
                         <div className="panel panel-warning">
                             <div className="panel-heading">
                                 Singapore Sling
                             </div>
-                            <div class="panel-body">
+                            <div className="panel-body">
                                 <ul>
                                      <li>4 cl gin</li>
                                      <li>1.5 cl cherry brandy</li>
@@ -84,7 +84,7 @@ class NotFound extends Component {
                             <div className="panel-heading">
                                 Between the Sheets
                             </div>
-                            <div class="panel-body">
+                            <div className="panel-body">
                                 <ul>
                                      <li>3 cl white rum</li>
                                     <li>3 cl cognac</li>

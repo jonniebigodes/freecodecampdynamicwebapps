@@ -11,8 +11,8 @@ class nightApi{
      */
     static search(query,location,userId,numberItems){
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}`) 
-                 /* fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?stockName=${nameofStock}&startdate=${startdate}&enddate=${enddate}`) */
+            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`)
+            /* fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`)  */
             .then(response=>{
                    //console.log("getStock status: " +response.status);
                    return response.json();
@@ -40,5 +40,94 @@ class nightApi{
         
     }
 
+    /**
+     * function to add the user from the night event
+     * @param {object} value containing user token and id of bar to go
+     * @returns {Promise} with the sucess or fail of the remote operation
+     */
+    static addUserNight(value){
+        return new Promise((resolve,reject)=>{
+            
+            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightadd`,{
+            //fetch(`http://localhost:5000/api/data/nightadd`,{
+                method:'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials:'same-origin',
+                body:JSON.stringify({
+                    userToken:value.userToken,
+                    location:value.idPlace
+                })
+            })
+            .then(response=>{
+                return response.json();
+            })
+            .then(result=>{
+                resolve(true)
+            })
+            .catch(err=>{
+                reject(err.message);
+            })
+        });
+    }
+    /**
+     * function to remove the user from the night event
+     * @param {object} value containing user token and id of bar to go
+     * @returns {Promise} with the sucess or fail of the remote operation
+     */
+    static removeUserNight(value){
+        return new Promise((resolve,reject)=>{
+            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightremove`,{
+            //fetch(`http://localhost:5000/api/data/nightremove`,{
+                method:'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                credentials:'same-origin',
+                body:JSON.stringify({
+                    userToken:value.userToken,
+                    location:value.idPlace
+                })
+            })
+            .then(response=>{
+                return response.json();
+            })
+            .then(result=>{
+                resolve(true);
+            })
+            .catch(err=>{
+                reject(err.message);
+            })
+        });
+    }
+    /**
+     * 
+     * @param {String} userToken user auth token provided by the system when logs or registers
+     * @returns {Promise} with the result or fail of the operation
+     */
+    static getUserSearches(userToken){
+        return new Promise((resolve,reject)=>{
+            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/usersearches?who=${userToken}`)
+            //fetch(`http://localhost:5000/api/data/usersearches?who=${userToken}`)
+            .then(response=>{
+                return response.json();
+            })
+            .then(result=>{
+                console.log('====================================');
+                console.log(`result data: ${JSON.stringify(result)}`);
+                console.log('====================================');
+                resolve (result.userData);
+            })
+            .catch(err=>{
+                console.log('====================================');
+                console.log(`error getting the user searches:${err.reason}`);
+                console.log('====================================');
+                reject(err);
+            })
+        });
+    }
 }
 export default nightApi;

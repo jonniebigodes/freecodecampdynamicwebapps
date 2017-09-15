@@ -15,7 +15,10 @@ import {setDataInit,
     fetchStocksIfNeeded,
     resetAppError,
     setAppError,
-    delStocks} from '../../../../common/actions/stockAppActions';
+    delStocks,
+    setStocksExit
+
+} from '../../../../common/actions/stockAppActions';
 import '../../../../Assets/stylesheets/base.scss';
 import '../../../../Assets/stylesheets/stocksApp.scss';
 import {stockInformationStyles} from '../../../../Assets/styles/stockStyles';
@@ -67,8 +70,6 @@ class StockContainer extends Component {
     searchStockInformation=(e)=>{
         e.preventDefault();
         
-        
-
         let tmpStock={stockName:this.props.nameofStock,startDate:this.props.startingDate,endDate:this.props.endingDate};
         if(this.isStockAlreadyAdded(tmpStock)){
             this.props.setError("Someone forgot something, didn't you?\nThis one was already added");
@@ -200,6 +201,12 @@ class StockContainer extends Component {
        console.log("item marked deletion;  "+e);
        this.props.removeitem(e);
    }
+   /**
+     * react guard method to handle the component unload
+     */
+    componentWillUnmount(){
+        this.props.unloadStocksApp(true);
+    }
     /**
      * component render function
      */
@@ -286,6 +293,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         removeitem:(value)=>{
             dispatch(delStocks(value));
+        },
+        unloadStocksApp:(value)=>{
+            dispatch(setStocksExit(value));
         }
     };
 };

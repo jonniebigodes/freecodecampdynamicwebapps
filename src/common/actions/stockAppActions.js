@@ -4,44 +4,48 @@ import * as types from '../constants/Actiontypes';
 export const requestDataStocks = value => ({
   type: types.REQUEST_STOCKS,
   value
-})
+});
 export const recieveData=result=>({
     type:types.RECIEVE_STOCKS,
     result
-})
+});
 
 export const recieveDataNOK=error=>({
     type:types.RECIEVE_STOCKS_NOK,
     error
 
-})
+});
 export const setAppError=value=>({
     type:types.APP_ERROR,
     value
-})
+});
 export const resetAppError=value=>({
     type:types.APP_ERROR_RESET,
     value
-})
+});
 export const setValueStock=valueQuery=>({
     type:types.SET_STOCK_VALUE,
     valueQuery
-})
+});
 
 export const setDataInit=valueDi=>({
     type:types.SET_DATA_START,
     valueDi
-})
+});
 
 export const delStocks=value=>({
     type:types.DELETE_STOCK,
     value
-})
+});
 
 export const setDataFinal=valueFD=>({
     type:types.SET_DATA_END,
     valueFD
-})
+});
+export const setStocksExit=value=>({
+    type:types.SET_STOCK_EXIT,
+    value
+});
 /**
  * "private" function to process the request information
  * 
@@ -74,7 +78,7 @@ const shouldGetDataStock=(state,stockData)=>{
         return true;
     }
     
-    const datainState=state.items.find(x=>x.searchIndex.toUpperCase()===stockData.stockName+"-"+stockName.startDate+"-"+stockName.endDate);
+    const datainState=state.items.find(x=>x.searchIndex.toUpperCase()===stockData.stockName+"-"+stockData.startDate+"-"+stockData.endDate);
     //console.log("exists item: "+datainState);
 
     if (!datainState){

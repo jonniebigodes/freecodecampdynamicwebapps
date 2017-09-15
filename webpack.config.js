@@ -70,12 +70,12 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     
-     new CleanWebpackPlugin(['dist'], {
+     /* new CleanWebpackPlugin(['dist'], {
      
       verbose: true, 
       dry: false,
       exclude: ['index.html','server.bundle.js','dbFactory.js','httpService.js']
-    }) 
+    })  */
     
    
   ]

@@ -2,7 +2,6 @@
   width: 2vw;
   height: 2vw;
   position: relative;
-  margin-left: 2vw;
   margin-bottom: 20vw;
   fill: blue;
   stroke: black;
@@ -23,7 +22,7 @@
 }
 .containerTriangleExpanded{
   @extend .containerTriangleDrawer;
-  margin-left: 33vh;
+  margin-left: 37vh;
   transition: margin 2s;
   -moz-transition: margin .2s; 
   -webkit-transition: margin .2s; 
@@ -34,8 +33,10 @@
   margin-left: 12vh;
 }
 .img_night{
-  height: 60vh !important;
-  width: 60vh !important;
+  
+  height: 80% !important;
+  width: 80% !important;
+ 
   
 }
 .searchButton{
@@ -62,4 +63,11 @@
 }
 .containerItemNight{
   box-shadow: 10px 10px grey;
+}
+.text_or{
+  margin-left: 3vh !important;
+}
+
+.textLoggedIn{
+  text-align: center;
 }

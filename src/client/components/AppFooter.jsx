@@ -7,11 +7,13 @@ class AppFooter extends Component{
      * could do a ternary but as this will be going all around so yeah...nothing beats a select case
      */
     setfooterLink=(value)=>{
-        switch ("stocks") {
-            case value:
+        switch (value) {
+            case "stocks":
                 return "linksStocks";
                 break;
-        
+            case "nights":
+                return "linksNights";
+                break;
             default:
                 return "footer";
                 break;
@@ -26,10 +28,13 @@ class AppFooter extends Component{
             case "stocks":
                 return "footer-stocks";
                 break;
-        
+            case "nights":
+                return "footer-night";
+                break;
             default:
                 return "footer";
                 break;
+                
         }
     }
     /**
@@ -51,5 +56,5 @@ class AppFooter extends Component{
 }
 AppFooter.propTypes={
     appName:PropTypes.string.isRequired
-}
+};
 export default AppFooter;

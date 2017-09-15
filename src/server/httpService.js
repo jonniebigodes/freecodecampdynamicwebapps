@@ -3,7 +3,6 @@
  * outside access like http get /posts
  */
 
-// delete unirest if fetch works
 const unirest = require('unirest');
 const yelp = require('yelp-fusion');
 
@@ -17,7 +16,15 @@ export const getStockInformation = value => {
         error: false,
         messageError: "",
         dataRecieved: {}
-    }
+    };
+    let stockinfo = {
+        stockName: "",
+        stockCode: "",
+        refreshDate: "",
+        stockQueryStart: "",
+        StockQueryEnd: "",
+        stockData: []
+    };
     return new Promise((resolve, reject) => {
         try {
             unirest
@@ -28,18 +35,10 @@ export const getStockInformation = value => {
                 .end(result => {
                     if (result.status === 404) {
                         resultInfo.error = true;
-                        resultInfo.messageError = "The stock " + value.queryStock + " to be searched does not exist";
                         reject(resultInfo);
 
                     } else {
-                        let stockinfo = {
-                            stockName: "",
-                            stockCode: "",
-                            refreshDate: "",
-                            stockQueryStart: "",
-                            StockQueryEnd: "",
-                            stockData: []
-                        };
+                        
                         stockinfo.stockName = result.body.dataset.name;
                         stockinfo.stockCode = result.body.dataset.dataset_code;
                         stockinfo.refreshDate = result.body.dataset.refreshed_at;
@@ -49,30 +48,36 @@ export const getStockInformation = value => {
                             stockinfo
                                 .stockData
                                 .push({stockDate: result.body.dataset.data[i][0], openPrice: result.body.dataset.data[i][1], highestPrice: result.body.dataset.data[i][2], lowestPrice: result.body.dataset.data[i][3], closePrice: result.body.dataset.data[i][4]
-                                })
+                                });
                         }
                         resultInfo.dataRecieved = stockinfo;
                         resolve(resultInfo);
 
                     }
-                })
+                });
 
         } catch (error) {
             console.log("ERROR HTTP SERVICE:\n" + error);
             resultInfo.error = true;
-            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO STOCK SERVER: " + err;
+            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO STOCK SERVER: " + error;
             reject(resultInfo);
         }
 
-    })
+    });
 
-}
+};
+/**
+ * function to get the token from yelp
+ * @param {String} clientId id of app provided by yelp services
+ * @param {String} clientSecret secret hash provided by yelp services
+ * @returns {Promise} with the result or fail of the remote request
+ */
 export const getToken = (clientId, clientSecret) => {
     let resultInfo = {
         error: false,
         messageError: "",
         dataRecieved: {}
-    }
+    };
     return new Promise((resolve, reject) => {
         try {
             yelp
@@ -95,18 +100,19 @@ export const getToken = (clientId, clientSecret) => {
         } catch (error) {
             console.log("ERROR HTTP SERVICE YELP TOKEN:\n" + error);
             resultInfo.error = true;
-            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + err;
+            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + error;
             reject(resultInfo);
         }
 
     });
-}
+};
 export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
     let resultInfo = {
         error: false,
         messageError: "",
         dataRecieved: {}
     };
+    let resultData=[];
     return new Promise((resolve, reject) => {
         try {
             const client= yelp.client(token);
@@ -115,10 +121,11 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                 location:searchLocation,
                 limit:numberOfItems
             }).then(response=>{
-                let resultData=[];
+                
                 for (let i=0; i<response.jsonBody.businesses.length;i++){
                     let itemresult={};
                     if (!response.jsonBody.businesses[i].is_closed){
+                        
                         itemresult.id=response.jsonBody.businesses[i].id;
                         itemresult.name=response.jsonBody.businesses[i].name;
                         itemresult.img=response.jsonBody.businesses[i].image_url;
@@ -126,6 +133,7 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                         itemresult.address=response.jsonBody.businesses[i].location.address1;
                         itemresult.city= response.jsonBody.businesses[i].location.city;
                         itemresult.zipCode=response.jsonBody.businesses[i].location.zip_code;
+                        itemresult.isGoing=false;
                         if (response.jsonBody.businesses[i].categories[0]){
                             itemresult.category= response.jsonBody.businesses[i].categories[0].alias;
                         }
@@ -138,16 +146,19 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                 resolve(resultInfo);
             })
             .catch(e=>{
+                console.log('====================================');
+                console.log(`ERROR ON PROCESSING REQUEST TO YELP SERVER:${e}`);
+                console.log('====================================');
                 resultInfo.error = true;
                 resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + e;
                 reject(resultInfo);
             })
 
         } catch (error) {
-            console.log("ERROR HTTP SERVICE YELP TOKEN:\n" + error);
+            console.log("ERROR HTTP SERVICE YELP SEARCH:\n" + error);
             resultInfo.error = true;
-            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + err;
+            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + error;
             reject(resultInfo);
         }
-    })
-}
+    });
+};

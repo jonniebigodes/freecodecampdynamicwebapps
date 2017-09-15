@@ -8,9 +8,9 @@ import '../../Assets/stylesheets/stocksApp.scss';
 export default class AppHeader extends Component {
     /**
      * event handler for the click 
-     * @param {*} e object of the event
+     * 
      */
-    handleHomeButtonClick = (e) => {
+    handleHomeButtonClick = () => {
         console.log("handled home got");
         browserHistory.push('/');
     };
@@ -18,11 +18,8 @@ export default class AppHeader extends Component {
         switch (value) {
             case "stocks":
                 return "headerTextStock";
-                break;
-        
             default:
                 return "footer";
-                break;
         }
     }
     /**
@@ -33,7 +30,7 @@ export default class AppHeader extends Component {
         return (
             <AppBar title={this.props.appName} className={this.setHeaderStyle(this.props.appStyle)}
                     showMenuIconButton={false}
-                    iconElementRight={<IconButton onClick={(e)=>this.handleHomeButtonClick(e)}>
+                    iconElementRight={<IconButton onClick={()=>this.handleHomeButtonClick()}>
                             <i className="material-icons md-24"> home</i>
                         </IconButton>}>
                     

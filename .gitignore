@@ -16,6 +16,7 @@ stats.json
 *.ttf
 *.svg
 *.old
+queries.json
 # Docker
 Dockerfile
 docker-compose.yml
