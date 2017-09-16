@@ -607,7 +607,7 @@ app.get('/api/data/stocksearch', (request, response) => {
         .getStockInformation(tmpObj)
         .then((result) => {
             response.writeHead(200, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify(result.dataRecieved));
+            response.end(JSON.stringify(result.dataRecieved)); 
         })
         .catch((error) => {
             response.writeHead(500, {'Content-Type': 'application/json'});
@@ -621,6 +621,7 @@ app.get('/api/data/stocksearch', (request, response) => {
  */
 app.get('*', (request, response) => {
     //response.sendFile(__dirname + '/dist/index.html');
+    //console.log(`dir name:${__dirname}`);
     response.sendFile(__dirname+'/index.html');
 });
 
