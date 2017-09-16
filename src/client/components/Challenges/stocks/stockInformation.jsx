@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
-import {delStocks} from '../../../../common/actions/stockAppActions';
 import {Line} from 'react-chartjs-2';
 import '../../../../Assets/stylesheets/stocksApp.scss';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 export class StockInformation extends Component {
     /**
      * class constructor

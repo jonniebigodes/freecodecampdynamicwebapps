@@ -3,7 +3,6 @@ import {render} from 'react-dom';
 import {Router,Route,browserHistory} from 'react-router';
 import {Provider} from "react-redux";
 import store from "./common/store/store";
-
 import App from './client/components/App';
 import votingApp from './client/components/Challenges/vottingapp/voteMachineApp';
 import pollDetails from './client/components/Challenges/vottingapp/voteMachinePollDetails';
