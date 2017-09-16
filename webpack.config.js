@@ -8,6 +8,7 @@ module.exports = {
   ],
   
   module: {
+    devtool: 'source-map',
     loaders: [
       {
         test: /\.js?$/, 
