@@ -7,7 +7,7 @@ import store from "./common/store/store";
 import App from './client/components/App';
 import votingApp from './client/components/Challenges/vottingapp/voteMachineApp';
 import pollDetails from './client/components/Challenges/vottingapp/voteMachinePollDetails';
-import nightLifeApp from './client/components/Challenges/nightlife/NightLifeApp';
+//import nightLifeApp from './client/components/Challenges/nightlife/NightLifeApp';
 import stocksApp from './client/components/Challenges/stocks/stocksApp';
 import bookTrade from './client/components/Challenges/books/booksApp';
 import pinrestApp from './client/components/Challenges/pinClone/pinRestCloneApp';
@@ -21,7 +21,7 @@ render(
         <Router history={browserHistory}> 
             <Route path="/voting" component={votingApp}/>
             <Route path="/voting/poll/(:idPoll)" component={pollDetails}/>
-            <Route path="/nightlife" component={nightLifeApp}/>
+            {/* <Route path="/nightlife" component={nightLifeApp}/> */}
             <Route path="/stocks" component={stocksApp}/>
             <Route path="/books" component={bookTrade}/>
             <Route path="/pinclone" component={pinrestApp}/>

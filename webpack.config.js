@@ -6,28 +6,19 @@ module.exports = {
   entry: ['whatwg-fetch',
     './src/index',
   ],
-  node: {
-    __dirname: true
-  },
   module: {
     devtool: 'source-map',
     
     loaders: [
       {
         test: /\.js?$/, 
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query:{
-          presets: ['es2015', 'react','stage-2']
-        }
+        loader: 'babel',
+        exclude: /node_modules/
       },
       {
         test:/\.jsx$/, 
-        loader: 'babel-loader',
+        loader: 'babel',
         exclude: /node_modules/,
-        query:{
-          presets:['es2015','react','stage-2']
-        }
       },
       { 
         test: /\.scss$/, 
@@ -89,4 +80,3 @@ module.exports = {
    
   ]
 };
-//path: path.join(__dirname, '/dist')
