@@ -4,7 +4,7 @@ node_modules/
 
 #buildfiles
 #dist/bundle.js
-
+errors.json
 # Local development
 *.env
 *.dev
