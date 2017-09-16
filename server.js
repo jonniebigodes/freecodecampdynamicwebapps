@@ -621,7 +621,7 @@ app.get('/api/data/stocksearch', (request, response) => {
  */
 app.get('*', (request, response) => {
     //response.sendFile(__dirname + '/dist/index.html');
-    console.log(`deployed dir name:${__dirname}`);
+    console.log(`deployed dir name:${__dirname }`);
     response.sendFile(__dirname+'/index.html');
     
 });
