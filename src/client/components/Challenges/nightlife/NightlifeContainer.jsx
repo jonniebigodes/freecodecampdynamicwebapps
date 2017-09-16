@@ -8,7 +8,6 @@ import FontIcon from 'material-ui/FontIcon';
 import FloatingActionButton  from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import {setNightQuery, 
     setLocationNight,
     setNumberItems,
