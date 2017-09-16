@@ -6,19 +6,28 @@ module.exports = {
   entry: ['whatwg-fetch',
     './src/index',
   ],
-  
+  node: {
+    __dirname: true
+  },
   module: {
     devtool: 'source-map',
+    
     loaders: [
       {
         test: /\.js?$/, 
-        loader: 'babel',
-        exclude: /node_modules/ 
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        query:{
+          presets: ['es2015', 'react','stage-2']
+        }
       },
       {
         test:/\.jsx$/, 
-        loader: 'babel',
-        exclude: /node_modules/ 
+        loader: 'babel-loader',
+        exclude: /node_modules/,
+        query:{
+          presets:['es2015','react','stage-2']
+        }
       },
       { 
         test: /\.scss$/, 
@@ -57,7 +66,7 @@ module.exports = {
     extensions: ['', '.js','.jsx']
   },
   output: {
-    path: './dist',
+    path: path.join(__dirname, '/dist'),
     publicPath: '/',
     filename: 'bundle.js'
   },

@@ -18,7 +18,7 @@
     "showinfo": "webpack --display-modules --display-reasons",
     "showinfofile": "webpack --json>stats.json",
     "showfilesizefile": "webpack --display-modules --display-reasons --sort-modules-by size --json>stats.json",
-    "spiterror": "webpack --display-error-details --json>errors.json"
+    "spiterror": "webpack --display-error-details"
   },
   "repository": {
     "type": "git",
