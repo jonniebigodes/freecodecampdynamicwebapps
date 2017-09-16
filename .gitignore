@@ -10,11 +10,11 @@ node_modules/
 *.dev
 .DS_Store
 stats.json
-#*.woff
-#*.woff2
-#*.eot
-$*.ttf
-#*.svg
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.svg
 *.old
 queries.json
 # Docker

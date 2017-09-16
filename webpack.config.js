@@ -58,7 +58,7 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, '/dist'),
-    publicPath: '/',
+    publicPath: '/dist/',
     filename: 'bundle.js'
   },
   devServer: {
@@ -80,3 +80,4 @@ module.exports = {
    
   ]
 };
+//path: path.join(__dirname, '/dist')
