@@ -12,7 +12,7 @@
     "buildserverdeps": "babel ./src/server/ --out-dir ./dist --presets minify",
     "buildserver": "babel server.js -o ./dist/server.bundle.js --presets minify",
     "buildproject": "webpack --config webpack.prod.config.js -p --progress --colors",
-    "build": "npm run buildserverdeps && npm run buildserver && npm run buildproject",
+    "build": "npm run buildserverdeps && npm run buildserver",
     "postinstall": "webpack -p --config webpack.prod.config.js",
     "showerrors": "webpack --progress --color --watch --display-error-details",
     "showinfo": "webpack --display-modules --display-reasons",
