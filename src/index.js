@@ -4,12 +4,13 @@ import {Router,Route,browserHistory} from 'react-router';
 import {Provider} from "react-redux";
 import store from "./common/store/store";
 import App from './client/components/App';
-import votingApp from './client/components/Challenges/vottingapp/voteMachineApp';
-import pollDetails from './client/components/Challenges/vottingapp/voteMachinePollDetails';
-import nightLifeApp from './client/components/Challenges/nightlife/NightLifeApp';
-import stocksApp from './client/components/Challenges/stocks/stocksApp';
-import bookTrade from './client/components/Challenges/books/booksApp';
-import pinrestApp from './client/components/Challenges/pinClone/pinRestCloneApp';
+import votingApp from './client/components/challenges/vottingapp/voteMachineApp';
+import pollDetails from './client/components/challenges/vottingapp/voteMachinePollDetails';
+import nightLifeApp from './client/components/challenges/nightlife/NightLifeApp';
+import stocksApp from './client/components/challenges/stocks/stocksApp';
+//import bookTrade from './client/components/challenges/books/booksApp';
+import BookTradeApp from './client/components/challenges/books/BookTradeApp';
+import pinrestApp from './client/components/challenges/pinClone/pinRestCloneApp';
 import NotFound from './client/components/notFound';
 
 
@@ -22,7 +23,7 @@ render(
             <Route path="/voting/poll/(:idPoll)" component={pollDetails}/>
             <Route path="/nightlife" component={nightLifeApp}/>
             <Route path="/stocks" component={stocksApp}/>
-            <Route path="/books" component={bookTrade}/>
+            <Route path="/books" component={BookTradeApp}/>
             <Route path="/pinclone" component={pinrestApp}/>
             <Route path="/" component={App} />
             <Route path="*" component={NotFound}/> 

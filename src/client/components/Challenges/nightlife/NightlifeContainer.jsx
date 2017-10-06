@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {PropTypes} from 'prop-types';
+import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
-import MenuItem from 'material-ui/MenuItem'
-import FontIcon from 'material-ui/FontIcon';
+import MenuItem from 'material-ui/MenuItem';
 import FloatingActionButton  from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -65,7 +64,7 @@ class NightLifeContainer extends Component {
      * @param {*} e html element that triggers the update(textinput)
      */ 
     updateSearchTerm=(e)=>{
-        e.preventDefault();
+        //e.preventDefault();
         //console.log("update term: "+ e.target.value);
         this.props.setLocation(e.target.value);
     }
@@ -73,8 +72,8 @@ class NightLifeContainer extends Component {
     /**
      * handler function to handle the query to the server via user input/selection
      */
-    searchNightInformation=(e)=>{
-        e.preventDefault();
+    searchNightInformation=()=>{
+        //e.preventDefault();
         if (this.props.nightvenue=='default'){
            this.props.setError(`Don't you know cupcake that default is not a place to eat or drink????`);
            return;
@@ -90,10 +89,10 @@ class NightLifeContainer extends Component {
         }
         let tmpNight={query:this.props.nightvenue,where:this.props.location,who:'',howMany:this.props.itemsQueried};
         if (this.props.loggedIn){
-            console.log('====================================');
+           /*  console.log('====================================');
             console.log(`user token before query:${this.props.id}`);
-            console.log('====================================');
-            tmpNight.who= this.props.loginData.id
+            console.log('===================================='); */
+            tmpNight.who= this.props.loginData.id;
         }
         
         this.props.searchItems(tmpNight);
@@ -105,20 +104,19 @@ class NightLifeContainer extends Component {
     }
 
     onRemoveNight=(e)=>{
-        this.props.loggedIn?this.props.removeUserFromNightEvent({userToken:this.props.loginData.id,idPlace:e}):this.props.setError('You need to be authenticated on the server first before adding yourself to a event')
+        this.props.loggedIn?this.props.removeUserFromNightEvent({userToken:this.props.loginData.id,idPlace:e}):this.props.setError('You need to be authenticated on the server first before adding yourself to a event');
     }
     /**
      * handler function to reset the errors on the app
      */
-    resetError=(e)=>{
-        e.preventDefault();
+    OnResetError=()=>{
+        //e.preventDefault();
         this.props.resetError(true);
     }
     /**
      * handler function for login/register user
      */
     loginRegSend=(e)=>{
-        console.log(`auth information:${e.isLogin}\ndata: mail=${e.email} password:${e.password}`);
         if (e.isLogin){
             this.props.setLogin(e);
         }
@@ -130,9 +128,7 @@ class NightLifeContainer extends Component {
      * handler function for user logout
      */
     logoutHandler=()=>{
-        console.log('====================================');
-        console.log(`logout handler: id user${this.props.loginData.id}`);
-        console.log('====================================');
+        
         this.props.unpluguser(this.props.loginData.id);
     }
 
@@ -178,14 +174,14 @@ class NightLifeContainer extends Component {
                                 floatingLabelText="Location"
                                 value={this.props.location}
                                 className="textSearch"
-                                onChange={(e)=>this.updateSearchTerm(e)}/>
+                                onChange={this.updateSearchTerm}/>
                         </div>
                         <div className="col-xs-6 col-sm-4">
                             <FloatingActionButton 
                                 mini={true}
                                 key="btnSearch"
                                 className="searchButton"
-                                onClick={(e) =>{this.searchNightInformation(e)}}>
+                                onClick={this.searchNightInformation}>
                                 <i className="material-icons md-18">search</i>
                             </FloatingActionButton>
                         </div>
@@ -236,14 +232,14 @@ class NightLifeContainer extends Component {
                                     floatingLabelText="Location"
                                     value={this.props.location}
                                     className="textSearch"
-                                    onChange={(e)=>this.updateSearchTerm(e)}/>
+                                    onChange={this.updateSearchTerm}/>
                             </div>
                             <div className="col-xs-6 col-sm-4">
                                 <FloatingActionButton 
                                     mini={true}
                                     key="btnSearch"
                                     className="searchButton"
-                                    onClick={(e) =>{this.searchNightInformation(e)}}>
+                                    onClick={this.searchNightInformation}>
                                     <i className="material-icons md-18">search</i>
                                 </FloatingActionButton>
                             </div>
@@ -263,7 +259,7 @@ class NightLifeContainer extends Component {
             <FlatButton key="dialogError_nightLife"
                 label="Ok"
                 primary={true}
-                onTouchTap={(e)=>this.resetError(e)}
+                onTouchTap={this.OnResetError}
             />
             ];
         return (
@@ -272,12 +268,12 @@ class NightLifeContainer extends Component {
                         actions={actionsDialog}
                         modal={false}
                         open={this.props.isError}
-                        onRequestClose={(e)=>this.resetError(e)}>
+                        onRequestClose={this.OnResetError}>
                         <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
                         <br/>
                         <h4>{this.props.errorMessageApp}</h4>
                 </Dialog>
-                <NightLifeLoginContainer islogged={this.props.loggedIn} loginreg={(e)=>this.loginRegSend(e)} userInformation={this.props.loginData} userLogout={()=>this.logoutHandler()} dataItems={this.props.items}/>
+                <NightLifeLoginContainer islogged={this.props.loggedIn} loginreg={(e)=>this.loginRegSend(e)} userInformation={this.props.loginData} userLogout={this.logoutHandler} dataItems={this.props.items}/>
                 {this.props.items.length?this.renderItems():this.renderNoItems()}
                 
                 
@@ -339,6 +335,6 @@ const mapDispatchToProps = dispatch => {
         unpluguser:(value)=>{
             dispatch(disconnectUser(value));
         }
-    }
+    };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(NightLifeContainer);

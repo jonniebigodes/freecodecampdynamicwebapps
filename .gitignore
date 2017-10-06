@@ -1,9 +1,9 @@
 node_modules/
-*npm-debug.log
+*.npm-debug.log
 .vscode/
 
 #buildfiles
-dist/bundle.js
+#dist/bundle.js
 errors.json
 # Local development
 *.env

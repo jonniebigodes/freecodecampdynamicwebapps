@@ -24,19 +24,13 @@ class AuthApi{
                 })
             })
             .then(response=>{
-                console.log('====================================');
-                console.log(`response json auth:${JSON.stringify(response)}`);
-                console.log('====================================');
                 return response.json();
             })
             .then(result=>{
-                console.log('====================================');
-                console.log(`authenticate result:${JSON.stringify(result)}`);
-                console.log('====================================');
-                if (result.code==='fccda002'){
-                    reject(`there was a problem authenticating the user`);
+                if (result.code==='fccda001'){
+                    reject(`there was a problem authenticating the user.\nThe credentials provided are not correct!`);
                 }
-                resolve(result.authToken);
+                resolve(result);
             })
             .catch(err=>{
                 console.log('====================================');
@@ -113,6 +107,53 @@ class AuthApi{
                 reject(err.message);
             })
         });
+    }
+    static changeUserInformation(value){
+        return new Promise((resolve,reject)=>{
+            fetch('https://freecodecampdynprojects.herokuapp.com/api/login/local/authdatachange',{
+            //fetch(`http://localhost:5000/api/login/local/authdatachange`,{
+                method:'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify(value)
+            })
+            .then(response=>{
+                return response.json();
+            })
+            .then(result=>{
+                if (result.code==='fccda001'){
+                    reject(`Something went wrong with the update of your information`);
+                }
+                else{
+                    resolve(true);
+                }
+            })
+            .catch(err=>{
+                console.log('====================================');
+                console.log('There has been a problem with your fetch operation: ' + err.message);
+                console.log('====================================');
+                reject(err.message);
+            })
+        });
+    }
+    static setStorageData(value){
+        console.log('====================================');
+        console.log(`data from storage:${JSON.stringify(value,null,2)}`);
+        console.log('====================================');
+        localStorage.setItem("bookapp_storage",JSON.stringify(value));
+    }
+    static getStorageData(){
+        return localStorage.getItem("bookapp_storage");
+        /* let resultAuthData= localStorage.getItem("bookapp_storage");
+        console.log('====================================');
+        console.log(`data from storage:${JSON.stringify(resultAuthData,null,2)}`);
+        console.log('====================================');
+        return resultAuthData; */
+    }
+    static clearStorage(){
+        localStorage.clear();
     }
 
 }

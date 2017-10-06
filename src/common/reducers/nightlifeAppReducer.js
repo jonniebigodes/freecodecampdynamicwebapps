@@ -106,9 +106,7 @@ const nightAppReducer = (state = {
             break;
         }
         case LOGIN_REQUEST:{
-            console.log('====================================');
-            console.log(`reducer request email:${action.value.email} password:${action.value.password}`);
-            console.log('====================================');
+            
             return {
                 ...state,
                 
@@ -123,9 +121,7 @@ const nightAppReducer = (state = {
             break;
         }
         case REGISTER_REQUEST:{
-            console.log('====================================');
-            console.log(`reduce register request email:${action.value.email} password:${action.value.password}`);
-            console.log('====================================');
+           
             return {
                 ...state,
                 
@@ -140,9 +136,7 @@ const nightAppReducer = (state = {
             break;
         }
         case LOGIN_OK:{
-            console.log('====================================');
-            console.log(`reducer login ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
-            console.log('====================================');
+           
             return {
                 ...state,
                 isLoggedin:true,
@@ -156,9 +150,7 @@ const nightAppReducer = (state = {
             break;
         }
         case REGISTER_OK:{
-            console.log('====================================');
-            console.log(`reducer register ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
-            console.log('====================================');
+            
             return {
                 ...state,
                 isLoggedin:true,

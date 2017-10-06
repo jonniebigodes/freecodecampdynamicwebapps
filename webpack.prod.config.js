@@ -25,7 +25,7 @@ config.plugins.push(
       unused: true,
       if_return: true,
       join_vars: true,
-      drop_console: false,
+      drop_console: true,
       screw_ie8: true, 
     }
   })

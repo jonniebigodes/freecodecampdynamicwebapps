@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import AppHeader from '../../AppHeader';
 import NightlifeContainer from './NightlifeContainer';
+import AppHeader from '../../AppHeader';
 import AppFooter from '../../AppFooter';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -19,7 +19,6 @@ export default class NightlifeApp extends Component{
                     <AppHeader appName="Supercalifragilistic Nightlife Coordinator" appStyle="night"/>
                     <NightlifeContainer/>
                     <AppFooter appName="night"/>
-
                 </div>
             </MuiThemeProvider>
         );

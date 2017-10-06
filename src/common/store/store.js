@@ -4,10 +4,12 @@ import promise from 'redux-promise-middleware'
 import stocks from '../reducers/stockAppReducer';
 import votes from '../reducers/votingAppReducer';
 import night from '../reducers/nightlifeAppReducer';
+import books from '../reducers/booktradeAppReducer';
 export default createStore(
     combineReducers({
         stocks,
-        night
+        night,
+        books
     }),
     {},
     applyMiddleware(thunk,promise())

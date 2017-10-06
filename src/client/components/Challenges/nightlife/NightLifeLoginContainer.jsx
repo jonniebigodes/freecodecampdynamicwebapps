@@ -7,6 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
 import {Tabs,Tab} from 'material-ui/Tabs';
 import Chip from 'material-ui/Chip';
+import TextField from 'material-ui/TextField';
 import '../../../../Assets/stylesheets/nightApp.scss';
 class NightLifeLoginContainer extends Component{
     /**
@@ -37,31 +38,27 @@ class NightLifeLoginContainer extends Component{
     /**
      * controlled event handler function
      */
-    openCloseDrawer = (e) => {
-        e.preventDefault();
+    openCloseDrawer = () => {
+        //e.preventDefault();
         this.setState({openDrawer: !this.state.openDrawer});
     }
    
-    cancelPostForm=(e)=>{
-        e.preventDefault();
+    cancelPostForm=()=>{
+        
         return false;
     }
-    handleChangeTab=(value)=>{
-        this.setState({tabValue:value});
+    handleChangeTab=()=>{
+        this.setState({tabValue:this.state.tabValue==='Login'?'Signup':'Login'});
     }
     handleLogout=()=>{
         this.props.userLogout();
     }
-    
-
     encrypwd=()=>{
         return cryptoModule.hashSync(this.state.password);
     }
-    handleLoginRegisterRequest=(e)=>{
-
-        e.preventDefault();
+    handleLoginRegisterRequest=()=>{
         if (this.state.tabValue==='Login'){
-            this.props.loginreg({isLogin:true,email:this.state.email,password:this.state.password})
+            this.props.loginreg({isLogin:true,email:this.state.email,password:this.state.password});
         }
         else{
             if (this.state.password!==this.state.retype_pwd){
@@ -69,8 +66,6 @@ class NightLifeLoginContainer extends Component{
             }
             this.props.loginreg({isLogin:false,email:this.state.email,password:this.encrypwd()});
         }
-        
-        
     }
     setEmail=(e)=>{
         this.setState({email:e.target.value});
@@ -81,6 +76,12 @@ class NightLifeLoginContainer extends Component{
     setConfirmationPwd=(e)=>{
         this.setState({retype_pwd:e.target.value});
     }
+    handleKeys=(e)=>{
+        if (e.key==='Enter'){
+            e.preventDefault();
+            this.handleLoginRegisterRequest();
+        }
+    }
     /**
      * function to render the content of the drawer
      */
@@ -90,7 +91,7 @@ class NightLifeLoginContainer extends Component{
             
             for (let resultItem of this.props.dataItems){
                 for (let resultItemSearch of resultItem.searchResults.results){
-                    console.log(resultItemSearch.category);
+                    
                     if (!chipInState.length){
                         chipInState.push(
                             {
@@ -130,7 +131,7 @@ class NightLifeLoginContainer extends Component{
                     <h3 className="textLoggedIn">Logged in as :</h3>
                     <h4 className="textLoggedIn">{this.props.userInformation.email}</h4>
                     {/* <button type="button" className="btn btn-link" onClick={this.handleLogout}>Logout</button> */}
-                    <FlatButton label="Logout" onClick={this.handleLogout} primary={true} fullWidth={true}/>
+                    <FlatButton label="Logout" onClick={this.handleLogout} primary fullWidth/>
                     <hr/>
                     <div style={this.styles.wrapper}>
                         {
@@ -142,59 +143,83 @@ class NightLifeLoginContainer extends Component{
             );
         }
         return(
-            
             <div>
                 <Tabs value={this.state.tabValue} onChange={this.handleChangeTab}>
                     <Tab label="Login" value="Login">
                         <h4> Insert your credentials bellow</h4>
-                        <form onSubmit={(e)=>this.cancelPostForm(e)}>
+                        <form onSubmit={this.cancelPostForm}>
                             <div className="form-group">
-                                <label for="inputNightLoginEmail">Email address </label>
-                                <input type="email" className="form-control" id="inputNightLoginEmail" key="inputNightLoginEmail" placeholder="Email" onChange={(e)=>this.setEmail(e)}/>
+                                <TextField key="inputBookLoginEmail" 
+                                    hintText="Set your email here" 
+                                    floatingLabelText="Email"
+                                    floatingLabelFixed
+                                    value={this.state.email}
+                                    onChange={this.setEmail}/>
+                                
                             </div>
                             <div className="form-group">
-                                    <label for="inputNightLoginPassword">Password</label>
-                                    <input type="password" className="form-control" id="inputNightLoginPassword" key="inputNightLoginPassword" placeholder="Password"
-                                    onChange={(e)=>this.setPassword(e)}/>
+                                <TextField key="inputBookLoginPassword" 
+                                        hintText="Set your password here" 
+                                        floatingLabelText="Password"
+                                        floatingLabelFixed
+                                        type="password"
+                                        value={this.state.password}
+                                        onChange={this.setPassword}
+                                        onKeyPress={this.handleKeys}/>
+                                    
                                     
                             </div>
                             <div className="form-group">
                                 <RaisedButton label="login"
-                                    primary={true}
+                                    primary
                                     icon={<FontIcon className="muidocs-icon-custom-github"/>}
-                                    onClick={(e)=>this.handleLoginRegisterRequest(e)} fullWidth={true}/>
+                                    onClick={this.handleLoginRegisterRequest} fullWidth/>
                                 
-                                <FlatButton label="Cancel" secondary={true} onClick={(e)=>this.openCloseDrawer(e)} fullWidth={true}/>
+                                <FlatButton label="Cancel" secondary onClick={this.openCloseDrawer} fullWidth/>
                                 
                             </div>
                         
                         </form>
                     </Tab>
-                    <Tab label="Signup" value="Signin">
-                        <form onSubmit={(e)=>this.cancelPostForm(e)}>
+                    <Tab label="Signup" value="Signup">
+                        <form onSubmit={this.cancelPostForm}>
                             <div className="form-group">
-                                <label for="inputNightLoginEmail">Email address </label>
-                                <input type="email" className="form-control" id="inputNightRegisterEmail" key="inputNightRegisterEmail" placeholder="Email" onChange={(e)=>this.setEmail(e)}/>
+                                <TextField key="inputBookRegisterEmail"
+                                    hintText="Set your email here"
+                                    floatingLabelFixed
+                                    floatingLabelText="Email"
+                                    value={this.state.email}
+                                    onChange={this.setEmail}/>
                             </div>
                             <div className="form-group">
-                                    <label for="inputNightLoginPassword">Password</label>
-                                    <input type="password" className="form-control" id="inputNightRegisterPassword" key="inputNightRegisterPassword" placeholder="Password"
-                                    onChange={(e)=>this.setPassword(e)}/>
-                                    <label for="inputNightLoginPassword">Re-type Password</label>
-                                    <input type="password" className="form-control" id="rinputNightRegisterPassword" key="rinputNightRegisterPassword" placeholder="Password" onChange={(e)=>this.setConfirmationPwd(e)}/>
+                                <TextField key="inputBookRegisterPassword"
+                                    hintText="Set your password here"
+                                    floatingLabelFixed
+                                    floatingLabelText="Password"
+                                    value={this.state.password}
+                                    onChange={this.setPassword}/>
+                                <TextField key="RetypeinputBookRegisterPassword"
+                                    hintText="Re-type your password here"
+                                    floatingLabelFixed
+                                    floatingLabelText="Re-type Password"
+                                    value={this.state.retype_pwd}
+                                    onChange={this.setConfirmationPwd}
+                                    />
+                                    
                             </div>
                             <div className="form-group">
                                 <RaisedButton label="Register"
-                                    primary={true}
+                                    primary
                                     icon={<FontIcon className="muidocs-icon-custom-github"/>}
-                                    onClick={(e)=>this.handleLoginRegisterRequest(e)} fullWidth={true}/>
+                                    onClick={this.handleLoginRegisterRequest} fullWidth/>
                                 
-                                <FlatButton label="Cancel" onClick={(e)=>this.openCloseDrawer(e)} fullWidth={true}/>
+                                <FlatButton label="Cancel" onClick={this.openCloseDrawer} fullWidth/>
                             </div>
                         </form>
                     </Tab>
                 </Tabs>
-            </div>);
+            </div>
+        );
         
     }
    /**
@@ -203,7 +228,7 @@ class NightLifeLoginContainer extends Component{
     render(){
         return(
             <div className={this.state.openDrawer?'containerTriangleExpanded':'containerTriangleDrawer'}>
-                    <svg onClick={(e)=>this.openCloseDrawer(e)} width="100" height="100">
+                    <svg onClick={this.openCloseDrawer} width="100" height="100">
                         <polygon points="0 0, 0 100, 100 0" className="triangle" />    
                     </svg>
                     <Drawer 
@@ -215,7 +240,7 @@ class NightLifeLoginContainer extends Component{
         );
     }
 }
-NightLifeLoginContainer.props={
+NightLifeLoginContainer.propTypes={
     dataItems:PropTypes.arrayOf(
         PropTypes.object.isRequired
     ).isRequired,

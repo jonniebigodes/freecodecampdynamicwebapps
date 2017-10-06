@@ -20,8 +20,6 @@ export const REGISTER_OK='OK_REGISTER';
 export const REGISTER_NOK='NOK_REGISTER';
 export const USER_LOGOUT='LOGOUT_USER';
 export const SET_USER_INFORMATION='USER_INFORMATION_CHANGE';
-
-
 //
 
 // nightlife

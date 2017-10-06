@@ -2,7 +2,6 @@ import * as types from '../constants/Actiontypes';
 import nightApi from '../api/nightLifeApi';
 import authApi from '../api/authApi';
 
-
 export const requestNightData=value=>({
     type:types.REQUEST_NIGHT,
     value

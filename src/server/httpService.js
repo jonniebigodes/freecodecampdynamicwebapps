@@ -5,7 +5,7 @@
 
 const unirest = require('unirest');
 const yelp = require('yelp-fusion');
-
+const sendBlue= require('sendinblue-api');
 /**
  *
  * @param {object} value item to contain info to call the stock api service
@@ -45,10 +45,7 @@ export const getStockInformation = value => {
                         stockinfo.stockQueryStart = value.startDate;
                         stockinfo.StockQueryEnd = value.endDate;
                         for (let i = 0; i < result.body.dataset.data.length; i++) {
-                            stockinfo
-                                .stockData
-                                .push({stockDate: result.body.dataset.data[i][0], openPrice: result.body.dataset.data[i][1], highestPrice: result.body.dataset.data[i][2], lowestPrice: result.body.dataset.data[i][3], closePrice: result.body.dataset.data[i][4]
-                                });
+                            stockinfo.stockData.push({stockDate: result.body.dataset.data[i][0], openPrice: result.body.dataset.data[i][1], highestPrice: result.body.dataset.data[i][2], lowestPrice: result.body.dataset.data[i][3], closePrice: result.body.dataset.data[i][4]});
                         }
                         resultInfo.dataRecieved = stockinfo;
                         resolve(resultInfo);
@@ -80,12 +77,7 @@ export const getToken = (clientId, clientSecret) => {
     };
     return new Promise((resolve, reject) => {
         try {
-            yelp
-                .accessToken(clientId, clientSecret)
-                .then(response => {
-                    /* console.log('====================================');
-                console.log(`token: ${response.jsonBody.access_token}`);
-                console.log('===================================='); */
+            yelp.accessToken(clientId, clientSecret).then(response => {
                     resolve(response.jsonBody.access_token);
                 })
                 .catch(e => {
@@ -161,4 +153,58 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
             reject(resultInfo);
         }
     });
+};
+
+/**
+ * to delete
+ const constructMailNotificationBookOwner=(trader,owner,tokenTrade,bookname)=>{
+    return{
+        id:1,
+        to:owner,
+        attr:{
+            BOOKTRADER:trader,
+            TRADETOKEN:tokenTrade,
+            BOOKNAME:bookname
+        }
+        
+    };
+};
+*/
+/**
+ * fat arrowed function to send the mail notification to the user about the trade
+ * @param {String} valueToken relay mail api key
+ * @param {String} userTrading mail user willing to trade book
+ * @param {String} userOwner mail user currently owning the book
+ * @param {String} tokenTrade id of the trade submited
+ * @param {String} bookname name of the book to be traded
+ * @returns {Promise} promise containing the result/fail of the operation
+ */
+export const sendMail=(value)=>{
+    //const mailToBookOwner=constructMailNotificationBookOwner(value.infotrader,value.infoowner,value.token,value.name);
+    const mailToBookOwner={
+        id:1,
+        to:value.infoowner,
+        attr:{
+            BOOKTRADER:value.infotrader,
+            TRADETOKEN:value.token,
+            BOOKNAME:value.name
+        }
+    };
+
+    console.log('====================================');
+    console.log(`mail to book owner data:${JSON.stringify(mailToBookOwner,null,2)}\n`);
+    console.log('====================================');
+
+    const sendinObj= new sendBlue({apiKey:value.apiKey,timeout:5000});
+
+     return new Promise((resolve,reject)=>{
+         sendinObj.send_transactional_template(mailToBookOwner,(errorMail,response)=>{
+            if (errorMail)reject(`Error on sending mail notification\n:${errorMail}`);
+            console.log('====================================');
+            console.log(`mail response data:${JSON.stringify(response)}`);
+            console.log('====================================');
+            resolve(true);
+         });
+        
+    }); 
 };

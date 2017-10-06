@@ -11,7 +11,6 @@ export default class AppHeader extends Component {
      * 
      */
     handleHomeButtonClick = () => {
-        console.log("handled home got");
         browserHistory.push('/');
     };
     setHeaderStyle=(value)=>{
@@ -30,21 +29,13 @@ export default class AppHeader extends Component {
         return (
             <AppBar title={this.props.appName} className={this.setHeaderStyle(this.props.appStyle)}
                     showMenuIconButton={false}
-                    iconElementRight={<IconButton onClick={()=>this.handleHomeButtonClick()}>
+                    iconElementRight={<IconButton onClick={this.handleHomeButtonClick}>
                             <i className="material-icons md-24"> home</i>
-                        </IconButton>}>
-                    
-            </AppBar>
-               
-                        
-                
-            
-              
-            
+                        </IconButton>} />  
         );
     }
 }
 AppHeader.propTypes={
     appName:PropTypes.string.isRequired,
     appStyle:PropTypes.string.isRequired,
-}
+};

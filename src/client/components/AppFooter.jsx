@@ -8,15 +8,21 @@ class AppFooter extends Component{
      */
     setfooterLink=(value)=>{
         switch (value) {
-            case "stocks":
+            case "stocks":{
                 return "linksStocks";
                 break;
-            case "nights":
+            }
+                
+            case "nights":{
                 return "linksNights";
                 break;
-            default:
+            }
+                
+            default:{
                 return "footer";
                 break;
+            }
+                
         }
     }
     /**
@@ -25,15 +31,21 @@ class AppFooter extends Component{
      */
     setFooter=(value)=>{
         switch (value) {
-            case "stocks":
+            case "stocks":{
                 return "footer-stocks";
                 break;
-            case "nights":
+            }
+               
+            case "nights":{
                 return "footer-night";
                 break;
-            default:
+            }
+                
+            default:{
                 return "footer";
                 break;
+            }
+                
                 
         }
     }
@@ -55,6 +67,7 @@ class AppFooter extends Component{
     }
 }
 AppFooter.propTypes={
-    appName:PropTypes.string.isRequired
+    appName:PropTypes.string.isRequired,
+    lightordark:PropTypes.bool
 };
 export default AppFooter;

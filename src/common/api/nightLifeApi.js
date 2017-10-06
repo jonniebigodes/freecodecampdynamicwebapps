@@ -1,7 +1,5 @@
 
 class nightApi{
-    
-    
     /**
      * function to call the api on the server and get the results
      * @param {string} query what to search

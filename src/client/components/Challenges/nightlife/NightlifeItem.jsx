@@ -55,12 +55,12 @@ export class NightLifeItem extends Component {
                 <CardHeader
                     title={this.props.item.name}
                     subtitle={`${this.props.item.name} @ ${this.props.item.city}`}
-                    actAsExpander={true}
+                    actAsExpander
                     showExpandableButton={false}/>
-                <CardMedia expandable={true}>
+                <CardMedia expandable>
                     <img src={this.props.item.img} className="img_night"/>
                 </CardMedia>
-                <CardText expandable={true}>
+                <CardText expandable>
                     <h4>Located at: {this.props.item.address}</h4>
                     <h4>See what people are saying about
                         <a href={this.props.item.url} target="_blank"> it </a>
@@ -76,7 +76,7 @@ export class NightLifeItem extends Component {
     }
 }
 
-NightLifeItem.props = {
+NightLifeItem.PropTypes = {
     userIsLogged:PropTypes.bool.isRequired,
     item: PropTypes.object.isRequired,
     going: PropTypes.func.isRequired,

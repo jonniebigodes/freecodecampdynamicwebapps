@@ -1,6 +1,6 @@
 import React, {Component } from 'react';
 import { connect } from 'react-redux';
-import { PropTypes } from 'prop-types';
+import PropTypes  from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import {DateField, DatePicker} from 'react-date-picker';
@@ -25,13 +25,11 @@ import {stockInformationStyles} from '../../../../Assets/styles/stockStyles';
 import 'react-date-picker/index.css';
 import {StockInformation} from './stockInformation';
 class StockContainer extends Component {
-    
-    
     /**
-     * fat arrow function to generate the current date
+     * react guard method to handle the component unload
      */
-    getCurrentDate = () => {
-        return new Date();
+    componentWillUnmount(){
+        this.props.unloadStocksApp(true);
     }
     /**
      * event handler for setting the start date
@@ -69,7 +67,6 @@ class StockContainer extends Component {
      */
     searchStockInformation=(e)=>{
         e.preventDefault();
-        
         let tmpStock={stockName:this.props.nameofStock,startDate:this.props.startingDate,endDate:this.props.endingDate};
         if(this.isStockAlreadyAdded(tmpStock)){
             this.props.setError("Someone forgot something, didn't you?\nThis one was already added");
@@ -124,13 +121,13 @@ class StockContainer extends Component {
     renderSearch = () => {
       
         return (
-            <form onSubmit={(e)=>this.cancelFormSubmit(e)} className="form-inline">
+            <form onSubmit={this.cancelFormSubmit} className="form-inline">
                 <div className="form-group">
                     <TextField hintText="Fill in with a valid stock code"
                            errorText="This field is required"
                            floatingLabelText="Stock Code"
                            value={this.props.nameofStock}
-                           onChange={(e)=>this.updateSearchTerm(e)}
+                           onChange={this.updateSearchTerm}
                            inputStyle={stockInformationStyles.searchStyles.buttonSearchlabel}
                            errorStyle={stockInformationStyles.searchStyles.errorStyle}
                            underlineStyle={stockInformationStyles.searchStyles.underlineStyle}
@@ -144,17 +141,17 @@ class StockContainer extends Component {
                     <DateField
                         dateFormat="YYYY-MM-DD"
                         defaultValue={this.getCurrentDate()}
-                        updateOnDateClick={true}
-                        collapseOnDateClick={true}
-                        forceValidDate={true}
+                        updateOnDateClick
+                        collapseOnDateClick
+                        forceValidDate
                         footer={false}
                         showClock={false}>
                         <DatePicker
                             id="startDate"
-                            navigation={true}
-                            forceValidDate={true}
-                            highlightToday={true}
-                            highlightWeekends={true}
+                            navigation
+                            forceValidDate
+                            highlightToday
+                            highlightWeekends
                             weekNumbers={false}
                             weekStartDay={0}
                             onChange={(e)=>this.handleStartDate(e)}
@@ -165,21 +162,18 @@ class StockContainer extends Component {
                         id="endate"
                         dateFormat="YYYY-MM-DD"
                         defaultValue={this.getCurrentDate()}
-                        forceValidDate={true}
+                        forceValidDate
                         footer={false}
                         showClock={false}
                         dateFormat="YYYY-MM-DD"
                         defaultValue={this.getCurrentDate()}
-                        updateOnDateClick={true}
-                        collapseOnDateClick={true}
-                        forceValidDate={true}
-                        footer={false}
-                        showClock={false}>
+                        updateOnDateClick
+                        collapseOnDateClick>
                         <DatePicker
-                            navigation={true}
-                            forceValidDate={true}
-                            highlightToday={true}
-                            highlightWeekends={true}
+                            navigation
+                            forceValidDate
+                            highlightToday
+                            highlightWeekends
                             weekNumbers={false}
                             weekStartDay={0}
                             onChange={(e) =>this.handleEndDate(e)}
@@ -190,7 +184,7 @@ class StockContainer extends Component {
             <RaisedButton 
                 key="btnSearch" buttonStyle={stockInformationStyles.searchStyles.buttonSearch}
                 label="Search" labelStyle={stockInformationStyles.searchStyles.buttonSearchlabel} 
-                onClick={(e) =>{this.searchStockInformation(e)}} 
+                onClick={this.searchStockInformation} 
                 
                 />
             </form>
@@ -198,14 +192,15 @@ class StockContainer extends Component {
         );
     }
    deleteItem=(e)=>{
-       console.log("item marked deletion;  "+e);
+       //console.log("item marked deletion;  "+e);
        this.props.removeitem(e);
    }
-   /**
-     * react guard method to handle the component unload
+   
+     /**
+     * fat arrow function to generate the current date
      */
-    componentWillUnmount(){
-        this.props.unloadStocksApp(true);
+    getCurrentDate = () => {
+        return new Date();
     }
     /**
      * component render function
@@ -214,9 +209,10 @@ class StockContainer extends Component {
         
         const actionsDialog = [
                 <FlatButton
+                    key="stockContainerDialogComponent"
                     label="Ok"
-                    primary={true}
-                    onTouchTap={(e)=>this.resetError(e)}
+                    primary
+                    onTouchTap={this.resetError}
                 />,
                 ];
         return(
@@ -226,18 +222,18 @@ class StockContainer extends Component {
                         actions={actionsDialog}
                         modal={false}
                         open={this.props.isError}
-                        onRequestClose={(e)=>this.resetError(e)}>
+                        onRequestClose={this.resetError}>
                 <h3>Ups!!!!<br/> Something went wrong with the search!<br/>Check out the problem bellow</h3>
                 <br/>
                 <h4>{this.props.errorMessageApp}</h4>
                 </Dialog>
                 <div className="voffset3"/>
                 <div style={stockInformationStyles.gridStyles.root}>
-                    <GridList style={ stockInformationStyles.gridStyles.gridList} >
+                    <GridList style={stockInformationStyles.gridStyles.gridList} >
                         {this.props.items.map((elementResult,i)=>{
                             return(
                               <StockInformation key={"StockInformation_"+i} chartData={elementResult.searchResults} deleteitem={(e)=>this.deleteItem(elementResult.searchIndex)}/>
-                            )
+                            );
                             })
                         }
                 </GridList>
@@ -265,7 +261,7 @@ const mapStateToProps =(state)=>{
         isError:state.stocks.onError,
         errorMessageApp:state.stocks.errorMessage
      };
-}
+};
 
 /**
  * funtion to connect the actions to the ui
@@ -300,4 +296,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps,mapDispatchToProps)(StockContainer)
+export default connect(mapStateToProps,mapDispatchToProps)(StockContainer);

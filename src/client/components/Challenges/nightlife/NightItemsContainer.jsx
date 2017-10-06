@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {PropTypes} from 'prop-types';
+import PropTypes from 'prop-types';
 import NightLifeItem from './NightLifeItem';
 import '../../../../Assets/stylesheets/nightApp.scss';
 import '../../../../Assets/stylesheets/base.scss';
@@ -18,18 +18,14 @@ class NightItemsContainer extends Component{
      * @param {String} e id of the item to be added
      */
     handleNightAdd=(e)=>{
-        console.log('====================================');
-        console.log(`night add item id:${e}`);
-        console.log('====================================');
+        
         this.props.onAddNight(e);
     }
     /**
      * event handler to remove user from the night event
      */
     handleNightRemove=(e)=>{
-        console.log('====================================');
-        console.log(`night remove item id:${e}`);
-        console.log('====================================');
+       
         this.props.onRemoveNight(e);
     }
     /**

@@ -8,21 +8,28 @@ import {
     REGISTER_NOK,
     REGISTER_OK,
     USER_LOGOUT,
+    SET_USER_INFORMATION,
     REQUEST_BOOKS,
     RECIEVE_BOOKS,
     RECIEVE_BOOKS_NOK,
-    SET_BOOK_EXIT
+    SET_BOOK_EXIT,
+    ADD_BOOK,
+    BOOK_TRADE_NOK,
+    BOOK_TRADE_OK
     
 } from '../constants/Actiontypes';
-
 const bookAppReducer = (state = {
     userInfo:{
         id:'',
         email:'',
-        password:''
+        password:'',
+        name:'',
+        city:'',
+        countrystate:'',
+        country:''
+
     },
     isLoggedin: false,
-    
     items: [],
     onError: false,
     errorMessage: ''
@@ -36,87 +43,69 @@ const bookAppReducer = (state = {
             };
             break;
         }
-            //console.log("reducer REQUEST_STOCKS: "+action.value);
-            
-       
-        case RECIEVE_BOOKS:
-            
-            let resultIndex=state.isLoggedin?state.userInfo.id+'-'+state.nightvenueQuery+"-"+state.location:'anon-'+state.nightvenueQuery+"-"+state.location;
+        case RECIEVE_BOOKS:{
             //console.log(`recieve nigth index:${resultIndex}`);
             //console.log('====================================');
-            
+           
             return {
                 ...state,
-                items: [
-                    ...state.items, 
-                    {
-                        searchQuery:{
-                            where:state.location,
-                            howmany:state.numberOfItems,
-                            what:state.nightvenueQuery
-                        },
-                        searchIndex: resultIndex,
-                        searchResults: action.result
-                    }
-                ],
-                isSearching: false,
-                nightvenueQuery: 'default',
-                location:'',
-                numberOfItems:0
-                
+                items: state.items.concat(action.value),
+                isSearching: false
             };
             break;
-        case LOGIN_REQUEST:
-            console.log('====================================');
+        }
+        case LOGIN_REQUEST:{
+           /*  console.log('====================================');
             console.log(`reducer request email:${action.value.email} password:${action.value.password}`);
-            console.log('====================================');
+            console.log('===================================='); */
             return {
                 ...state,
-                
                 userInfo:{
                     id:'',
                     email:action.value.email,
                     password:action.value.password
                 }
-
-
             };
             break;
-        case REGISTER_REQUEST:
-            console.log('====================================');
+        }
+        case REGISTER_REQUEST:{
+           /*  console.log('====================================');
             console.log(`reduce register request email:${action.value.email} password:${action.value.password}`);
-            console.log('====================================');
+            console.log('===================================='); */
             return {
                 ...state,
-                
                 userInfo:{
                     id:'',
                     email:action.value.email,
                     password:action.value.password
                 }
-
-
             };
             break;
-        case LOGIN_OK:
-            console.log('====================================');
+        }
+        case LOGIN_OK:{
+           /*  console.log('====================================');
             console.log(`reducer login ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
-            console.log('====================================');
+            console.log('===================================='); */
             return {
                 ...state,
                 isLoggedin:true,
                 userInfo:{
-                    id:action.value,
+                    id:action.value.authToken,
                     email:state.userInfo.email,
-                    password:state.userInfo.password
+                    password:state.userInfo.password,
+                    name:action.value.full_name,
+                    city:action.value.city,
+                    countrystate:action.value.countrystate,
+                    country:action.value.country
                 },
-                items:[]
+                
             };
             break;
-        case REGISTER_OK:
-            console.log('====================================');
+        }
+        case REGISTER_OK:{
+           /*  console.log('====================================');
             console.log(`reducer register ok ${action.value}:\ user Info:${state.userInfo.email} pass:${state.userInfo.password}`);
-            console.log('====================================');
+            console.log('===================================='); */
             return {
                 ...state,
                 isLoggedin:true,
@@ -127,7 +116,8 @@ const bookAppReducer = (state = {
                 }
             };
             break;
-        case LOGIN_NOK:
+        }
+        case LOGIN_NOK:{
             return {
                 ...state,
                 userInfo:{
@@ -137,7 +127,8 @@ const bookAppReducer = (state = {
                 }
             };
             break;
-        case REGISTER_NOK:
+        }
+        case REGISTER_NOK:{
             return {
                 ...state,
                 userInfo:{
@@ -147,19 +138,39 @@ const bookAppReducer = (state = {
                 }
             };
             break;
-        case USER_LOGOUT:
+        }
+        case USER_LOGOUT:{
             return {
                 ...state,
                 userInfo:{
                     id:'',
                     email:'',
-                    password:''
+                    password:'',
+                    name:'',
+                    city:'',
+                    countrystate:'',
+                    country:''
                 },
-                items:[],
                 isLoggedin:false
             }
             break;
-        case RECIEVE_BOOKS_NOK:
+        }
+        case SET_USER_INFORMATION:{
+            return{
+                ...state,
+                userInfo:{
+                    id:state.userInfo.id,
+                    email:state.userInfo.email,
+                    password:state.userInfo.password,
+                    name:action.value.fullusername!==undefined?action.value.fullusername:'',
+                    city:action.value.city!==undefined?action.value.city:'',
+                    countrystate:action.value.countrystate!==undefined?action.value.countrystate:'',
+                    country:action.value.country!==undefined?action.value.country:''
+                }
+
+            };
+        }
+        case RECIEVE_BOOKS_NOK:{
             //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
             return {
                 ...state,
@@ -168,7 +179,8 @@ const bookAppReducer = (state = {
                 errorMessage: action.error
             };
             break;
-        case APP_ERROR_RESET:
+        }
+        case APP_ERROR_RESET:{
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
@@ -177,7 +189,8 @@ const bookAppReducer = (state = {
                 errorMessage: ''
             };
             break;
-        case APP_ERROR:
+        }
+        case APP_ERROR:{
             //console.log("reducer app error");
             return {
                 ...state,
@@ -185,9 +198,8 @@ const bookAppReducer = (state = {
                 errorMessage: action.value
             };
             break;
-        
-        case SET_BOOK_EXIT:
-            
+        }
+        case SET_BOOK_EXIT:{
             return{
                 ...state,
                 userInfo:{},
@@ -198,9 +210,45 @@ const bookAppReducer = (state = {
                 errorMessage: ''
             };
             break;
-        default:
+        }
+        case ADD_BOOK:{
+            /* console.log('====================================');
+            console.log(`book app trade reducer ADD_BOOK: ${JSON.stringify(action.value)}`);
+            console.log('===================================='); */
+            return {
+                ...state,
+                items:[...state.items,action.value]
+            };
+            break;
+        }
+        case BOOK_TRADE_NOK:{
+            return{
+                ...state,
+                onError: true,
+                errorMessage: action.value
+            }
+            break;
+        }
+        case BOOK_TRADE_OK:{
+            
+            return {
+                ...state,
+                items:state.items.map(item=>{
+                    if (item.booktoken!==action.value.tokenBook){
+                        return item;
+                    }
+                    item.bookisbeingtraded=true;
+                    item.bookbeingtradedto=action.value.tradercontact;
+                    return item;
+                    
+                })
+            };
+            break;
+        }
+        default:{
             return state;
             break;
+        }
     }
 
 };

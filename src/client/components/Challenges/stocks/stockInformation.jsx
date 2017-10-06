@@ -16,21 +16,7 @@ export class StockInformation extends Component {
             itemColors:["#D44E3D","#EBAA13","#c5d5cb","#9fa8a3","#b3c2bf","#e9ece5","#edd9c0","#9068be","#3fb0ac","#173e43"],
             highestStockPrice:0,
             dateHigh:''
-        }
-    }
-    
-    /**
-     * chart color randomizer
-     */
-    randomizeColors=()=>{
-        return this.state.itemColors[this.randomizeStockNums(1,this.state.itemColors.length-1)];
-    }
-    /**
-     * number randomizer
-     */
-    randomizeStockNums=(minValue,maxValue)=>{
-            let item= Math.floor(Math.random()*maxValue)+minValue;
-            return item;
+        };
     }
     /**
      * guard method for the component to check if it was mounted
@@ -42,17 +28,17 @@ export class StockInformation extends Component {
         let tmpObj={
             labels:[],
             datasets:[]
-        }
+        };
         let tmpDataArray=[];
         let tmphigh=0;
         let tmpWhenHigh='';
         this.props.chartData.stockData.map((element)=>{
             
             tmpObj.labels.push(element.stockDate);
-            tmpDataArray.push(element.closePrice)
+            tmpDataArray.push(element.closePrice);
             if (tmphigh<element.closePrice){
                 tmphigh= element.closePrice;
-                tmpWhenHigh=element.stockDate
+                tmpWhenHigh=element.stockDate;
             }
         });
         tmpObj.datasets.push({
@@ -78,11 +64,25 @@ export class StockInformation extends Component {
         });
         this.setState({infoChart:tmpObj,highestStockPrice:tmphigh,dateHigh:tmpWhenHigh});
     }
+    /**
+     * chart color randomizer
+     */
+    randomizeColors=()=>{
+        return this.state.itemColors[this.randomizeStockNums(1,this.state.itemColors.length-1)];
+    }
+    /**
+     * number randomizer
+     */
+    randomizeStockNums=(minValue,maxValue)=>{
+            let item= Math.floor(Math.random()*maxValue)+minValue;
+            return item;
+    }
+    
 
     /**
      * event handler to change the state and show the chart
      */
-    chartShow=(e)=>{
+    chartShow=()=>{
         
         if (this.state.showChart){
             this.setState({showChart:false});
@@ -106,13 +106,13 @@ export class StockInformation extends Component {
                 
                 <Card className={this.state.showChart?'cardExpanded':'cardCollapsed'} 
                         expanded={this.state.showChart}
-                        onExpandChange={()=>this.chartShow()}>
+                        onExpandChange={this.chartShow}>
                     <CardHeader title={this.props.chartData.stockCode}
                         subtitle={`Entity:${this.props.chartData.stockName} `}
-                        actAsExpander={true}
+                        actAsExpander
                         showExpandableButton={false}/>
                      
-                    <CardText className="chartInformation" expandable={true}>
+                    <CardText className="chartInformation" expandable>
                         <Line data={this.state.infoChart}
                           
                           options={{maintainAspectRatio:false}}/>
@@ -130,4 +130,4 @@ export class StockInformation extends Component {
 StockInformation.propTypes={
     chartData:PropTypes.object.isRequired,
     deleteitem:PropTypes.func
-}
+};
