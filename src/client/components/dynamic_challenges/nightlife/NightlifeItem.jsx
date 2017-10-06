@@ -6,7 +6,7 @@ import ActionThumbUp from 'material-ui/svg-icons/action/thumb-up';
 import ActionThumbDown from 'material-ui/svg-icons/action/thumb-down';
 import '../../../../Assets/stylesheets/nightApp.scss';
 
-export class NightLifeItem extends Component {
+class NightLifeItem extends Component {
     /**
      * component constructor
      */
@@ -82,3 +82,4 @@ NightLifeItem.PropTypes = {
     going: PropTypes.func.isRequired,
     notGoing: PropTypes.func.isRequired
 };
+export default NightLifeItem;
