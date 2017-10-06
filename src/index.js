@@ -2,16 +2,24 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Router,Route,browserHistory} from 'react-router';
 import {Provider} from "react-redux";
-import store from "../src/common/store/store";
-import App from '../src/client/components/App';
-import votingApp from '../src/client/components/challenges/vottingapp/voteMachineApp';
-import pollDetails from '../src/client/components/challenges/vottingapp/voteMachinePollDetails';
-import nightLifeApp from '../src/client/components/challenges/nightlife/NightLifeApp';
-import stocksApp from '../src/client/components/challenges/stocks/stocksApp';
-import BookTradeApp from '../src/client/components/challenges/books/BookTradeApp';
-import pinrestApp from '../src/client/components/challenges/pinClone/pinRestCloneApp';
-import NotFound from '../src/client/components/notFound';
-
+//import store from "./common/store/store";
+import store from "common/store/store";
+//import App from './client/components/App';
+import App from 'client/components/App';
+//import votingApp from './client/components/challenges/vottingapp/voteMachineApp';
+import votingApp from 'client/components/challenges/vottingapp/voteMachineApp';
+//import pollDetails from './client/components/challenges/vottingapp/voteMachinePollDetails';
+import pollDetails from './client/components/challenges/vottingapp/voteMachinePollDetails';
+//import nightLifeApp from './client/components/challenges/nightlife/NightLifeApp';
+import nightLifeApp from 'client/components/challenges/nightlife/NightLifeApp';
+//import stocksApp from './client/components/challenges/stocks/stocksApp';
+import stocksApp from 'client/components/challenges/stocks/stocksApp';
+//import BookTradeApp from './client/components/challenges/books/BookTradeApp';
+import BookTradeApp from 'client/components/challenges/books/BookTradeApp';
+//import pinrestApp from './client/components/challenges/pinClone/pinRestCloneApp';
+import pinrestApp from 'client/components/challenges/pinClone/pinRestCloneApp';
+//import NotFound from './client/components/notFound';
+import NotFound from 'client/components/notFound';
 
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
