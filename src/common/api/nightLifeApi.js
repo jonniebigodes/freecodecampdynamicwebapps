@@ -9,8 +9,8 @@ class nightApi{
      */
     static search(query,location,userId,numberItems){
         return new Promise((resolve,reject)=>{
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`)
-            /* fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`)  */
+             fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`) 
+            /* fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`) */
             .then(response=>{
                    //console.log("getStock status: " +response.status);
                    return response.json();

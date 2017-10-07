@@ -34,7 +34,7 @@ app.KEY_QUANDL= process.env.QUANDL_KEY;
 //app.set('YELP_KEY', process.env.YELP_CONSUMER_KEY);
 app.YELP_KEY= process.env.YELP_CONSUMER_KEY;
 //app.set('YELP_CONSUMER', process.env.YELP_CONSUMER_SECRET);
-app.YELP_KEY=process.env.YELP_CONSUMER_SECRET;
+app.YELP_CONSUMER=process.env.YELP_CONSUMER_SECRET;
 //app.set('BLUEKEY',process.env.BLUEAPIKEY);
 app.BLUEKEY=process.env.BLUEAPIKEY;
 
