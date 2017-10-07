@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import NightLifeItem from './NightLifeItem';
+//import NightLifeItem from './NightLifeItem';
 import '../../../../Assets/stylesheets/nightApp.scss';
 import '../../../../Assets/stylesheets/base.scss';
 class NightItemsContainer extends Component{
@@ -84,7 +84,8 @@ class NightItemsContainer extends Component{
     render(){
         return (
             <div className="container-fluid">
-                {this.renderItems()}
+                <h3>testing it out</h3>
+                
             </div>
         );
 
