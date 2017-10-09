@@ -4,6 +4,9 @@ const dbService=require('./dbFactory');
 //const dbService = require('../src/server/dbFactory');
 module.exports = {
     searchNights(request, response) {
+        console.log('====================================');
+        console.log(`token present:${request.app.YELP_TOKEN}`);
+        console.log('====================================');
         if (!request.app.YELP_TOKEN) {
             httpService.getToken(request.app.YELP_KEY, request.app.YELP_CONSUMER)
                 .then(result => request.app.YELP_TOKEN = result)

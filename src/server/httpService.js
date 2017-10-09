@@ -78,11 +78,14 @@ export const getToken = (clientId, clientSecret) => {
     return new Promise((resolve, reject) => {
         try {
             yelp.accessToken(clientId, clientSecret).then(response => {
-                    resolve(response.jsonBody.access_token);
+                console.log('====================================');
+                console.log(`token obtained:${JSON.stringify(response,null,2)}`);
+                console.log('====================================');
+                resolve(response.jsonBody.access_token);
                 })
                 .catch(e => {
                     console.log('====================================');
-                    console.log(`there was an error getting the goken:\n ${e}`);
+                    console.log(`there was an error getting the goken:\n ${JSON.stringify(e,null,2)}`);
                     console.log('====================================');
                     resultInfo.error = true;
                     resultInfo.messageError = e;
@@ -90,7 +93,9 @@ export const getToken = (clientId, clientSecret) => {
                 });
 
         } catch (error) {
-            console.log("ERROR HTTP SERVICE YELP TOKEN:\n" + error);
+            console.log('====================================');
+            console.log(`there was in httpservice getting the goken:\n ${JSON.stringify(error,null,2)}`);
+            console.log('====================================');
             resultInfo.error = true;
             resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + error;
             reject(resultInfo);

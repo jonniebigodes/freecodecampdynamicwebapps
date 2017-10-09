@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-//import NightLifeSearchResultItem from './NightLifeSearchResultItem';
+import NightLifeSearchResultItem from './NightLifeSearchResultItem';
 import '../../../../Assets/stylesheets/nightApp.scss';
 import '../../../../Assets/stylesheets/base.scss';
 class NightItemsContainer extends Component{
@@ -61,7 +61,7 @@ class NightItemsContainer extends Component{
                 results.push(
                     <div className="containerItemNight" 
                         key={`cittem:${nightItem.id}`}>
-                        <NightLifeItem 
+                        <NightLifeSearchResultItem 
                                     key={`nightitem_${nightItem.id}`} 
                                     item={nightItem}
                                     userIsLogged={this.props.userLogged}
@@ -84,8 +84,8 @@ class NightItemsContainer extends Component{
     render(){
         return (
             <div className="container-fluid">
-                <h3>testing it out</h3>
                 
+                {this.renderItems()}
             </div>
         );
 
