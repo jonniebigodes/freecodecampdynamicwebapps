@@ -1,3 +1,4 @@
+// prod mode
 const AuthController= require('./AuthController');
 const NightsController=require('./NightLifeController');
 const StocksController=require('./StockSearchController');
@@ -5,25 +6,30 @@ const BooksController=require('./BooksController');
 const PollsController= require('./PollsController');
 const dbService = require('./dbFactory');
 const path = require('path');
+//
+
+
+// dev mode
 /* const AuthController= require('./controllers/AuthController');
 const NightsController=require('./controllers/NightLifeController');
 const StocksController=require('./controllers/StockSearchController');
 const BooksController=require('./controllers/BooksController');
 const PollsController= require('./controllers/PollsController');
 const dbService = require('./src/server/dbFactory'); */
+//
 const LocalStrategy = require('passport-local').Strategy;
 module.exports=(app,passport)=>{
     
     passport.serializeUser((user, done) => {
-        console.log('====================================');
+        /* console.log('====================================');
         console.log(`serialize usser:${JSON.stringify(user)}`);
-        console.log('====================================');
+        console.log('===================================='); */
         done(null, user.id);
     });
     passport.deserializeUser((id, done) => {
-        console.log('====================================');
+       /*  console.log('====================================');
         console.log(`deserialize user:${id}`);
-        console.log('====================================');
+        console.log('===================================='); */
         
         dbService.connect().then(() => dbService.searchByID({collectionName: 'users',queryParam: {_id:id}}))
             .then(resultSearch => {
@@ -43,13 +49,13 @@ module.exports=(app,passport)=>{
         passwordField: 'password',
         passReqToCallback: true
     }, (req, mail, password, done) => {
-        console.log('====================================');
+        /* console.log('====================================');
         console.log(`LocalStrategy login`);
-        console.log('====================================');
+        console.log('===================================='); */
         dbService.setUrl(req.app.MONGODB);
         dbService
             .connect()
-            .then(resultconnect => dbService.search({
+            .then(() => dbService.search({
                 collectionName: 'users',
                 queryParam: {
                     local_email: mail
@@ -58,9 +64,9 @@ module.exports=(app,passport)=>{
             .then(resultsearch => {
                 dbService.disconnect();
                 if (resultsearch.length){
-                    console.log('====================================');
+                   /*  console.log('====================================');
                     console.log(`local login resultsearch id:${resultsearch[0]._id}\n email:${resultsearch[0].local_email}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
 
                     if (dbService.comparePassword(password,resultsearch[0].local_password)==='PWD_OK'){
                         return done(null,{
@@ -102,17 +108,17 @@ module.exports=(app,passport)=>{
         passwordField: 'password',
         passReqToCallback: true
     }, (req, email, password, done) => {
-        console.log('====================================');
+       /*  console.log('====================================');
         console.log(`local-signup req.body.email:${req.body.username} email:${email} password:${password}`);
-        console.log('====================================');
+        console.log('===================================='); */
         dbService.setUrl(req.app.MONGODB);
         dbService
             .connect()
-            .then(resultconnect=>dbService.search({collectionName:'users',queryParam:{local_email:email}}))
+            .then(()=>dbService.search({collectionName:'users',queryParam:{local_email:email}}))
             .then(resultsearch => {
-                console.log('====================================');
+                /* console.log('====================================');
                 console.log(`local-signup resultsearch len:${resultsearch.length}`);
-                console.log('====================================');
+                console.log('===================================='); */
                 if (resultsearch.length){
                     dbService.disconnect();
                     return done(null, false);
@@ -137,13 +143,13 @@ module.exports=(app,passport)=>{
                     dbService.injectOneItem({collectionName: 'users', data: NewUser})
                         .then(resultInject => {
                             dbService.disconnect();
-                            console.log('====================================');
+                           /*  console.log('====================================');
                             console.log(`data was injected`);
-                            console.log('====================================');
+                            console.log('===================================='); */
                             NewUser.id = resultInject;
-                            console.log('====================================');
+                           /*  console.log('====================================');
                             console.log(`to be serialized:${NewUser.id}\nlocal_email:${NewUser.local_email} local_password:${NewUser.local_password}`);
-                            console.log('====================================');
+                            console.log('===================================='); */
                             return done(null, NewUser);
                         })
                         .catch(errInject => {
@@ -171,9 +177,9 @@ module.exports=(app,passport)=>{
         failureRedirect: '/api/login/fail'
     }));
     app.get('/api/login/sucess',(req,res)=>{
-        console.log('====================================');
+        /* console.log('====================================');
         console.log(`login sucess result:${req.user._id}`);
-        console.log('====================================');
+        console.log('===================================='); */
         res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify(
             {
@@ -216,7 +222,6 @@ module.exports=(app,passport)=>{
     app.post('/api/data/addpolloption',PollsController.addPollOption); 
     app.get('*',(request,response)=>{
         //response.sendFile(__dirname + '/dist/index.html');
-        
         response.sendFile('index.html',{root:path.join(__dirname,'../dist/')});
     });
 };

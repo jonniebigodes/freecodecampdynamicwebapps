@@ -1,5 +1,4 @@
 const httpService = require('./httpService'); 
-//const dbService=require('./dbFactory');
 //const httpService = require('../src/server/httpService');
 module.exports = {
     searchStockData(request, response) {

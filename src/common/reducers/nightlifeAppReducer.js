@@ -43,21 +43,18 @@ const nightAppReducer = (state = {
                 isSearching: true
                 
             };
-            break;
         }
         case ADD_TO_NIGHT:{
             return{
                 ...state,
                 
-            };
-            break;
+            }; 
         }
         case REMOVE_FROM_NIGHT:{
             return{
                 ...state,
                 
             };
-            break;
         }
         case RECIEVE_USER_SEARCH:{
             return {
@@ -75,7 +72,7 @@ const nightAppReducer = (state = {
                     }
                 ]
             };
-            break;
+            
         }
         case RECIEVE_NIGHT:{
             
@@ -103,7 +100,7 @@ const nightAppReducer = (state = {
                 numberOfItems:0
                 
             };
-            break;
+            
         }
         case LOGIN_REQUEST:{
             
@@ -118,7 +115,7 @@ const nightAppReducer = (state = {
 
 
             };
-            break;
+            
         }
         case REGISTER_REQUEST:{
            
@@ -133,7 +130,7 @@ const nightAppReducer = (state = {
 
 
             };
-            break;
+            
         }
         case LOGIN_OK:{
            
@@ -147,7 +144,7 @@ const nightAppReducer = (state = {
                 },
                 items:[]
             };
-            break;
+            
         }
         case REGISTER_OK:{
             
@@ -160,7 +157,7 @@ const nightAppReducer = (state = {
                     password:state.userInfo.password
                 }
             };
-            break;
+            
         }
         case LOGIN_NOK:{
             return {
@@ -171,7 +168,7 @@ const nightAppReducer = (state = {
                     password:''
                 }
             };
-            break;
+            
         }
         case REGISTER_NOK:{
             return {
@@ -182,7 +179,7 @@ const nightAppReducer = (state = {
                     password:''
                 }
             };
-            break;
+            
         }
         case USER_LOGOUT:{
             return {
@@ -194,8 +191,7 @@ const nightAppReducer = (state = {
                 },
                 items:[],
                 isLoggedin:false
-            }
-            break;
+            };
         }
         case RECIEVE_NIGHT_NOK:{
             //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
@@ -208,7 +204,6 @@ const nightAppReducer = (state = {
                 onError: true,
                 errorMessage: action.error
             };
-            break;
         }
         case APP_ERROR_RESET:{
             //console.log("reducer APP_ERROR_RESET");
@@ -218,7 +213,6 @@ const nightAppReducer = (state = {
                 onError: false,
                 errorMessage: ''
             };
-            break;
         }
         case APP_ERROR:{
             //console.log("reducer app error");
@@ -226,29 +220,25 @@ const nightAppReducer = (state = {
                 ...state,
                 onError: true,
                 errorMessage: action.value
-            };
-            break;
+            }; 
         }
         case SET_LOCATION_NIGHT:{
             return{
                 ...state,
                 location:action.valueLocation
-            };
-            break;
+            }; 
         }
         case SET_NIGHT_SEARCH:{
             return{
                 ...state,
                 nightvenueQuery:action.valueQuery
             };
-            break;
         }
         case SET_NIGHT_NUMBER:{
             return{
                 ...state,
                 numberOfItems:action.valueNumber
             };
-            break;
         }
         case SET_NIGHT_EXIT:{
             
@@ -263,11 +253,10 @@ const nightAppReducer = (state = {
                 onError: false,
                 errorMessage: ''
             };
-            break;
         }
         default:{
             return state;
-            break;
+            
         }
     }
 

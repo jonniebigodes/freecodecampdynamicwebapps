@@ -40,7 +40,15 @@ export const SET_NIGHT_EXIT='SET_NIGHT_EXIT';
 export const REQUEST_POLLS='REQUEST_POLLS';
 export const RECIEVE_POLLS='RECIEVE_POLLS';
 export const RECIEVE_POLLS_NOK='RECIEVE_POLLS_NOK';
-
+export const SET_POLL_EXIT='EXIT_POLL';
+export const ADD_POLL='POLL_ADD';
+export const ADD_POLL_OK='POLL_ADD_OK';
+export const ADD_POLL_NOK='POLL_ADD_NOK';
+export const DEL_POLL='POLL_DEL';
+export const DEL_POLL_OK='POLL_DEL_OK';
+export const DEL_POLL_NOK='POLL_DEL_NOK';
+export const ADD_POLL_OPTION='POLL_OPTION_ADD';
+export const EDIT_POLL_OPTION='POLL_OPTION_EDIT';
 //
 
 //books

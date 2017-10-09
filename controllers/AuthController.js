@@ -34,11 +34,11 @@ module.exports = {
                             }
                         }
                     }
-                }).then(resultupdateinfor => {
+                }).then(() => {
                     dbService.disconnect();
-                    console.log('====================================');
+                    /* console.log('====================================');
                     console.log(`result update info user result:${JSON.stringify(resultupdateinfor, null, 2)}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda005", reason: "Information updated"}));
 

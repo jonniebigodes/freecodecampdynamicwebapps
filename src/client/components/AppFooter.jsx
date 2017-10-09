@@ -10,17 +10,17 @@ class AppFooter extends Component{
         switch (value) {
             case "stocks":{
                 return "linksStocks";
-                break;
+                
             }
                 
             case "nights":{
                 return "linksNights";
-                break;
+               
             }
                 
             default:{
                 return "footer";
-                break;
+                
             }
                 
         }
@@ -33,17 +33,17 @@ class AppFooter extends Component{
         switch (value) {
             case "stocks":{
                 return "footer-stocks";
-                break;
+                
             }
                
             case "nights":{
                 return "footer-night";
-                break;
+                
             }
                 
             default:{
                 return "footer";
-                break;
+                
             }
                 
                 

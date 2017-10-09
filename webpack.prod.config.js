@@ -11,13 +11,12 @@ config.plugins.push(
 
 config.plugins.push(
   new webpack.optimize.UglifyJsPlugin({
+    sourceMap:true,
     comments:false,
-    //added for compression
+    minimize:true,
     mangle:true,
-    //
     compress: {
       warnings: false,
-      //added for compression
       sequences: true,
       dead_code: true,
       conditionals: true,

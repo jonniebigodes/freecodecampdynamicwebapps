@@ -5,8 +5,7 @@ const path = require('path');
 module.exports = {
   entry: ['whatwg-fetch','./src/index.js'],
   module: {
-    devtool: 'source-map',
-    
+    devtool: 'cheap-source-map',
     loaders: [
       {
         test: /\.js?$/, 

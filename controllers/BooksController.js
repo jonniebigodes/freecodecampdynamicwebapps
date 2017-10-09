@@ -212,9 +212,9 @@ module.exports = {
                    
                     resultInfo.book= resultdatatrade[2].name;
                     resultInfo.token= resulttradeadd;
-                    console.log('====================================');
+                    /* console.log('====================================');
                     console.log(`Mail DATA INFO:${JSON.stringify(resultInfo,null,2)}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
                     httpService.sendMail(resultInfo).then(resultMail=>{
                         if (resultMail){
                             response.writeHead(200, {'Content-Type': 'application/json'});
@@ -277,11 +277,11 @@ module.exports = {
                     }
                 }
         }))
-        .then(resultRejectTrade => {
+        .then(() => {
             dbService.disconnect();
-            console.log('====================================');
+            /* console.log('====================================');
             console.log(`resultRejectTrade removing the trade of the books:${resultRejectTrade}`);
-            console.log('====================================');
+            console.log('===================================='); */
             response.sendFile('rejecttrade.html',{root:path.join(__dirname,'../dist/')});
         })
         .catch(errConnect => {
@@ -302,9 +302,9 @@ module.exports = {
         dbService.setUrl(request.app.MONGODB);
         dbService.connect().then(() => dbService.searchByID({collectionName: 'book_trades',queryParam: {_id: request.query.tokentrade}}))
             .then(resultsearchtrade => {
-                console.log('====================================');
+               /*  console.log('====================================');
                 console.log(`tradebook accept result of query search trades:${JSON.stringify(resultsearchtrade, null, 2)}`);
-                console.log('====================================\n\n\n\n\n');
+                console.log('====================================\n\n\n\n\n'); */
                 // checks if it exists
                 if (!resultsearchtrade.length) {
                     dbService.disconnect();
@@ -371,14 +371,14 @@ module.exports = {
                     })
 
                 ]).then(resultradedata => {
-                    console.log('====================================');
+                    /* console.log('====================================');
                     console.log(`accept trade search books by id:${JSON.stringify(resultradedata, null, 2)}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
                     const bookTraded = resultradedata[1];
                     const infoBookTraded = bookTraded[0];
-                    console.log('====================================');
+                    /* console.log('====================================');
                     console.log(`book in question:${JSON.stringify(bookTraded, null, 2)} \n infoBook:${JSON.stringify(infoBookTraded, null, 2)}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
                     if (resultradedata[0].length) {
                         // pushes a new subdocument
                         dbService.updateData({
@@ -399,10 +399,10 @@ module.exports = {
                                     }
                                 }
                             }
-                        }).then(resultupdate => {
-                            console.log('====================================');
+                        }).then(() => {
+                            /* console.log('====================================');
                             console.log(`data added:${JSON.stringify(resultupdate)}`);
-                            console.log('====================================');
+                            console.log('===================================='); */
                             response.sendFile('resulttrade.html',{root:path.join(__dirname,'../dist/')});
                         }).catch(erraddtonewuser => {
                             dbService.disconnect();
@@ -427,10 +427,10 @@ module.exports = {
                                 ]
                             }
                         })
-                        .then(resultdata => {
-                            console.log('====================================');
+                        .then(() => {
+                            /* console.log('====================================');
                             console.log(`data added:${JSON.stringify(resultdata)}`);
-                            console.log('====================================');
+                            console.log('===================================='); */
                             response.status(200).send('../dist/resulttrade.html');
                         })
                         .catch(errInjectbook => {

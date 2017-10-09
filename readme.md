@@ -7,7 +7,7 @@ The challenges are the following
   - Build a Voting App
   - [Build a Nightlife coordination app]
   - [Chart the Stock Market]
-  - Manage a Book Trading Club
+  - [Manage a Book Trading Club]
   - Build a Pinrest Clone
 
 # Methodology used
@@ -106,6 +106,7 @@ MIT
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
    [Build a Nightlife coordination app]: <https://freecodecampdynprojects.herokuapp.com/nightlife>
    [Chart the Stock Market]: <https://freecodecampdynprojects.herokuapp.com/stocks>
+   [Manage a Book Trading Club]:<https://freecodecampdynprojects.herokuapp.com/books>
    [React-Chart]: <https://github.com/gor181/react-chartjs-2>
    [React-Redux]: <https://github.com/reactjs/react-redux>
    [whatwg-fetch]: <https://github.com/github/fetch>

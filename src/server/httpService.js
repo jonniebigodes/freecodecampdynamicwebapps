@@ -156,21 +156,6 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
 };
 
 /**
- * to delete
- const constructMailNotificationBookOwner=(trader,owner,tokenTrade,bookname)=>{
-    return{
-        id:1,
-        to:owner,
-        attr:{
-            BOOKTRADER:trader,
-            TRADETOKEN:tokenTrade,
-            BOOKNAME:bookname
-        }
-        
-    };
-};
-*/
-/**
  * fat arrowed function to send the mail notification to the user about the trade
  * @param {String} valueToken relay mail api key
  * @param {String} userTrading mail user willing to trade book
@@ -190,19 +175,18 @@ export const sendMail=(value)=>{
             BOOKNAME:value.name
         }
     };
-
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`mail to book owner data:${JSON.stringify(mailToBookOwner,null,2)}\n`);
     console.log('====================================');
-
+ */
     const sendinObj= new sendBlue({apiKey:value.apiKey,timeout:5000});
 
      return new Promise((resolve,reject)=>{
          sendinObj.send_transactional_template(mailToBookOwner,(errorMail,response)=>{
             if (errorMail)reject(`Error on sending mail notification\n:${errorMail}`);
-            console.log('====================================');
+            /* console.log('====================================');
             console.log(`mail response data:${JSON.stringify(response)}`);
-            console.log('====================================');
+            console.log('===================================='); */
             resolve(true);
          });
         

@@ -9,7 +9,7 @@ import {
     APP_ERROR_RESET,
     DELETE_STOCK,
     SET_STOCK_EXIT
-} from '../constants/Actiontypes'
+} from '../constants/Actiontypes';
 
 const StockAppReducer= (state = {
     isSearching:false,
@@ -28,8 +28,8 @@ const StockAppReducer= (state = {
                 ...state,
                 isSearching: true,
                 didInvalidate: false,
-            }
-            break;
+            };
+            
         }
         case RECIEVE_STOCKS:{
             //console.log("reducer RECIEVE_STOCKS: "+action.result.stockName);    
@@ -41,8 +41,8 @@ const StockAppReducer= (state = {
                 stockQuery:'',
                 initialDate:'',
                 finalDate:''
-            }
-            break;
+            };
+            
         }
         case RECIEVE_STOCKS_NOK:{
             //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
@@ -56,8 +56,8 @@ const StockAppReducer= (state = {
                 finalDate:'',
                 onError:true,
                 errorMessage:action.error
-            }
-            break;
+            };
+            
         }
         case APP_ERROR_RESET:{
              //console.log("reducer APP_ERROR_RESET");
@@ -70,8 +70,8 @@ const StockAppReducer= (state = {
                 finalDate:'',
                 onError:false,
                 errorMessage:''
-            }
-            break;
+            };
+            
         }
         case APP_ERROR:{
             //console.log("reducer app error");
@@ -79,7 +79,7 @@ const StockAppReducer= (state = {
                 ...state,
                 onError:true,
                 errorMessage:action.value
-            }
+            };
         }
         case DELETE_STOCK:{
             //console.log("reduce delete stock: "+ action.value);
@@ -87,7 +87,7 @@ const StockAppReducer= (state = {
                 ...state,
                 items:state.items.filter(item=>action.value!==item.searchIndex)
 
-            }
+            };
         }
         case SET_DATA_START:{
             //console.log("reducer SET_DATA_START: "+action.valueDi);
@@ -96,9 +96,9 @@ const StockAppReducer= (state = {
                 isSearching:false,
                 didInvalidate:false,
                 initialDate:action.valueDi
-            }
+            };
             
-            break;
+            
         }
         case SET_STOCK_VALUE:{
             //console.log("reducer SET_STOCK_VALUE: "+action.valueQuery);
@@ -108,8 +108,8 @@ const StockAppReducer= (state = {
                 didInvalidate:false,
                 stockQuery:action.valueQuery
                 
-            }
-            break;
+            };
+            
         }
         case SET_DATA_END:{
             //console.log("reducer SET_DATA_END: "+action.valueFD);
@@ -119,8 +119,8 @@ const StockAppReducer= (state = {
                 didInvalidate:false,
                 finalDate:action.valueFD
 
-            }
-            break;
+            };
+            
         }
         case SET_STOCK_EXIT:{
             return{
@@ -133,11 +133,10 @@ const StockAppReducer= (state = {
                 items: [],
                 onError:false,
                 errorMessage:''
-            }
+            };
         }
         default:{
             return state;
-            break;
         }
             
     }

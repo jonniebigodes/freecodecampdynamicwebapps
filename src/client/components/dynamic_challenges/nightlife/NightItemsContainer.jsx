@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-//import NightLifeItem from './NightLifeItem';
+//import NightLifeSearchResultItem from './NightLifeSearchResultItem';
 import '../../../../Assets/stylesheets/nightApp.scss';
 import '../../../../Assets/stylesheets/base.scss';
 class NightItemsContainer extends Component{

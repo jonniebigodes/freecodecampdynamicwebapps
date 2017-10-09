@@ -89,7 +89,7 @@ export const createCollections=(collections)=>{
  * es6 fat arrow function exported and exposed to disconnect to the db
  */
 export const disconnect=()=>{
-    console.log(`Now closing connection`);
+    //console.log(`Now closing connection`);
     if (dbInstance){
         dbInstance.close();
         //dbInstance={};
@@ -100,9 +100,9 @@ export const disconnect=()=>{
  * es6 fat arrow function exported and exposed to inject data passed as object
  */
 export const injectOneItem=(value)=>{
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`entered inject one item`);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance){
                 reject(`Connect first to the database then inject the data`);
@@ -122,9 +122,9 @@ export const injectOneItem=(value)=>{
  * 
  */
 export const search=(value)=>{
-    console.log('====================================');
+   /*  console.log('====================================');
     console.log(`search value search: ${JSON.stringify(value.queryParam,null,2)}\ncollection name:${value.collectionName} `);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance){
             reject(`Connect first to the database then search the data`);
@@ -146,9 +146,9 @@ export const search=(value)=>{
  * @returns {Promise} contains the sucess or fail of the operation
  */
 export const searchByID=(value)=>{
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`searchByID value search: ${JSON.stringify(value.queryParam)}\ncollection name:${value.collectionName} `);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance){
             reject(`Connect first to the database then search the data`);
@@ -170,9 +170,9 @@ export const searchByID=(value)=>{
  * @returns {Promise} with the result or fail of the operation
  */
 export const updateData=value=>{
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`updateData value search: ${JSON.stringify(value.queryParam,null,2)}\ncollection name:${value.collectionName} `);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance){
             reject(`Connect first to the database then search the data`);
@@ -184,7 +184,7 @@ export const updateData=value=>{
              
              resolve(result);
         });
-    })
+    });
 };
 /**
  * method to update data by object id on the collections
@@ -192,9 +192,9 @@ export const updateData=value=>{
  * @returns {Promise} with the result or fail of the operation
  */
 export const updateById=value=>{
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`updateById value search: ${JSON.stringify(value,null,2)}`);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance)reject(`Connect first to the database then search the data`);
         dbInstance.collection(value.collectionName).update(
@@ -230,9 +230,9 @@ export const removeOne=value=>{
  * @returns {Promise} with the result or fail of the operation
  */
 export const removeById=(value)=>{
-    console.log('====================================');
+    /* console.log('====================================');
     console.log(`removeById value search: ${JSON.stringify(value.queryParam)}\ncollection name:${value.collectionName} `);
-    console.log('====================================');
+    console.log('===================================='); */
     return new Promise((resolve,reject)=>{
         if (!dbInstance) reject(`Connect first to the database then search the data`);
         dbInstance.collection(value.collectionName).deleteOne({_id:new dbClient.ObjectId(value.queryParam.data)},(err,result)=>{

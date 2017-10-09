@@ -24,9 +24,9 @@ module.exports = {
                                 queryParam: {userToken: request.query.who,what: request.query.what,where: request.query.where,ammount: request.query.ammount}
                             }))
                             .then(resultuserSearches => {
-                                console.log('====================================');
+                                /* console.log('====================================');
                                 console.log(`searched items in db:${resultuserSearches.length} data:\n${JSON.stringify(resultuserSearches)}`);
-                                console.log('====================================');
+                                console.log('===================================='); */
                                 if (!resultuserSearches.length) {
                                     dbService
                                         .injectOneItem({
@@ -93,9 +93,9 @@ module.exports = {
                                 }
                         }))
                         .then(resultuserSearches => {
-                            console.log('====================================');
+                           /*  console.log('====================================');
                             console.log(`searched items in db:${resultuserSearches.length} data:\n${JSON.stringify(resultuserSearches,null,2)}`);
-                            console.log('====================================');
+                            console.log('===================================='); */
                             if (!resultuserSearches.length) {
                                 dbService.injectOneItem(
                                     {
@@ -142,9 +142,9 @@ module.exports = {
         dbService.connect().then(() => dbService.injectOneItem({collectionName: 'goingnights',data: {user: request.body.userToken,location: request.body.location}}))
             .then(() => {
                 dbService.disconnect();
-                console.log('====================================');
+                /* console.log('====================================');
                 console.log(`data was injected`);
-                console.log('====================================');
+                console.log('===================================='); */
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: 'fccda005',reason: "DATA ADDED"}));
             })
@@ -162,9 +162,9 @@ module.exports = {
         dbService.connect()
             .then(() => dbService.removeOne({collectionName: 'goingnights',data: {user: request.body.userToken,ocation: request.body.location}}))
             .then(() => {
-                console.log('====================================');
+                /* console.log('====================================');
                 console.log(`data was removed`);
-                console.log('====================================');
+                console.log('===================================='); */
                 dbService.disconnect();
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda005",reason: "DATA TERMINATED"}));
@@ -209,9 +209,9 @@ module.exports = {
                                 }
                             });
                     });
-                    console.log('====================================');
+                   /*  console.log('====================================');
                     console.log(`changed items:${JSON.stringify(dbUserSearches, null, 2)}`);
-                    console.log('====================================');
+                    console.log('===================================='); */
 
                     const userResults = [];
                     for (let item of dbUserSearches) {
