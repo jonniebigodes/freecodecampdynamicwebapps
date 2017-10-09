@@ -77,6 +77,9 @@ module.exports = {
                     response.end(JSON.stringify({code: "fccda001",reason: err.messageError}));
                 })
         } else {
+            console.log('====================================');
+            console.log(`token second search:${request.app.YELP_TOKEN}`);
+            console.log('====================================');
             httpService.searchYelp(request.app.YELP_TOKEN, request.query.what, request.query.where, request.query.ammount)
                 .then(searchresult => {
                     if (!searchresult.dataRecieved.num_items_response) {

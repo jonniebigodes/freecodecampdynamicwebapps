@@ -110,6 +110,10 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
         dataRecieved: {}
     };
     let resultData=[];
+
+    console.log('====================================');
+    console.log(`Search yelp token:${token}`);
+    console.log('====================================');
     return new Promise((resolve, reject) => {
         try {
             const client= yelp.client(token);
