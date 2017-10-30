@@ -1,6 +1,11 @@
+// prod mode
 const dbService=require('./dbFactory');
+const httpService = require('./httpService');
+//
+// dev mode
 //const dbService = require('../src/server/dbFactory');
-
+//const httpService = require('../src/server/httpService');
+//
 module.exports={
     getPolls(request,response){
         dbService.setUrl(request.app.MONGODB);
@@ -21,7 +26,8 @@ module.exports={
                         if (user){
                             results.push({
                                 polltoken:item._id,
-                                pollcreator:user.local_email,
+                                pollcreator:user.full_name==='0'?user.local_email:user.full_name,
+                                pollname:item.name,
                                 polloptions:item.polloptions
                             });
                         }
@@ -37,7 +43,7 @@ module.exports={
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-            })
+            });
         })
         .catch(errConnect=>{
             console.log('====================================');
@@ -45,7 +51,7 @@ module.exports={
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     deletePoll(request,response){
         if (!request.body.polltoken) {
@@ -72,12 +78,13 @@ module.exports={
             response.end(JSON.stringify({code: "fccda005", reason: `Poll number:${request.body.polltoken} was removed`}));
         })
         .catch(errConnect=>{
+            dbService.disconnect();
             console.log('====================================');
             console.log(`Polls Controller delete Polls error on connect:${JSON.stringify(errConnect,null,2)}`);
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     createPoll(request,response){
         if (!request.body.usertoken) {
@@ -98,9 +105,8 @@ module.exports={
             }
         )).then(resultPoll=>{
             dbService.disconnect();
-            
             response.writeHead(200, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify({code: "fccda005", reason: `Poll ${request.body.pollname} was added to the fold`}));
+            response.end(JSON.stringify({code: "fccda005", token:resultPoll,reason: `Poll ${request.body.pollname} was added to the fold`}));
         })
         .catch(errConnect=>{
             console.log('====================================');
@@ -108,53 +114,55 @@ module.exports={
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     voteOnPoll(request,response){
-        if ((!request.body.usertoken) || (!request.body.polltoken)) {
+        if  (!request.body.polltoken) {
             response.writeHead(500, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify({code: "fccda001", reason: "some information for the book submission was not provided"}));
+            response.end(JSON.stringify({code: "fccda001", reason: "some information for the poll vote was not provided"}));
             return;
         }
         dbService.setUrl(request.app.MONGODB);
-        dbService.connect()
-        .then(()=>{
-            dbService.updateData({
-                collectionName:'polls',
-                queryParam:{
-                    dataselect:{
-                        item:{
-                            polloptions:{
-                                idpollOption:request.body.polltoken
-                            }
-                        }
-                    },
-                    datacriteria:{
-                        $inc:{
-                            polloptions:{
-                                $:{
-                                    vote:1 
-                                }
+        dbService.connect().then(()=>{
+            dbService.updateData(
+                {
+                    collectionName:'polls',
+                    queryParam:{
+                        dataselect:{
+                            "polloptions.idoption":request.body.polltoken
+                        },
+                        datacriteria:{
+                            $inc:{
+                                "polloptions.$.votes":1
                             }
                         }
                     }
                 }
-            })
-        }).then(resultPoll=>{
-            console.log('====================================');
-            console.log(`vote poll result update:${JSON.stringify(resultPoll,null,2)}`);
-            console.log('====================================');
-        })
-        .catch(errConnect=>{
+            ).then(resultvote=>{
+                console.log('====================================');
+                console.log(`Polls Controller voteOnPoll result on vote:${JSON.stringify(resultvote,null,2)}`);
+                console.log('====================================');
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({code: "fccda005", reason: "VOTE_OK"})); 
+
+            }).catch(errvote=>{
+                console.log('====================================');
+                console.log(`Polls Controller voteOnPoll error on vote:${JSON.stringify(errvote,null,2)}`);
+                console.log('====================================');
+                response.writeHead(500, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
+            });
+        }).catch(errConnect=>{
             console.log('====================================');
             console.log(`Polls Controller voteOnPoll error on connect:${JSON.stringify(errConnect,null,2)}`);
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
+        
     },
     addPollOption(request,response){
-        if ((!request.body.usertoken) || (!request.body.polltoken)) {
+        if  (!request.body.polltoken){
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "some information for the book submission was not provided"}));
             return;
@@ -166,13 +174,13 @@ module.exports={
                 collectionName:'polls',
                 queryParam:{
                     dataselect:{
-                        _id:request.body.tokenPoll
+                        item:request.body.polltoken
                     },
                     datacriteria:{
                         $addToSet:{
                             polloptions:{
                                 idoption:request.body.polloptiontoken,
-                                optionname:request.body.polloptionName,
+                                optionname:request.body.optionname,
                                 votes:0
                             }
                         }
@@ -193,7 +201,7 @@ module.exports={
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     getPollDetails(request,response){
         if (!request.query.polltoken){
@@ -218,9 +226,12 @@ module.exports={
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify(
                     {
-                        polltoken:resultdetail[0]._id,
-                        pollname:resultdetail[0].name,
-                        polloptions:resultdetail[0].polloptions
+                        code:'fccda005',
+                        data:{
+                            polltoken:resultdetail[0]._id,
+                            pollname:resultdetail[0].name,
+                            polloptions:resultdetail[0].polloptions
+                        }
                     }
                 ));
 
@@ -231,8 +242,67 @@ module.exports={
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
         
-    }
+    },
+    sharePoll(request,response){
+        if ((!request.body.tokenpoll) || (!request.body.authtoken)){
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001", reason: "No token provided"}));
+            return;
+        }
+       /*  console.log('====================================');
+        console.log(`twitter app id:${request.app.locals.TWITTER_APP_ID} twitter app secret:${request.app.locals.TWITTER_APP_SECRET}`);
+        console.log('====================================');
 
+        return; */
+        dbService.setUrl(request.app.MONGODB);
+        dbService.connect()
+        .then(()=>dbService.searchByID({collectionName:'users',queryParam:{_id:request.body.authtoken}}))
+        .then(resultUsers=>{
+            dbService.disconnect();
+            if (resultUsers.length){
+                const userInfo=resultUsers[0];
+                if((userInfo.twitter_user_token=='0')||(userInfo.twitter_user_secret=='0')){
+                    response.writeHead(500, {'Content-Type': 'application/json'});
+                    response.end(JSON.stringify({code: "fccda001", reason: "No token provided"}));
+                    return;
+                }
+                httpService.sendToTwitter(
+                    {
+                        token:request.body.tokenpoll,
+                        appkey:request.app.locals.TWITTER_APP_ID,
+                        appsecret:request.app.locals.TWITTER_APP_SECRET,
+                        access_token:userInfo.twitter_user_token,
+                        access_secret:userInfo.twitter_user_secret
+                    }
+                )
+                .then(()=>{
+                    response.writeHead(200, {'Content-Type': 'application/json'});
+                    response.end(JSON.stringify({code: "fccda005", reason: "TweetOK"}));
+                })
+                .catch(()=>{
+                    response.writeHead(500, {'Content-Type': 'application/json'});
+                    response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
+                })
+
+            }
+        })
+        .catch(errorUsers=>{
+            console.log('====================================');
+            console.log(`Polls Controller sharePoll error on errorUsers:${JSON.stringify(errorUsers,null,2)}`);
+            console.log('====================================');
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
+        })
+        /* //httpService.sendToTwitter({token:request.query.token})
+        .then(()=>{
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda005", reason: "OK"}));
+        })
+        .catch(()=>{
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
+        }); */
+    }
 };

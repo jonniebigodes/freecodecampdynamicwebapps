@@ -1,147 +1,90 @@
+// prod mode
 const httpService = require('./httpService'); 
 const dbService=require('./dbFactory');
-//const httpService = require('../src/server/httpService');
-//const dbService = require('../src/server/dbFactory');
+//
+// dev mode
+/* const httpService = require('../src/server/httpService');
+const dbService = require('../src/server/dbFactory'); */
+
+//
 module.exports = {
+    getYelpToken(request,response){
+        console.log('====================================');
+        console.log(`yelp token:${request.app.YELP_KEY} yelp consumer:${request.app.YELP_CONSUMER}`);
+        console.log('====================================');
+        httpService
+        .getToken(request.app.YELP_KEY, request.app.YELP_CONSUMER)
+        .then(result=>{
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda005",userToken: result}));
+        }).catch(err=>{
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001",reason: "Something went wrong getting the token "}));
+        });
+    },
+
     searchNights(request, response) {
-        console.log('====================================');
-        console.log(`token present:${request.app.YELP_TOKEN}`);
-        console.log('====================================');
-        if (!request.app.YELP_TOKEN) {
-            httpService.getToken(request.app.YELP_KEY, request.app.YELP_CONSUMER)
-                .then(result => request.app.YELP_TOKEN = result)
-                .then(() => httpService.searchYelp(request.app.YELP_TOKEN, request.query.what, request.query.where, request.query.ammount))
-                .then(searchresult => {
-                    if (!searchresult.dataRecieved.num_items_response) {
-                        response.writeHead(500, {'Content-Type': 'application/json'});
-                        response.end(JSON.stringify({code: "fccda001",reason: "Something went wrong with the query "}));
-                        return;
-                    }
-                    //if is logged in check if query exists and add it to the database if not
-                    if (request.query.who) {
-                        dbService.setUrl = request.app.MONGODB;
-                        dbService
-                            .connect()
-                            .then(() => dbService.search({
-                                collectionName: 'user_searches',
-                                queryParam: {userToken: request.query.who,what: request.query.what,where: request.query.where,ammount: request.query.ammount}
-                            }))
-                            .then(resultuserSearches => {
-                                /* console.log('====================================');
-                                console.log(`searched items in db:${resultuserSearches.length} data:\n${JSON.stringify(resultuserSearches)}`);
-                                console.log('===================================='); */
-                                if (!resultuserSearches.length) {
-                                    dbService
-                                        .injectOneItem({
-                                            collectionName: 'user_searches',
-                                            data: {userToken: request.query.who,what: request.query.what,where: request.query.where,
-                                                ammount: request.query.ammount,
-                                                yelpsearchresults: searchresult.dataRecieved
-                                            }
-                                        })
-                                        .then(() => {
-                                            dbService.disconnect();
-                                        })
-                                        .catch(errInject => {
-                                            dbService.disconnect();
-                                            console.log('====================================');
-                                            console.log(`NightLIfe controller Error err inject data searchNights: ${JSON.stringify(errInject,null,2)}`);
-                                            console.log('====================================');
-                                            response.writeHead(500, {'Content-Type': 'application/json'});
-                                            response.end(JSON.stringify({code: "fccda001",reason: "Server Internal Error"}));
-                                        })
-                                }
-                            })
-                            .catch(err => {
-                                console.log('====================================');
-                                console.log(`error with injection of searches:\n${JSON.stringify(err,null,2)}`);
-                                console.log('====================================');
-                                response.writeHead(500, {
-                                    'Content-Type': 'application/json'
-                                });
-                                response.end(JSON.stringify({
-                                    code: "fccda001",
-                                    reason: "Server Internal Error"
-                                }));
-                            })
-                    }
-                    //
-                    response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(searchresult.dataRecieved));
-                })
-                .catch(err => {
-                    console.log('====================================');
-                    console.log(`error with yelp search of searches:\n${JSON.stringify(err,null,2)}`);
-                    console.log('====================================');
-                    response.writeHead(500, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify({code: "fccda001",reason: err.messageError}));
-                })
-        } else {
-            console.log('====================================');
-            console.log(`token second search:${request.app.YELP_TOKEN}`);
-            console.log('====================================');
-            httpService.searchYelp(request.app.YELP_TOKEN, request.query.what, request.query.where, request.query.ammount)
-                .then(searchresult => {
-                    if (!searchresult.dataRecieved.num_items_response) {
-                        response.writeHead(500, {'Content-Type': 'application/json'});
-                        response.end(JSON.stringify({code: "fccda001",reason: "Something went wrong with the query "}));
-                        return;
-                    }
-                    if (request.query.who) {
-                        dbService.setUrl = request.app.MONGODB;
-                        dbService.connect().then(() => dbService.search({
-                                collectionName: 'user_searches',
-                                queryParam: {
-                                    userToken: request.query.who,
-                                    what: request.query.what,
-                                    where: request.query.where,
-                                    ammount: request.query.ammount
-                                }
-                        }))
-                        .then(resultuserSearches => {
-                           /*  console.log('====================================');
-                            console.log(`searched items in db:${resultuserSearches.length} data:\n${JSON.stringify(resultuserSearches,null,2)}`);
-                            console.log('===================================='); */
-                            if (!resultuserSearches.length) {
-                                dbService.injectOneItem(
-                                    {
-                                        collectionName: 'user_searches',data: {userToken: request.query.who,what: request.query.what,where: request.query.where,ammount: request.query.ammount,yelpsearchresults: searchresult.dataRecieved}
-                                    })
-                                    .then(() => {
-                                        dbService.disconnect();
-                                        response.writeHead(200, {'Content-Type': 'application/json'});
-                                        response.end(JSON.stringify(searchresult.dataRecieved));
-                                    })
-                                    .catch(errInject => {
-                                        dbService.disconnect();
-                                        console.log('====================================');
-                                        console.log(`NightLIfe controller Error err inject data searchNights: ${JSON.stringify(errInject,null,2)}`);
-                                        console.log('====================================');
-                                        response.writeHead(500, {'Content-Type': 'application/json'});
-                                        response.end(JSON.stringify({code: "fccda001",reason: "Server Internal Error"}));
-                                    })
-                                }
-
-                            })
-                            .catch(err => {
-                                console.log('====================================');
-                                console.log(`error with injection of searches:\n${JSON.stringify(err,null,2)}`);
-                                console.log('====================================');
-                                response.writeHead(500, {'Content-Type': 'application/json'});
-                                response.end(JSON.stringify({code: "fccda001",reason: "Server Internal Error"}));
-                            })
-
-                    }
-                    
-                })
-                .catch(err => {
-                    console.log('====================================');
-                    console.log(`error with yelp search of searches:\n${JSON.stringify(err,null,2)}`);
-                    console.log('====================================');
-                    response.writeHead(500, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify({code: "fccda001",reason: err.messageError}));
-                })
+        if (!request.body.tokenyelp){
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001",reason: "No token provided"}));
+            return;
         }
+        httpService.searchYelp(request.body.tokenyelp,request.body.what,request.body.where,request.body.ammount)
+        .then(searchresult=>{
+            if (!searchresult.dataRecieved.num_items_response) {
+                response.writeHead(500, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({code: "fccda001",reason: "Something went wrong with the query "}));
+                return;
+            }
+            if (!request.body.who){
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({code:"fccda005",dataRecieved:searchresult.dataRecieved}));
+                return;
+            }
+            dbService.setUrl = request.app.MONGODB;
+            dbService.connect()
+            .then(()=>dbService.search(
+                {
+                    collectionName:'user_searches',
+                    queryParam:{
+                        userToken: request.query.who,
+                        what: request.query.what,
+                        where: request.query.where,
+                        ammount: request.query.ammount
+                    }
+                }
+            ))
+            .then(resultusersearches=>{
+                if (!resultusersearches.length){
+                    dbService.injectOneItem({collectionName: 'user_searches',
+                    data:{userToken: request.query.who,what: request.query.what,where: request.query.where,
+                        ammount: request.query.ammount,
+                        yelpsearchresults: searchresult.dataRecieved
+                    }
+                    }).then(()=>{
+                        dbService.disconnect();
+                        response.writeHead(200, {'Content-Type': 'application/json'});
+                        response.end(JSON.stringify({code:"fccda005",dataRecieved:searchresult.dataRecieved}));
+                        return;
+                    });
+                }
+            }).catch(errorSearches=>{
+                dbService.disconnect();
+                console.log('====================================');
+                console.log(`error with yelp search of searches:\n${JSON.stringify(errorSearches,null,2)}`);
+                console.log('====================================');
+                response.writeHead(500, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify({code: "fccda001",reason: "Internal server error"}));
+                return;
+            });
+            
+        }).catch(error=>{
+            console.log('====================================');
+            console.log(`error with yelp search of searches:\n${JSON.stringify(error,null,2)}`);
+            console.log('====================================');
+            response.writeHead(500, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify({code: "fccda001",reason: "Internal server error"}));
+        });
     },
     addNights(request, response) {
         dbService.setUrl=request.app.MONGODB;
@@ -161,7 +104,7 @@ module.exports = {
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: errInject}));
-            })
+            });
     },
     removeNights(request, response) {
         dbService.setUrl=request.app.MONGODB;
@@ -182,7 +125,7 @@ module.exports = {
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001",reason: errRemove}));
-            })
+            });
     },
     getUserSearches(request, response) {
         if (!request.query.who) {
@@ -200,7 +143,6 @@ module.exports = {
                     const dbUserSearches = responses[0];
                     const dbUserEvents = responses[1];
 
-                    
                     if ((!dbUserSearches.length) && (!dbUserEvents.length)) {
                         response.writeHead(200, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: 'fccda005',userData: "NO DATA"}));
@@ -231,7 +173,7 @@ module.exports = {
                     console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001",reason: "Server Internal Error"}));
-                })
+                });
             })
             .catch(err => {
                 console.log('====================================');
@@ -240,6 +182,6 @@ module.exports = {
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001",reason: "Server Internal Error"
                 }));
-            })
+            });
     }
 };

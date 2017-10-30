@@ -55,6 +55,7 @@ class NightItemsContainer extends Component{
      * function to inject the results of the search
      */
     renderItems(){
+        
         let results=[];
         for (let item of this.props.items){
             for (let nightItem of item.searchResults.results){
@@ -94,12 +95,41 @@ class NightItemsContainer extends Component{
         
     }
 }
-NightItemsContainer.PropTypes={
-    userLogged:PropTypes.bool.isrequired,
+NightItemsContainer.propTypes={
+    userLogged:PropTypes.bool.isRequired,
     onAddNight:PropTypes.func.isRequired,
     onRemoveNight:PropTypes.func.isRequired,
     items:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired
+        PropTypes.shape({
+            searchIndex:PropTypes.string,
+            searchQuery:PropTypes.shape({
+                howmany:PropTypes.number,
+                what:PropTypes.string,
+                where:PropTypes.string
+
+            }),
+            searchResults:PropTypes.shape({
+                num_items_response:PropTypes.number,
+                results:PropTypes.arrayOf(
+                    PropTypes.shape({
+                        address:PropTypes.string,
+                        category:PropTypes.string,
+                        city:PropTypes.string,
+                        id:PropTypes.string,
+                        img:PropTypes.string,
+                        isGoing:PropTypes.bool,
+                        name:PropTypes.string,
+                        url:PropTypes.string,
+                        zipCode:PropTypes.string
+                    })
+                )
+            })
+        })
+    ),
+
+    
 };
+/* items:PropTypes.arrayOf(
+        PropTypes.object.isRequired
+    ).isRequired */
 export default NightItemsContainer;

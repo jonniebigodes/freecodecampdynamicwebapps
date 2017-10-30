@@ -1,73 +1,52 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes from'prop-types';
 import * as cryptoModule from 'bcrypt-nodejs';
 import Drawer from 'material-ui/Drawer';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import FontIcon from 'material-ui/FontIcon';
-import {Tabs,Tab} from 'material-ui/Tabs';
-import Chip from 'material-ui/Chip';
 import TextField from 'material-ui/TextField';
-import '../../../../Assets/stylesheets/nightApp.scss';
-class NightLifeLoginContainer extends Component{
-    /**
-     * component constructor
-     * @param {*} props 
-     */
+import {Tabs,Tab} from 'material-ui/Tabs';
+class PollAppLogin extends Component{
     constructor(props){
         super(props);
         this.state={
             openDrawer:false,
-            tabValue:'Login',
             email:'',
+            tabValue:'Login',
             password:'',
-            retype_pwd:'',
-            chipdata:[]
+            userFullName:'',
+            local:false,
+            facebook:false,
+
         };
-        this.styles = {
-            chip:
-             {
-                 margin: 4,
-             },
-             wrapper: {
-                 display: 'flex',
-                flexWrap: 'wrap',
-            },
-        };
-    }
-    componentWillMount(){
-        this.setState({openDrawer:this.props.hasLoginNeeds});
     }
     componentWillReceiveProps(nextProps){
-        console.log('====================================');
-        console.log(`componentWillRecieveProps current prop:${this.props.hasLoginNeeds} next Props:${nextProps.hasLoginNeeds}`);
-        console.log('====================================');
         if (nextProps.hasLoginNeeds!==this.props.hasLoginNeeds){
             this.openCloseDrawer();
         }   
     }
-    /**
-     * controlled event handler function
-     */
     openCloseDrawer = () => {
-        //e.preventDefault();
         this.setState({openDrawer: !this.state.openDrawer});
     }
-   
     cancelPostForm=()=>{
-        
         return false;
     }
     handleChangeTab=()=>{
         this.setState({tabValue:this.state.tabValue==='Login'?'Signup':'Login'});
     }
     handleLogout=()=>{
+        if (this.state.isEdit){
+            this.setState({isEdit:false});
+        }
+        this.setState({email:'',password:''});
         this.props.userLogout();
     }
     encrypwd=()=>{
         return cryptoModule.hashSync(this.state.password);
     }
     handleLoginRegisterRequest=()=>{
+
         if (this.state.tabValue==='Login'){
             this.props.loginreg({isLogin:true,email:this.state.email,password:this.state.password});
         }
@@ -78,81 +57,43 @@ class NightLifeLoginContainer extends Component{
             this.props.loginreg({isLogin:false,email:this.state.email,password:this.encrypwd()});
         }
     }
+    handleKeys=(e)=>{
+        if (e.key === 'Enter'){
+            e.preventDefault();
+            this.handleLoginRegisterRequest();
+        }
+    }
     setEmail=(e)=>{
         this.setState({email:e.target.value});
     }
     setPassword=(e)=>{
         this.setState({password:e.target.value});
     }
-    setConfirmationPwd=(e)=>{
-        this.setState({retype_pwd:e.target.value});
+    
+    addPoll=()=>{
+        this.props.pollStart();
     }
-    handleKeys=(e)=>{
-        if (e.key==='Enter'){
-            e.preventDefault();
-            this.handleLoginRegisterRequest();
-        }
+    handleLocalCancel=()=>{
+        this.setState({openDrawer: !this.state.openDrawer,local:false});
     }
-    /**
-     * function to render the content of the drawer
-     */
-    addChips=()=>{
-        if (this.props.dataItems.length){
-            const chipInState=this.state.chipdata;
-            
-            for (let resultItem of this.props.dataItems){
-                for (let resultItemSearch of resultItem.searchResults.results){
-                    
-                    if (!chipInState.length){
-                        chipInState.push(
-                            {
-                                key:`chip_${resultItemSearch.category}`,
-                                label:resultItemSearch.category
-                            }
-                        );
-                    }
-                    else{
-                        let itemStored= chipInState.find(x=>x.label===resultItemSearch.category);
-                        if(!itemStored){
-                            chipInState.push(
-                                {
-                                    key:`chip_${resultItemSearch.category}`,label:resultItemSearch.category
-                                }
-                            );
-                        }
-                    }
-                }
-            }
-        }
+    
+    setLocalLogin=()=>{
+        this.setState({local:true});
     }
-    renderChips=(item)=>{
-        return(
-            <Chip key={item.key}
-            style={this.styles.chip}>
-                {item.label}
-            </Chip>
+    renderLogin=()=>{
+        return (
+            <div>
+                <h3 className="textLoggedIn">Logged in as :</h3>
+                <h4 className="textLoggedIn">{this.props.userInformation.name?this.props.userInformation.name:this.props.userInformation.email}</h4>
+                {/* <button type="button" className="btn btn-link" onClick={this.handleLogout}>Logout</button> */}
+                <FlatButton label="Logout" onClick={this.handleLogout} primary fullWidth/>
+                <hr/>
+                <FlatButton label="Add New Poll" onClick={this.addPoll} primary fullWidth/>
+            </div>
         );
     }
-    renderDrawerContent=()=>{
-        if (this.props.islogged){
-            this.addChips();
-            
-            return (
-                <div>
-                    <h3 className="textLoggedIn">Logged in as :</h3>
-                    <h4 className="textLoggedIn">{this.props.userInformation.email}</h4>
-                    {/* <button type="button" className="btn btn-link" onClick={this.handleLogout}>Logout</button> */}
-                    <FlatButton label="Logout" onClick={this.handleLogout} primary fullWidth/>
-                    <hr/>
-                    <div style={this.styles.wrapper}>
-                        {
-                            this.state.chipdata.map(this.renderChips,this)
-                        }
-                    </div>
-                </div>
-                
-            );
-        }
+    
+    renderLocalLoginRegister=()=>{
         return(
             <div>
                 <Tabs value={this.state.tabValue} onChange={this.handleChangeTab}>
@@ -186,7 +127,7 @@ class NightLifeLoginContainer extends Component{
                                     icon={<FontIcon className="muidocs-icon-custom-github"/>}
                                     onClick={this.handleLoginRegisterRequest} fullWidth/>
                                 
-                                <FlatButton label="Cancel" secondary onClick={this.openCloseDrawer} fullWidth/>
+                                <FlatButton label="Cancel" secondary onClick={this.handleLocalCancel} fullWidth/>
                                 
                             </div>
                         
@@ -207,11 +148,13 @@ class NightLifeLoginContainer extends Component{
                                     hintText="Set your password here"
                                     floatingLabelFixed
                                     floatingLabelText="Password"
+                                    type="password"
                                     value={this.state.password}
                                     onChange={this.setPassword}/>
                                 <TextField key="RetypeinputBookRegisterPassword"
                                     hintText="Re-type your password here"
                                     floatingLabelFixed
+                                    type="password"
                                     floatingLabelText="Re-type Password"
                                     value={this.state.retype_pwd}
                                     onChange={this.setConfirmationPwd}
@@ -231,35 +174,60 @@ class NightLifeLoginContainer extends Component{
                 </Tabs>
             </div>
         );
-        
     }
-   /**
-    * render function for the component
-    */
+    
+    
+    rendernoLogin=()=>{
+        if (this.state.local){
+            return this.renderLocalLoginRegister();
+        }
+        return(
+            <div>
+                <h4>Choose how you want to login</h4>
+                <RaisedButton label="Local"
+                            primary
+                            icon={<FontIcon className="muidocs-icon-custom-github"/>}
+                            onClick={this.setLocalLogin} fullWidth/>
+                <hr/>
+                <RaisedButton label="FACEBOOK"
+                            primary
+                            icon={<FontIcon className="muidocs-icon-custom-github"/>}
+                            href="http://localhost:5000/api/login/fb/auth"
+                            fullWidth
+                            />
+                <RaisedButton label="TWITTER"
+                            primary
+                            icon={<FontIcon className="muidocs-icon-custom-github"/>}
+                            href="http://localhost:5000/api/login/votting/twitter/connect"
+                            fullWidth/>
+            </div>
+        );
+    }
     render(){
         return(
             <div className={this.state.openDrawer?'containerTriangleExpanded':'containerTriangleDrawer'}>
-                   {/*  <svg onClick={this.openCloseDrawer} width="100" height="100">
-                        <polygon points="0 0, 0 100, 100 0" className="triangle" />    
-                    </svg> */}
                     <Drawer 
                         open={this.state.openDrawer}
                         containerStyle={{height: 'calc(100% - 64px)', top: 64,left:10}}
-                        width={265}>
-                        {this.renderDrawerContent()}
+                        width={this.state.isEdit?450:250}>
+                        {this.props.islogged?this.renderLogin():this.rendernoLogin()}
                     </Drawer>
                 </div>
         );
     }
 }
-NightLifeLoginContainer.propTypes={
-    dataItems:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
+PollAppLogin.propTypes={
     islogged:PropTypes.bool.isRequired,
     loginreg:PropTypes.func.isRequired,
     userLogout:PropTypes.func.isRequired,
-    userInformation:PropTypes.object.isRequired,
-    hasLoginNeeds:PropTypes.bool.isRequired
+    userInformation:PropTypes.shape({
+        id:PropTypes.string.isRequired,
+        email:PropTypes.string.isRequired,
+        password:PropTypes.string.isRequired,
+        name:PropTypes.string.isRequired,
+        
+    }).isRequired,
+    hasLoginNeeds:PropTypes.bool.isRequired,
+    pollStart:PropTypes.func.isRequired
 };
-export default NightLifeLoginContainer;
+export default PollAppLogin;

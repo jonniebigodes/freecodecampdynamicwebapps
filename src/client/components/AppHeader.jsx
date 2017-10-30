@@ -21,6 +21,9 @@ export default class AppHeader extends Component {
                 return "footer";
         }
     }
+    showHideLogin=()=>{
+        this.props.showLogin();
+    }
     /**
      * component render function
      */
@@ -28,7 +31,8 @@ export default class AppHeader extends Component {
         
         return (
             <AppBar title={this.props.appName} className={this.setHeaderStyle(this.props.appStyle)}
-                    showMenuIconButton={false}
+                    showMenuIconButton={this.props.hasLoginNeeds}
+                    onLeftIconButtonTouchTap={this.showHideLogin}
                     iconElementRight={<IconButton onClick={this.handleHomeButtonClick}>
                             <i className="material-icons md-24"> home</i>
                         </IconButton>} />  
@@ -38,4 +42,6 @@ export default class AppHeader extends Component {
 AppHeader.propTypes={
     appName:PropTypes.string.isRequired,
     appStyle:PropTypes.string.isRequired,
+    hasLoginNeeds:PropTypes.bool.isRequired,
+    showLogin:PropTypes.func.isRequired
 };

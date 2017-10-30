@@ -6,6 +6,7 @@
 const unirest = require('unirest');
 const yelp = require('yelp-fusion');
 const sendBlue= require('sendinblue-api');
+const twitterClient= require('twitter');
 /**
  *
  * @param {object} value item to contain info to call the stock api service
@@ -75,13 +76,16 @@ export const getToken = (clientId, clientSecret) => {
         messageError: "",
         dataRecieved: {}
     };
+    console.log('====================================');
+    console.log(`httpservice yelp id:${clientId} yelp secret:${clientSecret}`);
+    console.log('====================================');
     return new Promise((resolve, reject) => {
         try {
             yelp.accessToken(clientId, clientSecret).then(response => {
-                console.log('====================================');
-                console.log(`token obtained:${JSON.stringify(response,null,2)}`);
-                console.log('====================================');
-                resolve(response.jsonBody.access_token);
+               console.log('====================================');
+               console.log(`token information:${JSON.stringify(response,null,2)}`);
+               console.log('====================================');
+                resolve({token:response.jsonBody.access_token,expires:response.jsonBody.expires_in});
                 })
                 .catch(e => {
                     console.log('====================================');
@@ -111,9 +115,7 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
     };
     let resultData=[];
 
-    console.log('====================================');
-    console.log(`Search yelp token:${token}`);
-    console.log('====================================');
+   
     return new Promise((resolve, reject) => {
         try {
             const client= yelp.client(token);
@@ -200,4 +202,62 @@ export const sendMail=(value)=>{
          });
         
     }); 
+};
+
+export const sendToTwitter=(value)=>{
+
+    return new Promise((resolve,reject)=>{
+       
+        const client=new twitterClient({
+            consumer_key: value.appkey,
+            consumer_secret: value.appsecret,
+            access_token_key: value.access_token,
+            access_token_secret: value.access_secret
+        });
+        client.post('statuses/update',
+        {status:`check out the poll created at ${encodeURI(`https://freecodecampdynprojects.herokuapp.com/voting/poll/${value.token}`)}`})
+        .then(result=>{
+            console.log('====================================');
+            console.log(`result twitter:${JSON.stringify(result,null,2)}`);
+            console.log('====================================');
+            resolve(true);
+        })
+        .catch(error=>{
+            console.log('====================================');
+            console.log(`error sending tweet:${JSON.stringify(error,null,2)}`);
+            console.log('====================================');
+            reject(error);
+        });
+    });
+};
+export const sendToFacebook=(value)=>{
+    let resultInfo = {
+        error: false,
+        messageError: "",
+        dataRecieved: {}
+    };
+    return new Promise((resolve,reject)=>{
+        try {
+            unirest
+                .get(``)
+                .query({"api_key": value.keyQuandl})
+                .query({"start_date": value.startDate})
+                .query({"end_date": value.endDate})
+                .end(result => {
+                    if (result.status === 404) {
+                        resultInfo.error = true;
+                        reject(resultInfo);
+
+                    } else {
+                        resolve(resultInfo);
+                    }
+                });
+
+        } catch (error) {
+            console.log("ERROR HTTP SERVICE send to facebook:\n" + error);
+            resultInfo.error = true;
+            resultInfo.messageError = "ERROR ON PROCESSING POST TO FACEBOOK:" + error;
+            reject(resultInfo);
+        }
+    });
 };

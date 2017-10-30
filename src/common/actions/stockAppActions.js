@@ -1,49 +1,60 @@
 import StockApi from '../api/stocksApi';
-import * as types from '../constants/Actiontypes';
+import {
+    RECIEVE_STOCKS,
+    REQUEST_STOCKS,
+    RECIEVE_STOCKS_NOK,
+    APP_ERROR,
+    APP_ERROR_RESET,
+    SET_STOCK_VALUE,
+    SET_DATA_START,
+    DELETE_STOCK,
+    SET_DATA_END,
+    SET_STOCK_EXIT
+} from '../constants/Actiontypes';
 
 export const requestDataStocks = value => ({
-  type: types.REQUEST_STOCKS,
+  type: REQUEST_STOCKS,
   value
 });
 export const recieveData=result=>({
-    type:types.RECIEVE_STOCKS,
+    type:RECIEVE_STOCKS,
     result
 });
 
 export const recieveDataNOK=error=>({
-    type:types.RECIEVE_STOCKS_NOK,
+    type:RECIEVE_STOCKS_NOK,
     error
 
 });
 export const setAppError=value=>({
-    type:types.APP_ERROR,
+    type:APP_ERROR,
     value
 });
 export const resetAppError=value=>({
-    type:types.APP_ERROR_RESET,
+    type:APP_ERROR_RESET,
     value
 });
 export const setValueStock=valueQuery=>({
-    type:types.SET_STOCK_VALUE,
+    type:SET_STOCK_VALUE,
     valueQuery
 });
 
 export const setDataInit=valueDi=>({
-    type:types.SET_DATA_START,
+    type:SET_DATA_START,
     valueDi
 });
 
 export const delStocks=value=>({
-    type:types.DELETE_STOCK,
+    type:DELETE_STOCK,
     value
 });
 
 export const setDataFinal=valueFD=>({
-    type:types.SET_DATA_END,
+    type:SET_DATA_END,
     valueFD
 });
 export const setStocksExit=value=>({
-    type:types.SET_STOCK_EXIT,
+    type:SET_STOCK_EXIT,
     value
 });
 /**
@@ -64,7 +75,7 @@ const fetchData=stockData=>dispatch=>{
                 //console.log("got here: data is nok: "+ err);
                 dispatch(recieveDataNOK(err));
             });
-}
+};
 
 /**
  * checks the state to see if the date exists
@@ -89,7 +100,7 @@ const shouldGetDataStock=(state,stockData)=>{
     }
     return datainState.didInvalidate;
 
-}
+};
 /**
  * entry point operation for searching data
  * @param {object} stockData data to be searched
@@ -99,5 +110,5 @@ export const fetchStocksIfNeeded=stockData=>(dispatch, getState)=>{
     if (shouldGetDataStock(getState(),stockData)){
         return dispatch(fetchData(stockData));
     }
-}
+};
 

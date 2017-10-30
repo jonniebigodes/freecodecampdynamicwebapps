@@ -13,21 +13,24 @@ import {
     RECIEVE_NIGHT_NOK,
     ADD_TO_NIGHT,
     REMOVE_FROM_NIGHT,
-    SET_LOCATION_NIGHT,
-    SET_NIGHT_SEARCH,
-    SET_NIGHT_NUMBER,
     SET_NIGHT_EXIT,
-    RECIEVE_USER_SEARCH
+    RECIEVE_USER_SEARCH,
+    RECIEVE_YELP_TOKEN,
+    SET_NIGHT_INFO
 } from '../constants/Actiontypes';
 
 
 const nightAppReducer = (state = {
-    userInfo:{
+    nightuserInfo:{
         id:'',
         email:'',
         password:''
     },
-    isLoggedin: false,
+    yelpToken:{
+        token:'',
+        expires:0
+    },
+    nightisLoggedin: false,
     nightvenueQuery: 'default',
     numberOfItems:0,
     location:'',
@@ -40,20 +43,21 @@ const nightAppReducer = (state = {
             //console.log("reducer REQUEST_STOCKS: "+action.value);
             return {
                 ...state,
-                isSearching: true
-                
+                isSearching: true,
+                nightvenueQuery:action.value.query,
+                numberOfItems:action.value.howMany,
+                location:action.value.where
             };
         }
+        
         case ADD_TO_NIGHT:{
             return{
                 ...state,
-                
             }; 
         }
         case REMOVE_FROM_NIGHT:{
             return{
                 ...state,
-                
             };
         }
         case RECIEVE_USER_SEARCH:{
@@ -62,7 +66,7 @@ const nightAppReducer = (state = {
                 items:[
                     ...state.items,
                     {
-                        searchIndex:state.userInfo.id+"-"+action.value.what+"-"+action.value.where,
+                        searchIndex:state.nightuserInfo.id+"-"+action.value.what+"-"+action.value.where,
                         searchQuery:{
                             where:action.value.where,
                             what:action.value.what,
@@ -75,8 +79,7 @@ const nightAppReducer = (state = {
             
         }
         case RECIEVE_NIGHT:{
-            
-            let resultIndex=state.isLoggedin?state.userInfo.id+'-'+state.nightvenueQuery+"-"+state.location:'anon-'+state.nightvenueQuery+"-"+state.location;
+            let resultIndex=state.nightisLoggedin?state.nightuserInfo.id+'-'+state.nightvenueQuery+"-"+state.location:'anon-'+state.nightvenueQuery+"-"+state.location;
             //console.log(`recieve nigth index:${resultIndex}`);
             //console.log('====================================');
             
@@ -100,47 +103,37 @@ const nightAppReducer = (state = {
                 numberOfItems:0
                 
             };
-            
         }
         case LOGIN_REQUEST:{
-            
             return {
                 ...state,
                 
-                userInfo:{
+                nightuserInfo:{
                     id:'',
                     email:action.value.email,
                     password:action.value.password
                 }
-
-
             };
-            
         }
         case REGISTER_REQUEST:{
-           
             return {
                 ...state,
                 
-                userInfo:{
+                nightuserInfo:{
                     id:'',
                     email:action.value.email,
                     password:action.value.password
                 }
-
-
-            };
-            
+            }; 
         }
         case LOGIN_OK:{
-           
             return {
                 ...state,
-                isLoggedin:true,
-                userInfo:{
+                nightisLoggedin:true,
+                nightuserInfo:{
                     id:action.value,
-                    email:state.userInfo.email,
-                    password:state.userInfo.password
+                    email:state.nightuserInfo.email,
+                    password:state.nightuserInfo.password
                 },
                 items:[]
             };
@@ -150,11 +143,11 @@ const nightAppReducer = (state = {
             
             return {
                 ...state,
-                isLoggedin:true,
-                userInfo:{
+                nightisLoggedin:true,
+                nightuserInfo:{
                     id:action.value,
-                    email:state.userInfo.email,
-                    password:state.userInfo.password
+                    email:state.nightuserInfo.email,
+                    password:state.nightuserInfo.password
                 }
             };
             
@@ -162,7 +155,7 @@ const nightAppReducer = (state = {
         case LOGIN_NOK:{
             return {
                 ...state,
-                userInfo:{
+                nightuserInfo:{
                     id:'',
                     email:'',
                     password:''
@@ -173,7 +166,7 @@ const nightAppReducer = (state = {
         case REGISTER_NOK:{
             return {
                 ...state,
-                userInfo:{
+                nightuserInfo:{
                     id:'',
                     email:'',
                     password:''
@@ -184,13 +177,13 @@ const nightAppReducer = (state = {
         case USER_LOGOUT:{
             return {
                 ...state,
-                userInfo:{
+                nightuserInfo:{
                     id:'',
                     email:'',
                     password:''
                 },
                 items:[],
-                isLoggedin:false
+                nightisLoggedin:false
             };
         }
         case RECIEVE_NIGHT_NOK:{
@@ -222,41 +215,36 @@ const nightAppReducer = (state = {
                 errorMessage: action.value
             }; 
         }
-        case SET_LOCATION_NIGHT:{
-            return{
-                ...state,
-                location:action.valueLocation
-            }; 
-        }
-        case SET_NIGHT_SEARCH:{
-            return{
-                ...state,
-                nightvenueQuery:action.valueQuery
-            };
-        }
-        case SET_NIGHT_NUMBER:{
-            return{
-                ...state,
-                numberOfItems:action.valueNumber
-            };
-        }
+        
         case SET_NIGHT_EXIT:{
-            
             return{
                 ...state,
-                userInfo:{},
-                isLoggedin: false,
+                nightuserInfo:{
+                    id:'',
+                    email:'',
+                    password:''
+                },
+                nightisLoggedin: false,
                 nightvenueQuery: 'default',
                 numberOfItems:0,
                 location:'',
                 items: [],
                 onError: false,
-                errorMessage: ''
+                errorMessage: '',
+                yelpToken:{}
+            };
+        }
+        case RECIEVE_YELP_TOKEN:{
+            return {
+                ...state,
+                yelpToken:{
+                    token:action.value.token,
+                    expires:action.value.expires
+                }
             };
         }
         default:{
             return state;
-            
         }
     }
 

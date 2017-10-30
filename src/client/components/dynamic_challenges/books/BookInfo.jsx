@@ -54,11 +54,11 @@ class BookInfo extends Component{
                 userContact:this.props.userInformation.email
             };
             if (this.state.bookreview!=''){
-                console.log("has review");
+                //console.log("has review");
                 newBook.bookReview=this.state.bookreview;
             }
             if (this.state.bookcover!=''){
-                console.log("has review");
+                //console.log("has review");
                 newBook.imgCoverLocation=this.state.bookcover;
             }
             if(newBook.bookName==='' && newBook.authorName===''){
@@ -145,13 +145,21 @@ class BookInfo extends Component{
         );
     }
 }
-BookInfo.PropTypes={
+BookInfo.propTypes={
     listbooks:PropTypes.arrayOf(
         PropTypes.object.isRequired
     ).isRequired,
     abortAdd:PropTypes.func.isRequired,
     bookAdd:PropTypes.func.isRequired,
     bookreject:PropTypes.func.isRequired,
-    userInformation:PropTypes.object.isRequired
+    userInformation:PropTypes.shape({
+        id:PropTypes.string,
+        email:PropTypes.string,
+        password:PropTypes.string,
+        name:PropTypes.string,
+        city:PropTypes.string,
+        countrystate:PropTypes.string,
+        country:PropTypes.string
+    }).isRequired
 };
 export default BookInfo;

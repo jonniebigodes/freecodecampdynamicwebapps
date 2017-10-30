@@ -3,16 +3,8 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const bodyParse = require('body-parser');
-
 const app = express();
 
-
-/* console.log('====================================');
-console.log(`APP is running on :${process.env.NODE_ENV} session:${process.env.SESSION_HASH}`);
-console.log('====================================');
-console.log('====================================');
-console.log(`db is running on :${process.env.PROD_MONGODB}\nquandl:${process.env.QUANDL_KEY}\n YELP_CONSUMER_KEY:${process.env.YELP_CONSUMER_KEY} YELP_CONSUMER_SECRET:${process.env.YELP_CONSUMER_SECRET}\nblue api on :${process.env.BLUEAPIKEY}`); 
-console.log('===================================='); */
 if (process.env.NODE_ENV !== 'production') {
     let webpackDevMiddleware = require('webpack-dev-middleware');
     let webpackHotMiddleware = require('webpack-hot-middleware');
@@ -37,18 +29,22 @@ if (process.env.NODE_ENV === 'production') {
     app.MONGODB=process.env.PROD_MONGODB;
     //app.set('MONGODB', process.env.PROD_MONGODB);
 } else {
-    //pp.set('MONGODB', 'mongodb://localhost:27017/freecodecampdyn');
+    //app.set('MONGODB', 'mongodb://localhost:27017/freecodecampdyn');
     app.MONGODB='mongodb://localhost:27017/freecodecampdyn';
 }
 app.set('port', (process.env.PORT) || 5000);
 //app.set('KEY_QUANDL', process.env.QUANDL_KEY);
 app.KEY_QUANDL= process.env.QUANDL_KEY;
 //app.set('YELP_KEY', process.env.YELP_CONSUMER_KEY);
-app.YELP_KEY= process.env.YELP_CONSUMER_KEY;
+app.YELP_KEY=process.env.YELP_CONSUMER_KEY;
 //app.set('YELP_CONSUMER', process.env.YELP_CONSUMER_SECRET);
 app.YELP_CONSUMER=process.env.YELP_CONSUMER_SECRET;
 //app.set('BLUEKEY',process.env.BLUEAPIKEY);
 app.BLUEKEY=process.env.BLUEAPIKEY;
+app.locals.FACEBOOK_APP_ID= process.env.FACEBOOK_CLIENT_ID;
+app.locals.FACEBOOK_APP_SECRET=process.env.FACEBOOK_CLIENT_SECRET;
+app.locals.TWITTER_APP_ID=process.env.TWITTER_APP_KEY;
+app.locals.TWITTER_APP_SECRET=process.env.TWITTER_APP_SECRET;
 
 app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({extended: false}));
@@ -70,10 +66,17 @@ else{
     console.log('===================================='); */
     app.use(express.static(path.join(__dirname, '../dist')));
 }
+/*
+console.log('====================================');
+console.log(`app info:\n mongodb:${app.locals.MONGODB} QUANDL:${app.locals.KEY_QUANDL} yelp key:${app.locals.YELP_KEY} yelp consumer :${app.locals.YELP_CONSUMER} blue :${app.locals.BLUEKEY}\ntwitter id:${app.locals.TWITTER_APP_ID} twitter secret:${app.locals.TWITTER_APP_SECRET}`);
+console.log('====================================');
 
 
+console.log('====================================');
+console.log(`server client id fb:${app.locals.FACEBOOK_APP_ID}\n secret:${app.locals.FACEBOOK_APP_SECRET}\n process info:\n id:${process.env.FACEBOOK_CLIENT_ID} secret:${process.env.FACEBOOK_CLIENT_SECRET}`);
+console.log('===================================='); 
 
-/* console.log('====================================');
+ console.log('====================================');
 console.log(`app static location:${locationstatic}`);
 console.log('===================================='); */
 /**
@@ -90,4 +93,5 @@ app.listen(app.get('port'), (error) => {
         console.info("freecodecamp app is running on port", app.get('port'));
     }
 });
+const appPassport=require('./passportconfig')(app,passport);
 const appRoutes= require('./routes')(app,passport);

@@ -27,10 +27,21 @@ class BookAppLoginContainer extends Component{
         };
         
     }
+    componentWillMount(){
+        this.setState({openDrawer:this.props.hasLoginNeeds});
+    }
+    componentWillReceiveProps(nextProps){
+        console.log('====================================');
+        console.log(`componentWillRecieveProps current prop:${this.props.hasLoginNeeds} next Props:${nextProps.hasLoginNeeds}`);
+        console.log('====================================');
+        if (nextProps.hasLoginNeeds!==this.props.hasLoginNeeds){
+            this.openCloseDrawer();
+        }   
+    }
     openCloseDrawer = () => {
         this.setState({openDrawer: !this.state.openDrawer});
     }
-   
+    
     cancelPostForm=()=>{
         return false;
     }
@@ -254,14 +265,16 @@ class BookAppLoginContainer extends Component{
     }
     
     render(){
+        
         return(
             <div className={this.state.openDrawer?'containerTriangleExpanded':'containerTriangleDrawer'}>
-                    <svg onClick={this.openCloseDrawer} width="100" height="100">
+                    {/* <svg onClick={this.openCloseDrawer} width="100" height="100">
                         <polygon points="0 0, 0 100, 100 0" className="triangle" />    
-                    </svg>
+                    </svg> */}
                     <Drawer 
                         open={this.state.openDrawer}
-                        width={this.state.isEdit?450:250}>
+                        containerStyle={{height: 'calc(100% - 64px)', top: 64,left:10}}
+                        width={this.state.isEdit?450:265}>
                         {this.props.islogged?this.renderLogin():this.rendernoLogin()}
                     </Drawer>
                 </div>
@@ -275,6 +288,7 @@ BookAppLoginContainer.propTypes={
     userInformation:PropTypes.object.isRequired,
     themeChange:PropTypes.func.isRequired,
     bookinject:PropTypes.func.isRequired,
-    changeInfo:PropTypes.func.isRequired
+    changeInfo:PropTypes.func.isRequired,
+    hasLoginNeeds:PropTypes.bool.isRequired
 };
 export default BookAppLoginContainer;

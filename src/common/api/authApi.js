@@ -10,8 +10,8 @@ class AuthApi{
         console.log(`authUserLocal email:${valueMail} password:${valuePass}`);
         console.log('====================================');
         return new Promise((resolve,reject)=>{
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/local/auth`,{
-            //fetch(`http://localhost:5000/api/login/local/auth`,{
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/local/auth`,{
+            fetch(`http://localhost:5000/api/login/local/auth`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -39,7 +39,7 @@ class AuthApi{
                    //return {isDataOK:false,ErrorInfo:error,resultData:{}};
                    //reject(error.message)
                 throw new Error(err.message);
-            })
+            });
         });
     
     }
@@ -51,8 +51,8 @@ class AuthApi{
      */
     static registerUser(valueMail,valuePass){
         return new Promise((resolve,reject)=>{
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/local/signup`,{
-            //fetch(`http://localhost:5000/api/login/local/signup`,{
+            // fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/local/signup`,{
+            fetch(`http://localhost:5000/api/login/local/signup`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -83,14 +83,14 @@ class AuthApi{
                    //return {isDataOK:false,ErrorInfo:error,resultData:{}};
                    //reject(error.message)
                 throw new Error(err.message);
-            })
+            });
 
         });
     }
     static userLogout(){
         return new Promise((resolve,reject)=>{
-            //fetch(`http://localhost:5000/api/login/logout`)
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/logout`)
+            fetch(`http://localhost:5000/api/login/logout`)
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/login/logout`)
             .then(response=>{
                 return response.json();
             })
@@ -105,13 +105,13 @@ class AuthApi{
                 console.log('There has been a problem with your fetch operation: ' + err.message);
                 console.log('====================================');
                 reject(err.message);
-            })
+            });
         });
     }
     static changeUserInformation(value){
         return new Promise((resolve,reject)=>{
-            fetch('https://freecodecampdynprojects.herokuapp.com/api/login/local/authdatachange',{
-            //fetch(`http://localhost:5000/api/login/local/authdatachange`,{
+            //fetch('https://freecodecampdynprojects.herokuapp.com/api/login/local/authdatachange',{
+            fetch(`http://localhost:5000/api/login/local/authdatachange`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -135,26 +135,35 @@ class AuthApi{
                 console.log('There has been a problem with your fetch operation: ' + err.message);
                 console.log('====================================');
                 reject(err.message);
-            })
+            });
         });
     }
-    static setStorageData(value){
-        console.log('====================================');
-        console.log(`data from storage:${JSON.stringify(value,null,2)}`);
-        console.log('====================================');
-        localStorage.setItem("bookapp_storage",JSON.stringify(value));
-    }
-    static getStorageData(){
-        return localStorage.getItem("bookapp_storage");
-        /* let resultAuthData= localStorage.getItem("bookapp_storage");
-        console.log('====================================');
-        console.log(`data from storage:${JSON.stringify(resultAuthData,null,2)}`);
-        console.log('====================================');
-        return resultAuthData; */
-    }
-    static clearStorage(){
-        localStorage.clear();
+    static getSocialInfo(value){
+        return new Promise((resolve,reject)=>{
+            fetch('http://localhost:5000/api/login/social/getuserinfo',{
+                method:'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    authToken:value
+                })
+            })
+            .then(response=>{
+                console.log(`data from response:${JSON.stringify(response,null,2)}`);
+                return response.json();
+            }).then(result=>{
+                console.log(`data from result:${JSON.stringify(result,null,2)}`);
+                result.code=='fccda005'?resolve(result.data):reject('NO USER INFO FOUND');
+            }).catch(errorFB=>{
+                console.log('====================================');
+                console.log('There has been a problem with your fetch operation: ' + errorFB);
+                console.log('====================================');
+                reject(errorFB);
+            });
+        });
     }
 
 }
-export default  AuthApi;
+export default AuthApi;

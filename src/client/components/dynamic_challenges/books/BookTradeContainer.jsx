@@ -22,7 +22,8 @@ class BookTradeContainer extends Component{
             light:true,
             adding:false,
             snackOpen:false,
-            snackMessage:''
+            snackMessage:'',
+            hideShowLogin:false
         };
     }
     
@@ -53,17 +54,20 @@ class BookTradeContainer extends Component{
         this.setState({adding:!this.state.adding});
     }
     tradeBookHandler=(e)=>{
-        console.log('====================================');
-        console.log(`Trade container book handler:${JSON.stringify(e)}`);
+       /*  console.log('====================================');
+        console.log(`Trade container book handler:${JSON.stringify(e)}`); 
+        console.log('====================================');*/
         this.setState({snackMessage:'Book trade request sent to the user'});
         this.openCloseSnackBar();
-        console.log('====================================');
         this.props.booktrade(e);
     }
     rejectBook=(e)=>{
         this.changetoAdd();
         this.setState({snackMessage:`Looks like the book:${e} already exists`});
         this.openCloseSnackBar();
+    }
+    showHideLogin=()=>{
+        this.setState({hideShowLogin:!this.state.hideShowLogin});
     }
     renderNormal=()=>{
         return(
@@ -75,7 +79,8 @@ class BookTradeContainer extends Component{
                     userInformation={this.props.userData} 
                     themeChange={this.changeTheme} 
                     bookinject={this.changetoAdd}
-                    changeInfo={this.props.changeInfoUser}/>
+                    changeInfo={this.props.changeInfoUser}
+                    hasLoginNeeds={this.state.hideShowLogin}/>
                 <BookItemsContainer books={this.props.booklist}  
                     userInformation={this.props.userData} 
                     tradeBook={(e)=>this.tradeBookHandler(e)}/>
@@ -97,7 +102,7 @@ class BookTradeContainer extends Component{
         const actionsDialog = [
             <FlatButton key="dialogError_nightLife"
                 label="Ok"
-                primary={true}
+                primary
                 onTouchTap={this.onresetError}
             />
             ];
@@ -113,7 +118,7 @@ class BookTradeContainer extends Component{
                         <br/>
                         <h4>{this.props.errorMessageApp}</h4>
                     </Dialog> 
-                    <AppHeader appName="Supercalifragilistic Book Coordinator" appStyle="books"/>
+                    <AppHeader appName="Supercalifragilistic Book Coordinator" appStyle="books" showLogin={this.showHideLogin} hasLoginNeeds/>
                     {
                         this.state.adding?this.renderAdding():this.renderNormal()
                     }
@@ -124,7 +129,7 @@ class BookTradeContainer extends Component{
         );
     }
 }
-BookTradeContainer.PropTypes={
+BookTradeContainer.propTypes={
     booklist:PropTypes.arrayOf(
         PropTypes.object.isRequired
     ).isRequired,

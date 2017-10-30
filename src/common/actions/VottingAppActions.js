@@ -1,86 +1,108 @@
-import * as types from '../constants/Actiontypes';
+import {
+    REQUEST_POLLS,
+    RECIEVE_POLLS,
+    APP_ERROR,
+    APP_ERROR_RESET,
+    SET_POLL_EXIT,
+    ADD_POLL,
+    ADD_POLL_OPTION,
+    DEL_POLL,
+    EDIT_POLL_OPTION,
+    POLL_USER_LOGOUT,
+    POLL_LOGIN_REQUEST,
+    POLL_LOGIN_OK,
+    POLL_SOCIAL_LOGIN_REQUEST_OK,
+    POLL_LOGIN_NOK,
+    POLL_REGISTER_REQUEST,
+    POLL_REGISTER_OK,
+    POLL_REGISTER_NOK,
+    VOTE_POLL
+} from '../constants/Actiontypes';
 import authApi from '../api/authApi';
 import PollsApi from '../api/pollsApi';
-
-
+import ChallengesApi from '../api/challengesApi';
 export const requestPollData=value=>({
-    type:types.REQUEST_POLLS,
+    type:REQUEST_POLLS,
+    value
+});
+export const recievePollsData=value=>({
+    type:RECIEVE_POLLS,
     value
 });
 
-export const recievePollsData=value=>({
-    type:types.RECIEVE_POLLS,
-    value
-});
-export const recievePollsDataNOK=value=>({
-    type:types.RECIEVE_POLLS_NOK,
-    value
-});
 export const setPollAppError=value=>({
-    type:types.APP_ERROR,
+    type:APP_ERROR,
     value
 });
 export const resetPollAppError=value=>({
-    type:types.APP_ERROR_RESET,
+    type:APP_ERROR_RESET,
     value
 });
 export const pollAppExit=value=>({
-    type:types.SET_POLL_EXIT,
+    type:SET_POLL_EXIT,
     value
 });
 export const addPoll=value=>({
-    type:types.ADD_POLL,
+    type:ADD_POLL,
     value
 });
 export const removePoll=value=>({
-    type:types.DEL_POLL,
+    type:DEL_POLL,
     value
 });
 export const addPollOption=value=>({
-    type:types.ADD_POLL_OPTION,
+    type:ADD_POLL_OPTION,
     value
 });
 export const editPollOption=value=>({
-    type:types.EDIT_POLL_OPTION,
+    type:EDIT_POLL_OPTION,
     value
 });
 export const pollAppUserLogout=value=>({
-    type:types.USER_LOGOUT,
+    type:POLL_USER_LOGOUT,
     value
 }); 
 export const setpollAppAuthServerData=value=>({
-    type:types.LOGIN_REQUEST,
+    type:POLL_LOGIN_REQUEST,
     value
 });
 export const pollAppAuthSucess=value=>({
-    type:types.LOGIN_OK,
+    type:POLL_LOGIN_OK,
+    value
+});
+export const pollAppSocialLoginOK=value=>({
+    type:POLL_SOCIAL_LOGIN_REQUEST_OK,
     value
 });
 export const pollAppAuthFailure=value=>({
-    type:types.LOGIN_NOK,
+    type:POLL_LOGIN_NOK,
     value
 });
 export const pollAppSetRegisterData=value=>({
-    type:types.REGISTER_REQUEST,
+    type:POLL_REGISTER_REQUEST,
     value
 });
 export const pollAppRegisterUserOK=value=>({
-    type:types.REGISTER_OK,
+    type:POLL_REGISTER_OK,
     value
 });
 export const pollAppRegisterUserNOK=value=>({
-    type:types.REGISTER_NOK,
+    type:POLL_REGISTER_NOK,
+    value
+});
+export const castVotePoll=value=>({
+    type:VOTE_POLL,
     value
 });
 
 export const pollAppDisconnectUser=authInformation=>dispatch=>{
     authApi.userLogout(authInformation.id)
     .then(()=>{
-        authApi.clearStorage();
+        ChallengesApi.clearStorage();
         dispatch(pollAppUserLogout(authInformation.id));
     }).catch(err=>{
         dispatch(setPollAppError(err));
-    })
+    });
 };
 
 export const pollAppRegisterServer=authData=>dispatch=>{
@@ -88,7 +110,7 @@ export const pollAppRegisterServer=authData=>dispatch=>{
     authApi.registerUser(authData.email,authData.password)
             .then(result=>{
                 // set here
-                authApi.setStorageData({authToken:result.authToken,full_name:result.full_name,city:result.city,countrystate:result.countrystate,country:result.country,email:authData.email,password:authData.password});
+                ChallengesApi.setStorageData("votes_userinfo",{authToken:result.authToken,full_name:result.full_name,local:true,email:authData.email,password:authData.password});
                 //
                 dispatch(pollAppRegisterUserOK(result));
                
@@ -96,54 +118,101 @@ export const pollAppRegisterServer=authData=>dispatch=>{
             .catch(err=>{
                 dispatch(pollAppRegisterUserNOK(err));
                 dispatch(setPollAppError(err));
-            })
+            });
 };
 export const pollAppaAuthenticateServer=authData=>dispatch=>{
     dispatch(setpollAppAuthServerData(authData));
     authApi.authUserLocal(authData.email,authData.password)
     .then(result=>{
-        authApi.setStorageData({authToken:result.authToken,full_name:result.full_name,city:result.city,countrystate:result.countrystate,country:result.country,email:authData.email,password:authData.password});
+        ChallengesApi.setStorageData("votes_userinfo",{authToken:result.authToken,full_name:result.name,email:authData.email,password:authData.password,local:true});
         dispatch(pollAppAuthSucess(result));
-        //uthApi.setStorageData()
-        console.log('====================================');
+        
+        /* console.log('====================================');
         console.log(`auth success action result:${JSON.stringify(result,null,2)}`);
-        console.log('====================================');
+        console.log('===================================='); */
     })
     .catch(err=>{
-
         dispatch(pollAppAuthFailure(err));
         dispatch(setPollAppError(err));
-        
-    })
+    });
 };
-
+export const fetchSocialInfo=value=>dispatch=>{
+    authApi.getSocialInfo(value)
+        .then(result=>{
+            ChallengesApi.setStorageData("votes_userinfo",{authToken:value,full_name:result.name,email:result.email,islocal:false,twitterToken:result.twitterToken,facebookToken:value.facebookToken,twitterName:result.twitterusername,facebookName:result.facebookusername});
+            dispatch(pollAppSocialLoginOK({token:value,full_name:result.name,twitterToken:result.twitterToken,facebookToken:value.facebookToken,email:result.email}));
+        })
+        .catch(err=>{
+            dispatch(setPollAppError(err));
+    });
+};
+export const shareOnSocialMedia=value=>dispatch=>{
+    PollsApi.shareSocialPoll(value)
+    .then()
+    .catch(error=>{
+        dispatch(setPollAppError(error));
+    });
+};
 export const fetchPolls=()=>dispatch=>{
     dispatch(requestPollData(true));
-    const dataUserStorage=JSON.parse(authApi.getStorageData());
-    if (dataUserStorage){
+    let votesUserStorage=JSON.parse(ChallengesApi.getStorageData("votes_userinfo"));
+    console.log('====================================');
+    console.log(`dataUserStorage info:${JSON.stringify(votesUserStorage,null,2)}`);
+    console.log('====================================');
+    if (votesUserStorage){
         console.log('====================================');
-        console.log(`1 data with value of :${dataUserStorage.email}`);
+        console.log(`1 data with value of :${votesUserStorage.email}`);
         console.log('====================================');
+        if (votesUserStorage.islocal){
+            dispatch(setpollAppAuthServerData({email:votesUserStorage.email,password:votesUserStorage.password}));
+            dispatch(pollAppAuthSucess({authToken:votesUserStorage.authToken,full_name:votesUserStorage.full_name}));
+        }
+        else{
+            dispatch(pollAppSocialLoginOK({token:votesUserStorage.authToken,full_name:votesUserStorage.full_name,twitterToken:votesUserStorage.twitterToken,facebookToken:votesUserStorage.facebookToken,email:votesUserStorage.email,facebookname:votesUserStorage.facebookName,twittername:votesUserStorage.twitterName}));
+        }
         
-        dispatch(setpollAppAuthServerData({email:dataUserStorage.email,password:dataUserStorage.password}));
-        dispatch(pollAppAuthSucess({authToken:dataUserStorage.authToken,full_name:dataUserStorage.full_name,city:dataUserStorage.city,country:dataUserStorage.country,countrystate:dataUserStorage.countrystate}));
     }
     PollsApi.getallPolls().then(result=>{
         dispatch(recievePollsData(result));
     }).catch(err=>{
-        dispatch(recievePollsDataNOK(err));
+        dispatch(setPollAppError(err));
     });
 };
-
+export const voteOnPoll=pollInfo=>dispatch=>{
+    console.log('====================================');
+    console.log(`actions voteon poll data:${JSON.stringify(pollInfo,null,2)}`);
+    console.log('====================================');
+    PollsApi.votePoll(pollInfo.optionToken)
+        .then(()=>{
+            dispatch(castVotePoll({polltoken:pollInfo.polltoken,polloption:pollInfo.optionToken}));
+        })
+        .catch(err=>{
+            dispatch(setPollAppError(err));
+        });
+};
 export const addPollFold=pollData=>dispatch=>{
+    PollsApi.createPoll(pollData)
+        .then(result=>{
+            dispatch(addPoll({polltoken:result,pollcreator:pollData.pollcreatormail,pollname:pollData.pollname,polloptions:pollData.polloptions}));
+        })
+        .catch(err=>{
+            dispatch(setPollAppError(err));
+        });
+    
 
 };
 export const removePollFold=polldata=>dispatch=>{
-
+    PollsApi.deletePoll(polldata)
+    .then(()=>{
+        dispatch(removePoll(polldata));
+    })
+    .catch(err=>{dispatch(setPollAppError(err));});
 };
 export const addPollOptionFold=polldata=>dispatch=>{
-
+    PollsApi.injectPollOption(polldata).then(()=>{
+        dispatch(addPollOption(polldata));
+    }).catch(err=>{
+        dispatch(setPollAppError(err));
+    });
+    
 };
-export const removePollOptionFold=polldata=>dispatch=>{
-
-}

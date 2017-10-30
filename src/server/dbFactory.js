@@ -186,6 +186,25 @@ export const updateData=value=>{
         });
     });
 };
+
+/* export const increment=value=>{
+    return new Promise((resolve,reject)=>{
+        if (!dbInstance)reject(`Connect first to the database then search the data`);
+        dbInstance.collection(value.collectionName).update(
+            {
+                _id:new dbClient.ObjectId(value.queryParam.dataselect.item),
+                value.queryParam.dataselect.item
+            },
+            value.queryParam.datacriteria,(errorincrement,result)=>{
+                if(errorincrement){
+                    reject(`Error on querying data:${value.collectionName}\n${errorincrement.code}\nstatus message:${errorincrement.message}`);
+                }
+                
+                resolve(result);
+            }
+        );
+    });
+} */
 /**
  * method to update data by object id on the collections
  * @param {Object} value the object containing the data to be updated 

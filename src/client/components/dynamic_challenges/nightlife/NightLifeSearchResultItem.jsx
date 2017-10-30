@@ -76,9 +76,19 @@ class NightLifeSearchResultItem extends Component {
     }
 }
 
-NightLifeSearchResultItem.PropTypes = {
+NightLifeSearchResultItem.propTypes = {
     userIsLogged:PropTypes.bool.isRequired,
-    item: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+        address:PropTypes.string,
+        category:PropTypes.string,
+        city:PropTypes.string,
+        id:PropTypes.string,
+        img:PropTypes.string,
+        isGoing:PropTypes.bool,
+        name:PropTypes.string,
+        url:PropTypes.string,
+        zipCode:PropTypes.string
+    }).isRequired,
     going: PropTypes.func.isRequired,
     notGoing: PropTypes.func.isRequired
 };

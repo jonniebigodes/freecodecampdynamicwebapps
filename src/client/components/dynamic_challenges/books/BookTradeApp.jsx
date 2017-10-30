@@ -13,8 +13,12 @@ import {
     tradeBook,
     changeUserInformation
 } from '../../../../common/actions/booksAppActions';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import BookTradeContainer from './BookTradeContainer';
 class BookTradeApp extends Component{
+    componentWillMount(){
+        injectTapEventPlugin();
+    }
     componentDidMount=()=>{
         // will get the books
         this.props.getBooks(true);
@@ -24,6 +28,9 @@ class BookTradeApp extends Component{
         this.props.resetError(true);
     }
     componentWillUnmount(){
+        console.log('====================================');
+        console.log('BOOK UNMOUNT');
+        console.log('====================================');
         this.props.exitBookApp(true);
     }
     logoutUser=()=>{
@@ -79,8 +86,8 @@ const mapStateToProps=state=>{
         bookItems:state.books.items,
         bookAppIsError:state.books.onError,
         bookAppErrorMessage:state.books.errorMessage,
-        bookApploggedIn:state.books.isLoggedin,
-        bookApploginData:state.books.userInfo
+        bookApploggedIn:state.books.bookAppisLoggedin,
+        bookApploginData:state.books.bookuserInfo
     };
 };
 const mapDispatchToProps=dispatch=>{
@@ -114,7 +121,8 @@ const mapDispatchToProps=dispatch=>{
         },
         userInfoChange:(value)=>{
             dispatch(changeUserInformation(value));
-        }
+        },
+        
     };
 };
 export default connect(mapStateToProps,mapDispatchToProps)(BookTradeApp);

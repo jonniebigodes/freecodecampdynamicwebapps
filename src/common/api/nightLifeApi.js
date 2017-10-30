@@ -7,10 +7,26 @@ class nightApi{
      * @param {string} userID who searches 
      * @param {number} numberItems how may items to be searched
      */
-    static search(query,location,userId,numberItems){
+    static search(value){
         return new Promise((resolve,reject)=>{
-             fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`) 
-            /* fetch(`http://localhost:5000/api/data/nightsearch?what=${query}&where=${location}&ammount=${numberItems}&who=${userId}`) */
+            console.log('====================================');
+            console.log(`data query:${JSON.stringify(value,null,2)}`);
+            console.log('====================================');
+             //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch`) 
+            fetch(`http://localhost:5000/api/data/nightsearch`,{
+                method:'post',
+                headers:{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body:JSON.stringify({
+                    tokenyelp:value.token,
+                    what:value.query,
+                    where:value.where,
+                    ammount:value.howMany,
+                    userId:value.who
+                })
+            })
             .then(response=>{
                    //console.log("getStock status: " +response.status);
                    return response.json();
@@ -18,12 +34,11 @@ class nightApi{
             .then(result=>{
                    //console.log("result: " + JSON.stringify(result));
                    //return result;
-                   if (result.code){
+                   if (result.code==='fccda001'){
                        //console.log("there was an error");
                        reject(result.reason);
-   
                    }
-                   resolve(result);
+                   resolve(result.dataRecieved);
                    
                })
             .catch(error=>{
@@ -46,8 +61,8 @@ class nightApi{
     static addUserNight(value){
         return new Promise((resolve,reject)=>{
             
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightadd`,{
-            //fetch(`http://localhost:5000/api/data/nightadd`,{
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightadd`,{
+            fetch(`http://localhost:5000/api/data/nightadd`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -63,7 +78,8 @@ class nightApi{
                 return response.json();
             })
             .then(result=>{
-                resolve(true)
+                result.code==='fccda001'?reject(result.reason):resolve(true);
+                
             })
             .catch(err=>{
                 reject(err.message);
@@ -77,8 +93,8 @@ class nightApi{
      */
     static removeUserNight(value){
         return new Promise((resolve,reject)=>{
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightremove`,{
-            //fetch(`http://localhost:5000/api/data/nightremove`,{
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightremove`,{
+            fetch(`http://localhost:5000/api/data/nightremove`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -94,7 +110,7 @@ class nightApi{
                 return response.json();
             })
             .then(result=>{
-                resolve(true);
+                result.code==='fccda001'?reject(result.reason):resolve(true);
             })
             .catch(err=>{
                 reject(err.message);
@@ -108,8 +124,8 @@ class nightApi{
      */
     static getUserSearches(userToken){
         return new Promise((resolve,reject)=>{
-            fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/usersearches?who=${userToken}`)
-            //fetch(`http://localhost:5000/api/data/usersearches?who=${userToken}`)
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/usersearches?who=${userToken}`)
+            fetch(`http://localhost:5000/api/data/usersearches?who=${userToken}`)
             .then(response=>{
                 return response.json();
             })
@@ -117,7 +133,27 @@ class nightApi{
                 console.log('====================================');
                 console.log(`result data: ${JSON.stringify(result)}`);
                 console.log('====================================');
-                resolve (result.userData);
+                result.code==='fccda001'?reject(result.reason):resolve(result.userData);
+                
+            })
+            .catch(err=>{
+                console.log('====================================');
+                console.log(`error getting the user searches:${err.reason}`);
+                console.log('====================================');
+                reject(err);
+            })
+        });
+    }
+    static getTokenYelp(){
+        return new Promise((resolve,reject)=>{
+            //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nighttoken`)
+            fetch(`http://localhost:5000/api/data/nighttoken`)
+            .then(response=>{
+                return response.json();
+            })
+            .then(result=>{
+               
+                resolve (result.userToken);
             })
             .catch(err=>{
                 console.log('====================================');

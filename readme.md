@@ -4,16 +4,16 @@
 
 This repository contains the implementation of the Dynamic webapps challenges for freecodecamp.
 The challenges are the following
-  - Build a Voting App
+  - [Build a Voting App]
   - [Build a Nightlife coordination app]
   - [Chart the Stock Market]
   - [Manage a Book Trading Club]
   - Build a Pinrest Clone
 
 # Methodology used
-Instead of creating a single repo for each challenge and as i'm familiar with github i condensed the api challenges in one package/repo.  
-As it's not in direct contradiction of the rules and/or objective.
-In terms of development methodology i used the following:
+Instead of creating a single repo for each challenge and as i'm familiar with github i condensed the dynamic  challenges in one package/repo.  
+As it's not in direct contradiction of the rules and/or objectives.
+In terms of development methodology i used the following folder structure:
   - /controllers/
     - This folder contains the controllers for all the challenges
   - /src/
@@ -26,7 +26,7 @@ In terms of development methodology i used the following:
   - /src/client/mockData/
     - This folder contains the implementation of some mock data for testing purposes.
   - /src/server/
-    - This folder contains the the bits that are the responsability of the server i.e db operations.
+    - This folder contains the the bits that are external to the application.
   - /dist/
     - This folder contains the release(aka build files).
   - /src/common/actions
@@ -34,7 +34,7 @@ In terms of development methodology i used the following:
   - /src/common/api
     - This folder is the placeholder for external calls, namely rest calls to the server for the various challenges.
  - /src/common/constants
-  - This folder is the placeholder for defining the constants(i.e action types) for the challenges.
+    - This folder is the placeholder for defining the constants(i.e action types) for the challenges.
   - /src/common/reducers
     - This folder is the placeholder for the redux reducers for the challenges
   - /src/common/store
@@ -54,6 +54,8 @@ This set of challenges uses a number of open source projects to work properly:
                     cause bad..bad move to try and get stuff from mongo directly from client code, that's the server responsability right kids?
 * [React-Chart] - A react wrapper for [Chart2] library.
 * [yelp-fusion] - Yelp Fusion API client for Node.js with Promises
+* [Twitter-Client] - Twitter client package in order to be possible sharing some information in some challenges
+* [PASSPORT] - Authentication middleware for node(added normal passport and it's social variants twitter and facebook)
 
 And of course the implementation of the challenges themselves are open source with a [git-repo-url]
  on GitHub.
@@ -107,6 +109,7 @@ MIT
    [Build a Nightlife coordination app]: <https://freecodecampdynprojects.herokuapp.com/nightlife>
    [Chart the Stock Market]: <https://freecodecampdynprojects.herokuapp.com/stocks>
    [Manage a Book Trading Club]:<https://freecodecampdynprojects.herokuapp.com/books>
+   [Build a Voting App]:<https://freecodecampdynprojects.herokuapp.com/voting/>
    [React-Chart]: <https://github.com/gor181/react-chartjs-2>
    [React-Redux]: <https://github.com/reactjs/react-redux>
    [whatwg-fetch]: <https://github.com/github/fetch>
@@ -126,5 +129,7 @@ MIT
    [YELP]:<https://www.yelp.com/developers>
    [Twitter]:<https://apps.twitter.com/>
    [BLUESEND]:<http://www.sendinblue.com>
+   [Twitter-Client]:<https://www.npmjs.com/package/twitter>
+   [PASSPORT]:<http://www.passportjs.org/>
    [PlGh]:  <https://github.com/jonniebigodes/freecodecampdynamicwebapps/tree/master/plugins/github/readme.md>
    

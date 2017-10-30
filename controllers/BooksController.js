@@ -1,7 +1,11 @@
+//prod mode
 const httpService = require('./httpService'); 
 const dbService=require('./dbFactory');
-//const httpService = require('../src/server/httpService');
-//const dbService = require('../src/server/dbFactory');
+//
+// dev mode
+/* const httpService = require('../src/server/httpService');
+const dbService = require('../src/server/dbFactory'); */
+//
 const path = require('path');
 module.exports = {
     /**
@@ -62,7 +66,7 @@ module.exports = {
                     console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                })
+                });
             })
             .catch(err => {
                 console.log('====================================');
@@ -70,7 +74,7 @@ module.exports = {
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-            })
+            });
     },
     addBookCollection(request, response) {
         if ((!request.body.usertoken) || (!request.body.bookName)) {
@@ -111,7 +115,7 @@ module.exports = {
                         console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                    })
+                    });
                 } else {
                     dbService.injectOneItem(
                         {
@@ -141,7 +145,7 @@ module.exports = {
                         console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                    })
+                    });
                 }
             })
             .catch(errconnect => {
@@ -150,7 +154,7 @@ module.exports = {
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-            })
+            });
 
     },
     tradeBook(request, response) {
@@ -230,7 +234,7 @@ module.exports = {
                         
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                    })
+                    });
                 })
                 .catch(errorinjecttrade => {
                     dbService.disconnect();
@@ -239,7 +243,7 @@ module.exports = {
                     console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                })
+                });
             }).catch(errordatatrade => {
                     //dbService.disconnect();
                 console.log('====================================');
@@ -247,7 +251,7 @@ module.exports = {
                 console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-            })
+            });
         })
         .catch(errorConnect => {
             console.log('====================================');
@@ -255,7 +259,7 @@ module.exports = {
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     tradeReject(request, response) {
         if (!request.query.tokentrade) {
@@ -290,7 +294,7 @@ module.exports = {
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
     },
     tradeAccept(request, response) {
         if (!request.query.tokentrade) {
@@ -411,7 +415,7 @@ module.exports = {
                             console.log('====================================');
                             response.writeHead(500, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                        })
+                        });
                     } else {
                         dbService.injectOneItem({collectionName: 'books',
                             data: {
@@ -440,7 +444,7 @@ module.exports = {
                             console.log('====================================');
                             response.writeHead(500, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                        })
+                        });
                     }
                 }).catch(errupdatetrade => {
                     dbService.disconnect();
@@ -449,7 +453,7 @@ module.exports = {
                     console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                })
+                });
             })
         .catch(errorConnect => {
             console.log('====================================');
@@ -457,7 +461,7 @@ module.exports = {
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
+        });
 
     }
 };

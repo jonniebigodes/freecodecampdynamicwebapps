@@ -5,8 +5,8 @@ class BookApi{
      */
     static getAll(){
         return new Promise((resolve,reject)=>{
-            fetch('https://freecodecampdynprojects.herokuapp.com/api/data/getbooks')
-            //fetch(`http://localhost:5000/api/data/getbooks`)
+            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/getbooks')
+            fetch(`http://localhost:5000/api/data/getbooks`)
             .then(response=>{
                 return response.json();
             })
@@ -23,8 +23,8 @@ class BookApi{
     }
     static addBook(value){
         return new Promise((resolve,reject)=>{
-            fetch('https://freecodecampdynprojects.herokuapp.com/api/data/bookadd',{
-            //fetch(`http://localhost:5000/api/data/bookadd`,{
+            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/bookadd',{
+            fetch(`http://localhost:5000/api/data/bookadd`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -58,8 +58,8 @@ class BookApi{
         console.log('====================================');
         
         return new Promise((resolve,reject)=>{
-            fetch('https://freecodecampdynprojects.herokuapp.com/api/data/tradebook',{
-            //fetch(`http://localhost:5000/api/data/tradebook`,{
+            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/tradebook',{
+            fetch(`http://localhost:5000/api/data/tradebook`,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
