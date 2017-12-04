@@ -7,6 +7,24 @@ const unirest = require('unirest');
 const yelp = require('yelp-fusion');
 const sendBlue= require('sendinblue-api');
 const twitterClient= require('twitter');
+
+export const checkImage=value=>{
+    return new Promise((resolve,reject)=>{
+        try {
+            unirest.head(value)
+            .end(result=>{
+                result.status!=404?resolve("IMAGE_OK"):resolve("NO_IMAGE");
+            });
+            
+        } catch (error) {
+            console.log('====================================');
+            console.log(`ERROR HTTPSERVICE CHECK IMAGE:\n${error}`);
+            console.log('====================================');
+            
+            reject(error);
+        }
+    });
+}
 /**
  *
  * @param {object} value item to contain info to call the stock api service

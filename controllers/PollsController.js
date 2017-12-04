@@ -1,10 +1,10 @@
 // prod mode
-const dbService=require('./dbFactory');
-const httpService = require('./httpService');
+/* const dbService=require('./dbFactory');
+const httpService = require('./httpService'); */
 //
 // dev mode
-//const dbService = require('../src/server/dbFactory');
-//const httpService = require('../src/server/httpService');
+const dbService = require('../src/server/dbFactory');
+const httpService = require('../src/server/httpService');
 //
 module.exports={
     getPolls(request,response){
@@ -68,12 +68,8 @@ module.exports={
                     data:request.body.polltoken  
                 }
             }
-        )).then(resultPoll=>{
+        )).then(()=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`data removed result:${JSON.stringify(resultPoll,null,2)}`);
-            console.log('====================================');
-            
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda005", reason: `Poll number:${request.body.polltoken} was removed`}));
         })
@@ -138,14 +134,13 @@ module.exports={
                         }
                     }
                 }
-            ).then(resultvote=>{
-                console.log('====================================');
-                console.log(`Polls Controller voteOnPoll result on vote:${JSON.stringify(resultvote,null,2)}`);
-                console.log('====================================');
+            ).then(()=>{
+                dbService.disconnect();
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda005", reason: "VOTE_OK"})); 
 
             }).catch(errvote=>{
+                dbService.disconnect();
                 console.log('====================================');
                 console.log(`Polls Controller voteOnPoll error on vote:${JSON.stringify(errvote,null,2)}`);
                 console.log('====================================');
@@ -187,11 +182,8 @@ module.exports={
                     }
                 }
             }
-        )).then(resultPoll=>{
+        )).then(()=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`add poll option result update :${JSON.stringify(resultPoll,null,2)}`);
-            console.log('====================================');
             response.writeHead(200,{'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda005", reason: "poll updated"}));
         })
@@ -214,10 +206,6 @@ module.exports={
             .then(()=>dbService.searchByID({collectionName:'polls',queryParam:{_id:request.query.polltoken}}))
             .then(resultdetail=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`GOT DATA:${JSON.stringify(resultdetail,null,2)}`);
-                console.log('====================================');
-                
                 if (!resultdetail.length){
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "No poll with the token provided exists"}));
@@ -234,7 +222,6 @@ module.exports={
                         }
                     }
                 ));
-
             })
             .catch(errConnect=>{
                 console.log('====================================');
@@ -251,11 +238,6 @@ module.exports={
             response.end(JSON.stringify({code: "fccda001", reason: "No token provided"}));
             return;
         }
-       /*  console.log('====================================');
-        console.log(`twitter app id:${request.app.locals.TWITTER_APP_ID} twitter app secret:${request.app.locals.TWITTER_APP_SECRET}`);
-        console.log('====================================');
-
-        return; */
         dbService.setUrl(request.app.MONGODB);
         dbService.connect()
         .then(()=>dbService.searchByID({collectionName:'users',queryParam:{_id:request.body.authtoken}}))
@@ -284,7 +266,7 @@ module.exports={
                 .catch(()=>{
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-                })
+                });
 
             }
         })
@@ -294,15 +276,7 @@ module.exports={
             console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        })
-        /* //httpService.sendToTwitter({token:request.query.token})
-        .then(()=>{
-            response.writeHead(500, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify({code: "fccda005", reason: "OK"}));
-        })
-        .catch(()=>{
-            response.writeHead(500, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
-        }); */
+        });
+        
     }
 };

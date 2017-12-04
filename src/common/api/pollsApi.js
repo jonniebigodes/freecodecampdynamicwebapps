@@ -112,7 +112,10 @@ class PollsApi{
             }).then(response=>{
                 return response.json();
             }).then(result=>{
-                result.code==='fccda001'?reject(`There was an error deleting the poll:${result.reason}`):resolve(true);
+                console.log('====================================');
+                console.log(`RESULT API CALL:${JSON.stringify(result,null,2)}`);
+                console.log('====================================');
+                result.code=='fccda001'?reject(`There was an error deleting the poll:${result.reason}`):resolve(true);
                 
             }).catch(error=>{
                 console.log('====================================');

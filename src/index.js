@@ -9,7 +9,7 @@ import PollInfoDetail from './client/components/dynamic_challenges/vottingapp/Po
 import nightLifeApp from './client/components/dynamic_challenges/nightlife/NightLifeApp';
 import stocksApp from './client/components/dynamic_challenges/stocks/stocksApp';
 import BookTradeApp from './client/components/dynamic_challenges/books/BookTradeApp';
-import pinrestApp from './client/components/dynamic_challenges/pinClone/pinRestCloneApp';
+import PinApp from './client/components/dynamic_challenges/pinClone/pinApp';
 import NotFound from './client/components/notFound';
 
 
@@ -23,7 +23,7 @@ render(
             <Route path="/nightlife" component={nightLifeApp}/>
             <Route path="/stocks" component={stocksApp}/>
             <Route path="/books" component={BookTradeApp}/>
-            <Route path="/pinclone" component={pinrestApp}/>
+            <Route path="/pinclone/(:authToken)" component={PinApp}/>
             <Route path="/" component={App} />
             <Route path="*" component={NotFound}/> 
         </Router>

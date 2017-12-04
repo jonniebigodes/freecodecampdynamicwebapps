@@ -1,17 +1,15 @@
 // prod mode
-const httpService = require('./httpService'); 
-const dbService=require('./dbFactory');
+/* const httpService = require('./httpService'); 
+const dbService=require('./dbFactory'); */
 //
 // dev mode
-/* const httpService = require('../src/server/httpService');
-const dbService = require('../src/server/dbFactory'); */
+const httpService = require('../src/server/httpService');
+const dbService = require('../src/server/dbFactory');
 
 //
 module.exports = {
     getYelpToken(request,response){
-        console.log('====================================');
-        console.log(`yelp token:${request.app.YELP_KEY} yelp consumer:${request.app.YELP_CONSUMER}`);
-        console.log('====================================');
+        
         httpService
         .getToken(request.app.YELP_KEY, request.app.YELP_CONSUMER)
         .then(result=>{
@@ -91,9 +89,6 @@ module.exports = {
         dbService.connect().then(() => dbService.injectOneItem({collectionName: 'goingnights',data: {user: request.body.userToken,location: request.body.location}}))
             .then(() => {
                 dbService.disconnect();
-                /* console.log('====================================');
-                console.log(`data was injected`);
-                console.log('===================================='); */
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: 'fccda005',reason: "DATA ADDED"}));
             })
@@ -111,9 +106,6 @@ module.exports = {
         dbService.connect()
             .then(() => dbService.removeOne({collectionName: 'goingnights',data: {user: request.body.userToken,ocation: request.body.location}}))
             .then(() => {
-                /* console.log('====================================');
-                console.log(`data was removed`);
-                console.log('===================================='); */
                 dbService.disconnect();
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda005",reason: "DATA TERMINATED"}));

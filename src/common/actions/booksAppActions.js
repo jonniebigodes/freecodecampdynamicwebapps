@@ -195,9 +195,9 @@ export const fetchDataBooks=()=>dispatch=>{
     dispatch(requestBooksData(true));
     let dataUserStorage=JSON.parse(ChallengesApi.getStorageData("bookapp_userinfo"));
     if (dataUserStorage){
-        console.log('====================================');
+       /*  console.log('====================================');
         console.log(`1 data with value of :${dataUserStorage.email}`);
-        console.log('====================================');
+        console.log('===================================='); */
         
         dispatch(setBookAppAuthServerData({email:dataUserStorage.email,password:dataUserStorage.password}));
         dispatch(BookAppAuthSucess({authToken:dataUserStorage.authToken,full_name:dataUserStorage.full_name,city:dataUserStorage.city,country:dataUserStorage.country,countrystate:dataUserStorage.countrystate}));

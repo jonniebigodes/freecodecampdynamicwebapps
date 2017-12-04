@@ -1,24 +1,17 @@
 const LocalStrategy = require('passport-local').Strategy;
 const FacebookStrategy=require('passport-facebook').Strategy;
 const TwitterStrategy= require('passport-twitter').Strategy;
-const dbService = require('./dbFactory');
-//const dbService = require('./src/server/dbFactory');
+
+const localTwitterCallback='http://localhost:5000/api/login/twitter/connect/callback';
+const externalTwitterCallback='https://freecodecampdynprojects.herokuapp.com/api/login/twitter/connect/callback';
+// const dbService = require('./dbFactory');
+const dbService = require('./src/server/dbFactory');
 module.exports=(app,passport)=>{
-  /*   console.log('====================================');
-    console.log(`pass config app mongodb:${app.MONGODB}`);
-    console.log('===================================='); */
+    
     passport.serializeUser((user, done) => {
-        /* console.log('====================================');
-        console.log(`serialize user:${JSON.stringify(user)}`);
-        console.log('===================================='); */
         done(null, user.id);
-        //done(null,user);
-        
     });
     passport.deserializeUser((id, done) => {
-        /* console.log('====================================');
-        console.log(`deserialize user:${id}`);
-        console.log('===================================='); */
         dbService.setUrl(app.MONGODB);
         dbService.connect().then(() => dbService.searchByID({collectionName: 'users',queryParam: {_id:id}}))
             .then(resultSearch => {
@@ -38,9 +31,6 @@ module.exports=(app,passport)=>{
         passwordField: 'password',
         passReqToCallback: true
     }, (req, mail, password, done) => {
-        /* console.log('====================================');
-        console.log(`LocalStrategy login`);
-        console.log('===================================='); */
         dbService.setUrl(app.MONGODB);
         dbService
             .connect()
@@ -53,10 +43,6 @@ module.exports=(app,passport)=>{
             .then(resultsearch => {
                 dbService.disconnect();
                 if (resultsearch.length){
-                   /*  console.log('====================================');
-                    console.log(`local login resultsearch id:${resultsearch[0]._id}\n email:${resultsearch[0].local_email}`);
-                    console.log('===================================='); */
-
                     if (dbService.comparePassword(password,resultsearch[0].local_password)==='PWD_OK'){
                         return done(null,{
                                 id:resultsearch[0]._id,
@@ -98,17 +84,11 @@ module.exports=(app,passport)=>{
         passwordField: 'password',
         passReqToCallback: true
     }, (req, email, password, done) => {
-       /*  console.log('====================================');
-        console.log(`local-signup req.body.email:${req.body.username} email:${email} password:${password}`);
-        console.log('===================================='); */
         dbService.setUrl(app.MONGODB);
         dbService
             .connect()
             .then(()=>dbService.search({collectionName:'users',queryParam:{local_email:email}}))
             .then(resultsearch => {
-                /* console.log('====================================');
-                console.log(`local-signup resultsearch len:${resultsearch.length}`);
-                console.log('===================================='); */
                 if (resultsearch.length){
                     dbService.disconnect();
                     return done(null, false);
@@ -134,13 +114,7 @@ module.exports=(app,passport)=>{
                     dbService.injectOneItem({collectionName: 'users', data: NewUser})
                         .then(resultInject => {
                             dbService.disconnect();
-                           /*  console.log('====================================');
-                            console.log(`data was injected`);
-                            console.log('===================================='); */
                             NewUser.id = resultInject;
-                           /*  console.log('====================================');
-                            console.log(`to be serialized:${NewUser.id}\nlocal_email:${NewUser.local_email} local_password:${NewUser.local_password}`);
-                            console.log('===================================='); */
                             return done(null, NewUser);
                         })
                         .catch(errInject => {
@@ -159,15 +133,19 @@ module.exports=(app,passport)=>{
                 return done(err);
             });
     }));
+    
 
-    // twitter auth
+    //region twitter auth
     passport.use(new TwitterStrategy({
         consumerKey: app.locals.TWITTER_APP_ID,
         consumerSecret: app.locals.TWITTER_APP_SECRET,
-        callbackURL:'http://localhost:5000/api/login/twitter/connect/callback',
+        callbackURL:process.env.NODE_ENV !== 'production'?localTwitterCallback:externalTwitterCallback,
         passReqToCallback:true,
         includeEmail:true
     },(req, token, tokenSecret, profile, done)=>{
+       /*  console.log('====================================');
+        console.log(`app.locals.APP_SWITCH value ssss:${app.locals.APP_SWITCH}`);
+        console.log('===================================='); */
         process.nextTick(()=>{
             dbService.setUrl(app.MONGODB);
             let dataUser = {
@@ -188,20 +166,12 @@ module.exports=(app,passport)=>{
                 state:'0',
                 country:'0'
             };
-            console.log('====================================');
-            console.log(`twitter token:${token} tokenSecret:${tokenSecret}`);
-            console.log('====================================');
-          /*   console.log('====================================');
-            console.log(`twitter req auth:${JSON.stringify(req.user,null,2)}`);
-            console.log('===================================='); */
             // change to email
             if (!req.user){
                 dbService.connect()
                 .then(()=>dbService.search({collectionName:'users',queryParam:{local_email: profile.emails[0].value}}))
                 .then(resultSearchUsers=>{
-                   /*  console.log('====================================');
-                    console.log(`result resultSearchUsers no req user:${JSON.stringify(resultSearchUsers,null,2)}`);
-                    console.log('===================================='); */
+                   
                     if (resultSearchUsers.length){
                         dataUser.id= resultSearchUsers[0]._id; 
                         dataUser.twitter_user_token=resultSearchUsers[0].twitter_user_token;
@@ -267,9 +237,7 @@ module.exports=(app,passport)=>{
                         
                         dbService.injectOneItem({collectionName:'users',data:dataUser})
                             .then(resultCreateUser=>{
-                                console.log('====================================');
-                                console.log(`resultAdd tw user:${JSON.stringify(resultCreateUser,null,2)}`);
-                                console.log('====================================');
+                                dbService.disconnect();
                                 dataUser.id=resultCreateUser;
                                 return done(null,dataUser);
                             })
@@ -286,23 +254,18 @@ module.exports=(app,passport)=>{
                 .catch(errorFbConnect=>{
                     dbService.disconnect();
                     console.log('====================================');
-                    console.log(`error fb-login err:${errorFbConnect}`);
+                    console.log(`error tw-login err:${errorFbConnect}`);
                     console.log('====================================');
                     return done(errorFbConnect);
                 });
             }
             else{
-                
-               //dataUser= req.user;
                dataUser.id=req.user._id;
                dataUser.twitter_id= profile.id;
                dataUser.twitter_user_token= token;
                dataUser.twitter_user_secret= tokenSecret;
                dataUser.twitter_username=profile.username;
                dataUser.twitter_display_name= profile.displayName;
-               /* console.log('====================================');
-               console.log(`user in session :${JSON.stringify(dataUser,null,2)}`);
-               console.log('===================================='); */
                dbService.connect().then(()=>dbService.updateById(
                 {
                     collectionName:'users',
@@ -337,7 +300,7 @@ module.exports=(app,passport)=>{
             }
         });
     }));
-    //
+    //endregion
 
     //facebook auth
     passport.use(new FacebookStrategy({

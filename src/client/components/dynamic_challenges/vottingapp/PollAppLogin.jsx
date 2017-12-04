@@ -18,7 +18,6 @@ class PollAppLogin extends Component{
             userFullName:'',
             local:false,
             facebook:false,
-
         };
     }
     componentWillReceiveProps(nextProps){
@@ -181,6 +180,7 @@ class PollAppLogin extends Component{
         if (this.state.local){
             return this.renderLocalLoginRegister();
         }
+        //http://localhost:5000/api/login/votting/twitter/connect
         return(
             <div>
                 <h4>Choose how you want to login</h4>
@@ -198,7 +198,7 @@ class PollAppLogin extends Component{
                 <RaisedButton label="TWITTER"
                             primary
                             icon={<FontIcon className="muidocs-icon-custom-github"/>}
-                            href="http://localhost:5000/api/login/votting/twitter/connect"
+                            href="http://localhost:5000/api/login/social?q=v"
                             fullWidth/>
             </div>
         );

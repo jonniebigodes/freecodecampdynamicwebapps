@@ -74,7 +74,6 @@ class NewPoll extends Component{
             ,polloptionId:'',polloptionName:''});
     }
     removePoll=(e)=>{
-        
         this.setState({PollOptions:this.state.PollOptions.filter(x=>x.idoption!=e)});
     }
     generateListOptions(){

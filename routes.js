@@ -4,6 +4,7 @@ const NightsController=require('./NightLifeController');
 const StocksController=require('./StockSearchController');
 const BooksController=require('./BooksController');
 const PollsController= require('./PollsController');
+const PinsController= require('./PinController'); 
 const path = require('path');
 //
 
@@ -13,7 +14,8 @@ const path = require('path');
 const NightsController=require('./controllers/NightLifeController');
 const StocksController=require('./controllers/StockSearchController');
 const BooksController=require('./controllers/BooksController');
-const PollsController= require('./controllers/PollsController'); */
+const PollsController= require('./controllers/PollsController');
+const PinsController= require('./controllers/PinController'); */
 //
 
 
@@ -35,13 +37,38 @@ module.exports=(app,passport)=>{
     }));
 
     //twitter auth
+    app.get('/api/login/social',(req,res)=>{
+        /* console.log('====================================');
+        console.log(`social route query param :${req.query.q}`);
+        console.log('====================================') */;
+        if(req.query.q=='v'){
+            app.locals.APP_SWITCH='VOTES';
+            res.redirect('/api/login/votting/twitter/connect');
+        }
+        else{
+            app.locals.APP_SWITCH='PINS';
+            res.redirect('/api/login/pins/twitter/connect');
+        }
+    });
+    // votes
     app.get('/api/login/votting/twitter/connect',passport.authenticate('twitter',{scope:'email'}));
+    //
+    // pins
+    app.get('/api/login/pins/twitter/connect',passport.authenticate('twitter',{scope:'email'}));
+    //
     app.get('/api/login/twitter/connect/callback',passport.authenticate('twitter',{
-        successRedirect: '/api/login/votting/social/sucess',
         failureRedirect: '/api/login/fail'
-    }));
+    }),(req,res)=>{
+        //console.log(`APP IS GOING TO REDIRECT TO:${app.locals.APP_SWITCH}`);
+        app.locals.APP_SWITCH=='VOTES'?res.redirect('/api/login/votting/social/sucess'):res.redirect('/api/login/pin/social/sucess');
+        
+    });
     app.get('/api/login/votting/social/sucess',(req,res)=>{
-        res.redirect(`/voting/${req.user._id}`); // add arguments
+        res.redirect(`/voting/${req.user._id}`); 
+    });
+    //
+    app.get('/api/login/pin/social/sucess',(req,res)=>{
+        res.redirect(`/pinclone/${req.user._id}`); 
     });
     //
     app.post('/api/login/local/auth',passport.authenticate('local-login',{
@@ -103,6 +130,10 @@ module.exports=(app,passport)=>{
     app.post('/api/data/pollvote',PollsController.voteOnPoll);
     app.post('/api/data/addpolloption',PollsController.addPollOption);
     app.post('/api/data/pollshare',PollsController.sharePoll);
+    app.get('/api/data/getpins',PinsController.getImages);
+    app.post('/api/data/addimage',PinsController.addImage);
+    app.post('/api/data/delimage',PinsController.deleteImage);
+    app.post('/api/data/voteimage',PinsController.VoteImage);
     app.get('*',(request,response)=>{
         //response.sendFile(__dirname + '/dist/index.html');
         response.sendFile('index.html',{root:path.join(__dirname,'../dist/')});

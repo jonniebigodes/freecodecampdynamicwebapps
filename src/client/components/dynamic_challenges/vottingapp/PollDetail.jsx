@@ -121,7 +121,13 @@ class PollDetail extends Component{
         this.props.shareSocialNetwork(this.props.pollInfo.polltoken);
     }
     deletePoll=()=>{
+        if (!this.props.userInfo.id==this.props.pollInfo.pollcreator){
+           this.setState({snackOpen:true,snackMessage:'Cannot delete a poll you did not create'});
+           return;
+        }
+        
         this.props.pollRemoval(this.props.pollInfo.polltoken);
+        this.exitVotes();
     }
     canEdit=()=>{
         if (!this.props.userInfo.email){

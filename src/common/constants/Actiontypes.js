@@ -75,3 +75,18 @@ export const BOOK_TRADE_OK='OK_BOOK_TRADE';
 export const BOOK_TRADE_NOK='NOK_BOOK_TRADE';
 export const SET_BOOK_EXIT='SET_BOOK_EXIT';
 //
+//pins
+export const REQUEST_PINS='PINS_REQUEST';
+export const RECIEVE_PINS='PINS_RECIEVE';
+export const ADD_PIN='PIN_ADD';
+export const WALL_ADD='ADD_WALL';
+export const REMOVE_PIN='PIN_DEL';
+export const VIEW_WALLS='WALL_VIEW';
+export const VIEW_ALL_WALLS='WALL_VIEW_ALL';
+export const VOTE_PIN='PIN_VOTE';
+export const SET_PIN_EXIT='EXIT_PIN';
+export const PIN_LOGIN_OK='LOGIN_OK_PIN';
+export const PIN_LOGIN_NOK='LOGIN_NOK_PIN';
+export const PIN_USER_LOGOUT='LOGOUT_PINS';
+export const PIN_SOCIAL_LOGIN_REQUEST_OK='LOGIN_REQUEST_SOCIAL_OK_PIN';
+//

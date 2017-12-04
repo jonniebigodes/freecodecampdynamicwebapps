@@ -10,16 +10,18 @@ import stocks from '../reducers/stockAppReducer';
 import votes from '../reducers/votingAppReducer';
 import night from '../reducers/nightlifeAppReducer';
 import books from '../reducers/booktradeAppReducer';
-
+import pins from '../reducers/pinAppReducer';
 // dev mode
 //const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //
+
 /* export default createStore(
     combineReducers({
         stocks,
         night,
         books,
-        votes
+        votes,
+        pins
     }),
     {},
     composeEnhancers(
@@ -33,7 +35,8 @@ export default createStore(
         stocks,
         night,
         books,
-        votes
+        votes,
+        pins
     }),
     {},
     applyMiddleware(thunk,promise()));

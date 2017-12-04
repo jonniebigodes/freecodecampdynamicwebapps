@@ -72,10 +72,7 @@ class NightItemsContainer extends Component{
                     </div>
                         
                 );
-            }
-            
-            
-                
+            }    
         }
         return results;
     }
@@ -89,10 +86,6 @@ class NightItemsContainer extends Component{
                 {this.renderItems()}
             </div>
         );
-
-        
-        
-        
     }
 }
 NightItemsContainer.propTypes={
@@ -106,7 +99,6 @@ NightItemsContainer.propTypes={
                 howmany:PropTypes.number,
                 what:PropTypes.string,
                 where:PropTypes.string
-
             }),
             searchResults:PropTypes.shape({
                 num_items_response:PropTypes.number,

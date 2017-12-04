@@ -1,10 +1,10 @@
 //prod mode
-const httpService = require('./httpService'); 
-const dbService=require('./dbFactory');
+/* const httpService = require('./httpService'); 
+const dbService=require('./dbFactory'); */
 //
 // dev mode
-/* const httpService = require('../src/server/httpService');
-const dbService = require('../src/server/dbFactory'); */
+const httpService = require('../src/server/httpService');
+const dbService = require('../src/server/dbFactory');
 //
 const path = require('path');
 module.exports = {

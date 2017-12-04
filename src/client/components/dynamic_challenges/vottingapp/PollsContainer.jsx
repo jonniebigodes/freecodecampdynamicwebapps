@@ -24,7 +24,8 @@ class PollsContainer extends Component{
         };
     }
     handleRemovePoll=(value)=>{
-        this.props.removePoll(value.polltoken);        
+       
+        this.props.removePoll(value);        
     }
     showHideLogin=()=>{
         this.setState({hideShowLogin:!this.state.hideShowLogin});
@@ -53,9 +54,6 @@ class PollsContainer extends Component{
         this.setState({adding:!this.state.adding});
     }
     onRowSelectedHandler=(selectedRows)=>{
-        /* console.log('====================================');
-        console.log(`selected row:${selectedRows}`);
-        console.log('===================================='); */
         this.setState({viewMode:!this.state.viewMode,selectedPoll:this.props.pollItems[selectedRows]});
     }
     handleVotes=(value)=>{
@@ -65,18 +63,14 @@ class PollsContainer extends Component{
         this.props.optionaddPoll(value);
     }
     handleNewPoll=(value)=>{
-        console.log('====================================');
-        console.log(`POlls container new poll:${JSON.stringify(value,null,2)}`);
-        console.log('====================================');
+        
         this.props.newPoll(value);
     }
     handleNewPollInject=()=>{
         this.changeAdd();
     }
     handleLoginReg=(value)=>{
-        console.log('====================================');
-        console.log(`container handleLoginReg: ${JSON.stringify(null,2)}`);
-        console.log('====================================');
+        
         this.props.loginregister(value);
     }
    handleSocialLogin=(value)=>{

@@ -10,17 +10,16 @@ class AppFooter extends Component{
         switch (value) {
             case "stocks":{
                 return "linksStocks";
-                
             }
                 
             case "nights":{
                 return "linksNights";
-               
             }
-                
+            case "pins":{
+                return "linkPins";
+            } 
             default:{
                 return "footer";
-                
             }
                 
         }
@@ -34,11 +33,12 @@ class AppFooter extends Component{
             case "stocks":{
                 return "footer-stocks";
             }
-               
             case "nights":{
                 return "footer-night";
             }
-                
+            case "pins":{
+                return "footer-pins";
+            }
             default:{
                 return "footer";
             }
@@ -51,8 +51,8 @@ class AppFooter extends Component{
      */
     render(){
         const linkstock=this.setfooterLink(this.props.appName);
-        //console.log("class Name: "+ linkstock);
         const footertext=this.setFooter(this.props.appName);
+        //console.log(`link stock value:${linkstock} footer text:${footertext}`);
         return(
              <div className={footertext+" voffset3"}>
                 Made by <a className={linkstock} href="https://www.freecodecamp.com/jonniebigodes" 

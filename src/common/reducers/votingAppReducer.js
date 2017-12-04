@@ -82,7 +82,7 @@ const voteAppReducer=(state = {
             };
         }
         case DEL_POLL:{
-            let votingIndex=this.state.items.findIndex(x=>x.polltoken==action.value);
+            let votingIndex=state.items.findIndex(x=>x.polltoken==action.value);
             return {
                 ...state,
                 items:[...state.items.slice(0,votingIndex),...state.items.slice(votingIndex+1)]
@@ -239,7 +239,6 @@ const voteAppReducer=(state = {
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
-                isSearching: false,
                 onError: false,
                 errorMessage: ''
             };

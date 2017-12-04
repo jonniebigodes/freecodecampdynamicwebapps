@@ -8,7 +8,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {GridList} from 'material-ui/GridList';
 import moment from 'moment';
-
 import {setDataInit,
     setDataFinal,
     setValueStock,
@@ -17,7 +16,6 @@ import {setDataInit,
     setAppError,
     delStocks,
     setStocksExit
-
 } from '../../../../common/actions/stockAppActions';
 import '../../../../Assets/stylesheets/base.scss';
 import '../../../../Assets/stylesheets/stocksApp.scss';
@@ -72,8 +70,6 @@ class StockContainer extends Component {
             this.props.setError("Someone forgot something, didn't you?\nThis one was already added");
             return;
         }
-
-
         let tmpDateCompare= tmpStock.endDate<tmpStock.startDate;
         //console.log("end date minor than start date"+ tmpDateCompare);
         
@@ -243,9 +239,6 @@ class StockContainer extends Component {
            
         );
     }
-    
-    
-
 
 }
 /**

@@ -45,7 +45,7 @@ app.locals.FACEBOOK_APP_ID= process.env.FACEBOOK_CLIENT_ID;
 app.locals.FACEBOOK_APP_SECRET=process.env.FACEBOOK_CLIENT_SECRET;
 app.locals.TWITTER_APP_ID=process.env.TWITTER_APP_KEY;
 app.locals.TWITTER_APP_SECRET=process.env.TWITTER_APP_SECRET;
-
+app.locals.APP_SWITCH='';
 app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({extended: false}));
 app.use(session({secret: process.env.SESSION_HASH, resave: false, saveUninitialized: true}));
@@ -66,19 +66,7 @@ else{
     console.log('===================================='); */
     app.use(express.static(path.join(__dirname, '../dist')));
 }
-/*
-console.log('====================================');
-console.log(`app info:\n mongodb:${app.locals.MONGODB} QUANDL:${app.locals.KEY_QUANDL} yelp key:${app.locals.YELP_KEY} yelp consumer :${app.locals.YELP_CONSUMER} blue :${app.locals.BLUEKEY}\ntwitter id:${app.locals.TWITTER_APP_ID} twitter secret:${app.locals.TWITTER_APP_SECRET}`);
-console.log('====================================');
 
-
-console.log('====================================');
-console.log(`server client id fb:${app.locals.FACEBOOK_APP_ID}\n secret:${app.locals.FACEBOOK_APP_SECRET}\n process info:\n id:${process.env.FACEBOOK_CLIENT_ID} secret:${process.env.FACEBOOK_CLIENT_SECRET}`);
-console.log('===================================='); 
-
- console.log('====================================');
-console.log(`app static location:${locationstatic}`);
-console.log('===================================='); */
 /**
  * function to set up the listener for the requests
  * @param port is the port defined above

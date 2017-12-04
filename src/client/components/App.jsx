@@ -28,7 +28,7 @@ class App extends Component {
         browserHistory.push('/books');
         break; 
      case "pPin":
-        browserHistory.push('/pinclone');
+        browserHistory.push('/pinclone/');
         break;
      default:
        break;
@@ -82,6 +82,5 @@ class App extends Component {
     );
   }
 }
-
 
 export default App;

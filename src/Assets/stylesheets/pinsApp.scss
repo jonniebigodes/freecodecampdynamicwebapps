@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat | Roboto Condensed');
+.imgthumb {
+    /* width:40vw !important;
+    height:40vh !important; */
+    width: auto;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 50vw;
+    max-height: 50vh;
+}
+
+.gridContainer {
+    width: 95vw !important;
+    height: 100vh !important; //overflow-Y: 'auto' !important;
+    margin-left: 1vw !important;
+}
+
+.formaddpos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: .2px solid plum;
+    width: 65%;
+    height: 50vh;
+    margin-top: 4vh;
+    margin-left: 14vw;
+    background-color: whitesmoke;
+}
+
+.preloaderpos {
+    width: 20vw;
+    height: 20vh;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+.progressPos{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.progressPos{
+    position: relative;
+    left: 6vh;
+}
+
+/* .viewerImagePos{
+    margin-left: 10vw;
+    margin-top: 2vh;
+    width: 50vw;
+    height: 50vh; 
+} */
+
+.infoViewPin {
+    margin-right: 1vw;
+}
+
+.imgPin {
+    width: 50vw;
+    height: 60vh;
+}
+
+.textPin {
+    text-align: center;
+    font-size: 2rem;
+    font-family: 'Monserrat', sans-serif;
+    color: #2c3251;
+}
+
+.textPinTile {
+    @extend .textPin;
+    font-size: 2.2rem;
+    color: #2c3251;
+}
+.textPinTileWall{
+    @extend .textPin;
+    font-size: 2.2rem;
+    color: #313968;
+}
+.textPinTileWall:hover{
+    cursor: pointer;
+}
+.overlaypinContainer {
+    width: 60vw;
+    height: 60vh;
+    margin-left: 25vw;
+    margin-top: 2vh;
+    position: relative;
+}
+
+.optionsPin,
+.pin {
+    width: 85%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.pinViewerContainer {
+    width: 80vw;
+    height: 80vh;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.optionsPin {
+    z-index: 10;
+    opacity: 0.7;
+}
+
+
+.posButtonsLogin {
+    margin-left: 9vw;
+    margin-top: 2vh;
+}
+
+.posButtonsPinView {
+    margin-left: 2vw;
+    margin-top: 2vh;
+}

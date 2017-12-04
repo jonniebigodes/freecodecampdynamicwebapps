@@ -14,9 +14,21 @@
     @extend .footer;
     color: white;
 }
+.footer-pins{
+    @extend .footer;
+    position: relative;
+    color:#49507a;
+    
+}
+
+a.linkPins:link{
+    color:#49507a;
+}
+a.linkPins:visited, .linkPins:hover,.linkPins:active{
+    color: #CE93D8;
+}
 a.linksStocks:link{
     color: white;
-
 }
 a.linksStocks:visited, .linksStocks:hover,.linksStocks:active {
     color:#FF9100;

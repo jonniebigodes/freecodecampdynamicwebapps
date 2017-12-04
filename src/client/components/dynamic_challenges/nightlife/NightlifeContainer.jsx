@@ -107,14 +107,12 @@ class NightLifeContainer extends Component {
      * handler function for login/register user
      */
     loginRegSend=(e)=>{
-        
         this.props.nightConnectUser(e);
     }
     /**
      * handler function for user logout
      */
     logoutHandler=()=>{
-        
         this.props.nightUnloadUser();
     }
     //region render component

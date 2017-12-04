@@ -202,11 +202,23 @@ export const addPollFold=pollData=>dispatch=>{
 
 };
 export const removePollFold=polldata=>dispatch=>{
+    console.log('====================================');
+    console.log(`removePollFold poll data: ${polldata}`);
+    console.log('====================================');
     PollsApi.deletePoll(polldata)
-    .then(()=>{
+    .then(result=>{
+        console.log('====================================');
+        console.log(`removePollFold poll result`);
+        console.log('====================================');
         dispatch(removePoll(polldata));
     })
-    .catch(err=>{dispatch(setPollAppError(err));});
+    .catch(errorDelPoll=>{
+        console.log('====================================');
+        console.log(`removePollFold poll error: ${errorDelPoll}`);
+        console.log('====================================');
+        dispatch(setPollAppError(errorDelPoll));
+    });
+    
 };
 export const addPollOptionFold=polldata=>dispatch=>{
     PollsApi.injectPollOption(polldata).then(()=>{
