@@ -1,5 +1,5 @@
-const dbService = require('../src/server/dbFactory');
-//const dbService=require('./dbFactory');
+//const dbService = require('../src/server/dbFactory');
+const dbService=require('./dbFactory');
 module.exports = {
 
     changeUserData(request, response) {

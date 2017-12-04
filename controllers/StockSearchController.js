@@ -1,5 +1,5 @@
-//const httpService = require('./httpService'); 
-const httpService = require('../src/server/httpService');
+const httpService = require('./httpService'); 
+//const httpService = require('../src/server/httpService');
 module.exports = {
     searchStockData(request, response) {
         if (request.query.stockName === '') {
