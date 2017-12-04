@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PinButton from './pinButton';
+import '../../../../Assets/stylesheets/pinsApp.scss';
 class PinView extends Component{
 
     constructor(props){

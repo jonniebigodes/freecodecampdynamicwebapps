@@ -4,6 +4,7 @@ import moment from 'moment';
 import Snackbar from 'material-ui/Snackbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import '../../../../Assets/stylesheets/pinsApp.scss';
 class PinAdd extends Component{
     constructor(props){
         super(props);
