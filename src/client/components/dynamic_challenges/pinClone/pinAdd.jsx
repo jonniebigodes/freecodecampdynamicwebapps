@@ -5,7 +5,6 @@ import Snackbar from 'material-ui/Snackbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 class PinAdd extends Component{
-    
     constructor(props){
         super(props);
         this.state={
