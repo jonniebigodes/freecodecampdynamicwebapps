@@ -6,7 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import '../../../../Assets/stylesheets/pinsApp.scss';
 
-class PinAdd extends Component{
+class PinCreator extends Component{
     constructor(props){
         super(props);
         this.state={
@@ -91,9 +91,9 @@ class PinAdd extends Component{
         );
     }
 }
-PinAdd.propTypes={
+PinCreator.propTypes={
     userInfo:PropTypes.string.isRequired,
     addPin:PropTypes.func.isRequired,
     cancelAdd:PropTypes.func.isRequired
 };
-export default PinAdd;
+export default PinCreator;

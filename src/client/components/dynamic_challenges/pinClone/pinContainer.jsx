@@ -9,7 +9,7 @@ import AppFooter from '../../AppFooter';
 import PinList from './pinList';
 import PinWallSelector from './pinWallSelector';
 import PinLogin from './pinLogin';
-import PinAdd from './PinAdd';
+import PinCreator from './PinCreator';
 import PinView from './pinViewer';
 import '../../../../Assets/stylesheets/pinsApp.scss';
 
@@ -75,7 +75,7 @@ class PinContainer extends Component{
 
         if (isadding){
             return (
-                <PinAdd userInfo={pinUserInfo.id} cancelAdd={this.cancelAdd} addPin={this.injectPin}/>
+                <PinCreator userInfo={pinUserInfo.id} cancelAdd={this.cancelAdd} addPin={this.injectPin}/>
             );
         }
         if (isImageView){
