@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-//import RaisedButton from 'material-ui/RaisedButton';
-
 import Drawer from 'material-ui/Drawer';
-//import FontIcon from 'material-ui/FontIcon';
-
 import {
     pintwitterloginexternalserver,
     pintwitterloginlocalserver
 } from '../../../../common/constants/ApiEndPoints';
 import PinButton from './pinButton';
 class PinLogin extends Component{
-     
+     /**
+      * pin login class constructor
+      * @param {*} props 
+      */
     constructor(props){
         super(props);
         this.state={
@@ -19,24 +18,42 @@ class PinLogin extends Component{
         };
         
     }
+    /**
+     * guard method for the framework
+     * @param {Object} nextProps next props to be injected on the component
+     */
     componentWillReceiveProps(nextProps){
         if (nextProps.hasLoginNeeds!==this.props.hasLoginNeeds){
             this.openCloseDrawer();
         }   
     }
-    
+    /**
+     * class property to change the state
+     *
+     */
     openCloseDrawer = () => {
         this.setState({openDrawer: !this.state.openDrawer});
     }
+    /**
+     * class property to handle the logout
+     *
+     */
     handleLogout=()=>{
         this.props.userLogout();
     }
+    /**
+     * class property to handle the pin injections
+     *
+     */
     addPin=()=>{
         this.props.addPinWall();
     }
     setdummyLogin=()=>{
         this.props.enableDummyLogin();
     }
+    /**
+     * render function case loggedin
+     */
     renderLogin=()=>{
         return (
             <div>
@@ -51,12 +68,15 @@ class PinLogin extends Component{
             </div>
         );
     }
+    /**
+     * render function case no login
+     */
     rendernoLogin=()=>{
         return(
             <div>
                  <h4>Click bellow to authenticate yourself</h4>
                  <div className="posButtonsLogin">
-                    <PinButton buttonText={"Add Pin"} 
+                    <PinButton buttonText={"Connect"} 
                     hasHref 
                     hrefUrl={process.env.NODE_ENV!=='production'?pintwitterloginlocalserver:pintwitterloginexternalserver}
                     hasSvg 

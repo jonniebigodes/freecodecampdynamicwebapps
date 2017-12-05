@@ -15,6 +15,10 @@ import '../../../../Assets/stylesheets/pinsApp.scss';
 
 class PinContainer extends Component{
 
+     /**
+     * container class construtor
+     * @param {*} props 
+     */
     constructor(props){
         super(props);
         this.state={
@@ -27,48 +31,86 @@ class PinContainer extends Component{
         };
        
     }
+    /**
+     * class property to handle the state change login
+     */
     showHideLogin=()=>{
         this.setState({hideShowLogin:!this.state.hideShowLogin});
     }
+    /**
+     * class property to handle reset app error
+     */
     onresetError=()=>{
         this.props.resetErrorApp();
     }
+    /**
+     * class property to handle the pin vote
+     * @param {Object} value object containing the information about the pin
+     */
     voteImage=value=>{
         this.props.castImageVote(value);
         this.setState({snackOpen:!this.state.snackOpen, snackMessage:'The vote was cast on the image'});
     }
+    /**
+     * class property to handle the state change for the snack
+     */
     handleCloseSnack=()=>{
         this.setState({snackOpen:!this.state.snackOpen});
     }
-    
+    /**
+     * class property to handle getting all the walls
+     */
     getAllWalls=()=>{
         this.props.getAllWalls();
     }
+    /**
+     * class property to handle the click on the button
+     * @param {string} value string containing the id of the wall
+     */
     wallSelector=value=>{
         this.props.selectWall(value);
     }
     pinAdd=()=>{
         this.setState({isadding:true});
     }
+    /**
+     * class property to handle the cancelation of the pin add
+     */
     cancelAdd=()=>{
         this.setState({isadding:false});
     }
+    /**
+     * class property to handle the addition of a pin to a wall
+     */
     injectPin=(value)=>{
         this.props.addPinUserWall(value);
     }
     enableDummyUser=()=>{
         this.props.setDummyLogin();
     }
+    /**
+     * class property to handle the pin selection for viewing
+     * @param {string} value string containing the id of the image
+     */
     handleImagePreview=value=>{
         
         this.setState({isImageView:true,selectedImage:value});
     }
+    /**
+     * class property to handle the exit of pin view
+     */
     handleExitViewer=()=>{
         this.setState({isImageView:false,selectedImage:{}});
     }
+    /**
+     * class property to handle the click on the button
+     */
     removePinData=value=>{
         this.props.deletePin(value);
     }
+    /**
+     * render normal method
+     */
     renderNormal(){
         const {isadding,isImageView,selectedImage,snackOpen,snackMessage,hideShowLogin}=this.state;
         const {isLoggedIn,pindata,selectedWall,pinUserInfo}= this.props;
@@ -112,6 +154,9 @@ class PinContainer extends Component{
            </div>
         );
     }
+    /**
+     * preload renderer
+     */
     renderPreload(){
         return(
             <div className="preloaderpos">
@@ -124,6 +169,9 @@ class PinContainer extends Component{
             </div>
         );
     }
+    /**
+     * render method
+     */
     render(){
         const {isAppError,errorMessageApp,isSearching}= this.props;
         const actionsDialog = [

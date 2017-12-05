@@ -8,8 +8,16 @@ import {
     removePinlocalserver,
     removePinexternalserver
 } from '../constants/ApiEndPoints';
+
+/**
+ * class to connect to the backend and perform operations needed for the challenge
+ */
 class PinApi{
    
+    /**
+     * static method to get all the pins in the system
+     * @returns {Promise} result or fail of the request
+     */
     static getallPins(){
         return new Promise((resolve,reject)=>{
             fetch(process.env.NODE_ENV !== 'production'?getPinslocalserver:getPinsexternalserver)
@@ -30,6 +38,11 @@ class PinApi{
             });
         });
     }
+    /**
+     * static method to add a pin on the user wall
+     * @returns {Promise} result or fail of the request action
+     * @argument {object} value object containing the information about the pin(link/name/id) and user token
+     */
     static addPin(value){
         return new Promise((resolve,reject)=>{
             fetch(process.env.NODE_ENV!=='production'?addPinslocalserver:addPinsexternalserver,{
@@ -65,6 +78,11 @@ class PinApi{
             });
         });
     }
+    /**
+     * static method to remove a pin on the user wall
+     * @returns {Promise} result or fail of the request action
+     * @argument {object} value object containing the information about the pin to remove
+     */
     static removePin(value){
         return new Promise((resolve,reject)=>{
             fetch(process.env.NODE_ENV !== 'production'?removePinlocalserver:removePinexternalserver,{
@@ -93,6 +111,11 @@ class PinApi{
             });
         });
     }
+    /**
+     * static method to add a pin on the user wall
+     * @returns {Promise} result or fail of the request action
+     * @argument {string} value the id of the image
+     */
     static voteOnPin(value){
         return new Promise((resolve,reject)=>{
             fetch(process.env.NODE_ENV!=='production'?votePinlocalserver:votePinexternalserver,{

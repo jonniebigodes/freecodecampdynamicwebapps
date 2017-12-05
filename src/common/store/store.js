@@ -1,8 +1,8 @@
 // dev mode
-//import {createStore,combineReducers,applyMiddleware,compose} from 'redux';
+import {createStore,combineReducers,applyMiddleware,compose} from 'redux';
 //
 // prod mode 
-import {createStore,combineReducers,applyMiddleware} from 'redux';
+//import {createStore,combineReducers,applyMiddleware} from 'redux';
 //
 import thunk from 'redux-thunk';
 import promise from 'redux-promise-middleware';
@@ -12,10 +12,10 @@ import night from '../reducers/nightlifeAppReducer';
 import books from '../reducers/booktradeAppReducer';
 import pins from '../reducers/pinAppReducer';
 // dev mode
-//const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 //
 
-/* export default createStore(
+export default createStore(
     combineReducers({
         stocks,
         night,
@@ -28,9 +28,9 @@ import pins from '../reducers/pinAppReducer';
         applyMiddleware(thunk,promise())
     )
     
-); */
+);
 // prod mode
-export default createStore(
+/* export default createStore(
     combineReducers({
         stocks,
         night,
@@ -39,4 +39,4 @@ export default createStore(
         pins
     }),
     {},
-    applyMiddleware(thunk,promise()));
+    applyMiddleware(thunk,promise())); */

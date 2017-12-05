@@ -11,7 +11,8 @@ import{
     viewAllUserWAlls,
     fetchPinSocialInfo,
     setDummyLoginData,
-    removePinfromWall
+    removePinfromWall,
+    pinAppDisconnect
 } from '../../../../common/actions/pinAppActions';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import PinContainer from './pinContainer';
@@ -19,10 +20,15 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
 class PinApp extends Component{
-    
+    /**
+     * guard methods from the framework
+     */
     componentWillMount(){
         injectTapEventPlugin();
     }
+    /**
+     * guard methods from the framework
+     */
     componentDidMount(){
         this.props.reqPins();
         this.props.getPins();
@@ -30,30 +36,61 @@ class PinApp extends Component{
             this.props.getPinSocialAuthData(this.props.params.authToken);
         }
     }
+    /**
+     * guard methods from the framework
+     */
     componentWillUnmount(){
         this.props.pinsExit();
     }
+    /**
+     * class property to handle reset of the app error
+     */
     handleResetError=()=>{
         this.props.pinResetError();
     }
+    /**
+     * class property to handle the vote operation
+     * @param {Object} value object containing the information about the pin
+     */
     handleVoteCast=value=>{
         this.props.pinVote(value);
     }
+    /**
+     * class property to handle the wall selection
+     * @param {string} value id of the wall
+     */
     handleViewSelectedWall=value=>{
         this.props.viewUserWall(value);
     }
+    /**
+     * class property to get all the walls back
+     */
     handleGetAllWalls=()=>{
         this.props.viewAll();
     }
+    /**
+     * class property to handle user disconnect
+     */
     handleDisconnect=()=>{
         this.props.unplugPinApp();
     }
+    /**
+     * class property to handle the add pin operation
+    * @param {Object} value object containing the information about the pin to be added
+     */
     handlePinAdd=(value)=>{
         this.props.injectPin(value);
     }
+    /**
+     * to delete
+     */
     makeDummyLogin=()=>{
         this.props.makeDummy();
     }
+    /**
+     * class property to handle the delete operation
+     * @param {Object} value object containing the information about the pin
+     */
     handleDelete=value=>{
         this.props.unplugPin(value);
     }
@@ -121,7 +158,7 @@ const mapDispatchToProps=dispatch=>{
             dispatch(removePinfromWall(value));
         },
         unplugPinApp:()=>{
-            dispatch(disconnectPinApp());
+            dispatch(pinAppDisconnect());
         },
         getPinSocialAuthData:(value)=>{
             dispatch(fetchPinSocialInfo(value));

@@ -7,6 +7,10 @@ import TextField from 'material-ui/TextField';
 import '../../../../Assets/stylesheets/pinsApp.scss';
 
 class PinCreator extends Component{
+    /**
+     * constructor
+     * @param {*} props 
+     */
     constructor(props){
         super(props);
         this.state={
@@ -17,18 +21,30 @@ class PinCreator extends Component{
             imageId:''
         };
     }
+    /**
+     * class property to handle the generation of the id
+     */
     generateIDPin=()=>{
         this.setState({imageId:`pincimage_${moment()}`});
     }
+    /**
+     * class property to handle name change of the image(event handler)
+     */
     updateImageName=(e)=>{
         if (this.state.imageName===''){
             this.generateIDPin();
         }
         this.setState({imageName:e.target.value});
     }
+     /**
+     * class property to handle location change of the image(event handler)
+     */
     updateImageLocation=(e)=>{
         this.setState({imgURL:e.target.value});
     }
+     /**
+     * class property to handle the addition of the pin
+     */
     addPin=()=>{
         const {imgURL,imageName,imageId}= this.state;
         const {userInfo}= this.props;
@@ -42,15 +58,24 @@ class PinCreator extends Component{
             this.cancelPinAdd();
         }, 1000);
     }
+     /**
+     * class property to handle the cancelation of the pin
+     */
     cancelPinAdd=()=>{
         this.props.cancelAdd();
     }
+     /**
+     * class property to handle state change for the snack
+     */
     handleCloseSnack=()=>{
         this.setState({snackOpen:!this.state.snackOpen});
     }
     cancelFormSubmit=()=>{
         return false;
     }
+     /**
+     * render method
+     */
     render(){
         const {imageName,imgURL,snackOpen,snackMessage}= this.state;
         return (

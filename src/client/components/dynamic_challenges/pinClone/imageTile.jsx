@@ -3,21 +3,29 @@ import PropTypes from 'prop-types';
 import {GridTile} from 'material-ui/GridList';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import Star from 'material-ui/svg-icons/toggle/star';
-//import RaisedButton from 'material-ui/RaisedButton';
+
 import IconButton from 'material-ui/IconButton';
 import '../../../../Assets/stylesheets/pinsApp.scss'; 
 class ImageTile extends Component{
 
+    /**
+     * class constructor
+     */
     constructor(props){
         super(props);
         this.state={
             stars:0
         };
     }
+    /**
+     * guard methods from the framework
+     */
     componentWillMount(){
         this.setState({stars:this.props.imageInfo.stars});
     }
-    
+    /**
+     * class property to handle the vote operation
+     */
     handlevoteImage=()=>{
         const {imageInfo}= this.props;
         this.props.voteImage({wall:imageInfo.wallid,image:imageInfo.imageid});
@@ -25,15 +33,23 @@ class ImageTile extends Component{
         stars+=1;
         this.setState({stars:stars});
     }
+    /**
+     * class property to handle the wall selection
+     */
     viewWall=()=>{
         const {imageInfo}= this.props;
         this.props.viewWall(imageInfo.wallid);
     }
+    /**
+     * class property to handle the pin selection
+     */
     selectviewImage=()=>{
         const {imageInfo}= this.props;
         this.props.viewImage(imageInfo);
     }
-    
+    /**
+     * render method
+     */
     render(){
        const {imageInfo}= this.props;
        const {stars}=this.state;

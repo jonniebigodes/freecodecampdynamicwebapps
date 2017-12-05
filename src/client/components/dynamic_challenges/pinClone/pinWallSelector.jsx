@@ -7,12 +7,20 @@ import {
   } from 'material-ui/Stepper';
 class PinWallSelector extends Component{
 
+  /**
+   * wall selector class construtor
+   * @param {*} props 
+   */
     constructor(props){
         super(props);
         this.state={
           stepIndex:1
         };
     }
+    /**
+     * class property to handle the go back
+     
+     */
     handlePrev=()=>{
         /* const {stepIndex}=this.state;
         if (stepIndex > 0) {
@@ -22,7 +30,10 @@ class PinWallSelector extends Component{
         this.props.allwallsview();
         this.setState({stepIndex: 1});
     }
-    
+    /**
+     * class property to show the component
+     
+     */
     renderWall=()=>{
       const {wallname}=this.props;
       const {stepIndex} = this.state;
@@ -41,9 +52,10 @@ class PinWallSelector extends Component{
         </Stepper>
       );
     }
+    /**
+     * render method
+     */
     render(){
-      
-      
         return(
             <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
               {this.renderWall()}

@@ -10,13 +10,15 @@ import {
     VIEW_ALL_WALLS,
     VOTE_PIN,
     SET_PIN_EXIT,
-    PIN_SOCIAL_LOGIN_REQUEST_OK
+    PIN_SOCIAL_LOGIN_REQUEST_OK,
+    PIN_USER_LOGOUT
 } from '../constants/Actiontypes';
 import authApi from '../api/authApi';
 import ChallengesApi from '../api/challengesApi';
 import PinApi from '../api/pinsApi';
 import {normalize} from 'normalizr';
 import {PinSchemas} from '../constants/pinsSchema';
+
 export const requestPins=()=>({
     type:REQUEST_PINS
 });
@@ -61,6 +63,9 @@ export const pinSocialLoginOK=(value)=>({
     type:PIN_SOCIAL_LOGIN_REQUEST_OK,
     value
 });
+export const pinDisconnectUser=()=>({
+    type:PIN_USER_LOGOUT
+});
 export const fetchPinSocialInfo=value=>dispatch=>{
     authApi.getSocialInfo(value)
     .then(result=>{
@@ -81,6 +86,15 @@ export const fetchPinSocialInfo=value=>dispatch=>{
     });
 };
 
+export const pinAppDisconnect=()=>dispatch=>{
+    authApi.userLogout()
+        .then(()=>{
+            ChallengesApi.clearStorage();
+            dispatch(pinDisconnectUser());
+        }).catch(error=>{
+            dispatch(setPinAppError(error));
+        });
+};
 export const setDummyLoginData=()=>dispatch=>{
     dispatch(pinSocialLoginOK({token:'59b3ece0d0341622f08d9d8e',full_name:'paxa.brutal@gmail.com',twitterToken:'41643250-fL5thF5gFY6zHY3zvUMrgLBv90KGTeymN6F5Fd1wp',email:'paxa.brutal@gmail.com'}));
 };
@@ -174,15 +188,6 @@ export const voteOnPin=value=>dispatch=>{
     });
 };
 
-export const removePinWall=value=>dispatch=>{
-    PinApi.removePin(value)
-    .then(result=>{
-        dispatch(delPin(value));
-    })
-    .catch(error=>{
-        dispatch(setPinAppError(error));
-    });
-};
 export const disconnectPinApp=()=>dispatch=>{
     dispatch(exitPinApp());
 };

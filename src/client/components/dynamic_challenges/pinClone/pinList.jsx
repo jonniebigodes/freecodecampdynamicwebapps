@@ -5,28 +5,48 @@ import ImageTile from './imageTile';
 
 class PinList extends Component{
 
+    /**
+     * class constructor for the list of pins
+     * @param {*} props 
+     */
     constructor(props){
         super(props);
         this.pinVoteImage= this.pinVoteImage.bind(this);
         
-        this.styles={
+        /* this.styles={
             gridList:{
                 width:1280,
                 height:385,
                 margin:20,
                 overflowY: 'auto'
             }
-        };
+        }; */
     }
+    /**
+     * class property for handling pin vote
+     * @param {Object} value object containing the pin information 
+     */
     pinVoteImage=value=>{
         this.props.castImageVote(value);
     }
+    /**
+     * class property for handling selection of the wall
+     * @param {string} value contains the id of the wall
+     */
     userWallView=value=>{
         this.props.viewSelectedWall(value);
     }
+    /**
+     * class property for handling pin vote
+     * @param {string} value contains the image id
+     */
     selectedImageView=value=>{
         this.props.imageSelector(value);
     }
+    /**
+     * function to generate tiles 
+     * 
+     */
     generateTiles(){
         const {wallData}=this.props;
         let result=[];
@@ -73,6 +93,10 @@ class PinList extends Component{
         }
         return result;
     }
+    /**
+     * render method
+     * 
+     */
     render(){
         
         return(

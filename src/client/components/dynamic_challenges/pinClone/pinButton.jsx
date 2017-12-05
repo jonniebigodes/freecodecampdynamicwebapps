@@ -11,15 +11,25 @@ import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import Star from 'material-ui/svg-icons/toggle/star';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 class PinButton extends Component{
+    /**
+     * button class construtor
+     * @param {*} props 
+     */
     constructor(props){
         super(props);
         this.state={
             showMessage:false
         };
     }
+     /**
+     * class property to handle the click on the button
+     */
     clickHandler=()=>{
         this.props.clickAction();
     }
+     /**
+     * class property to get the icon for the button
+     */
     getIcon=value=>{
         switch (value) {
             case "dc":
@@ -39,6 +49,9 @@ class PinButton extends Component{
                 break;
         }
     }
+     /**
+     * render function for information
+     */
     renderInfo=()=>{
         const {buttonText,iconInfo,hasHref,hrefUrl,hasSvg,svgInfo}= this.props;
         
@@ -72,6 +85,9 @@ class PinButton extends Component{
                 onClick={this.clickHandler}/>
         ); */
     }
+     /**
+     * render function normal
+     */
     renderNormal=()=>{
         const {iconInfo,hasHref,hasSvg,svgInfo,hrefUrl}= this.props;
         if (hasHref){
@@ -94,14 +110,21 @@ class PinButton extends Component{
         }
         
     }
+     /**
+     * mouse event handler
+     */
     onMouseEnter=()=>{
-        
         this.setState({showMessage:true});
     }
+    /**
+     * mouse event handler
+     */
     onMouseLeave=()=>{
-        
         this.setState({showMessage:false});
     }
+    /**
+     * render method
+     */
     render(){
        const {showMessage}= this.state;
         return (

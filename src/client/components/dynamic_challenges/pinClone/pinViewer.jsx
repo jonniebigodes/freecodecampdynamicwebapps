@@ -4,6 +4,10 @@ import PinButton from './pinButton';
 import '../../../../Assets/stylesheets/pinsApp.scss';
 class PinView extends Component{
 
+    /**
+     * class constructor
+     * @param {*} props 
+     */
     constructor(props){
         super(props);
         this.state={
@@ -12,6 +16,10 @@ class PinView extends Component{
         };
         
     }
+    /**
+     * guard method framework
+     * @param {*} nextProps obj containing the next props to be injected
+     */
     componentWillReceiveProps(nextProps){
         
         const {imageInfo}= this.props;
@@ -20,13 +28,25 @@ class PinView extends Component{
             this.setState({stars:imageInfo.stars});
         }   
     }
+    /**
+     * class property to handle the image preview exit
+     
+     */
     imageViewExit=()=>{
         this.props.exitView();
     }
+    /**
+     * class property to handle the pin vote
+     
+     */
     addVote=()=>{
         this.setState({starsNumber:this.props.imageInfo.stars+1});
         this.props.voteOnImage({wall:this.props.imageInfo.wallid,image:this.props.imageInfo.imageid});
     }
+    /**
+     * class property to delete the pin
+     
+     */
     deletePinCollection=()=>{
         this.props.removePinWall({walltoken:this.props.imageInfo.wallid,imgtoken:this.props.imageInfo.imageid});
         setTimeout(() => {
@@ -34,12 +54,24 @@ class PinView extends Component{
         }, 1000);
 
     }
+    /**
+     * event handler
+     
+     */
     onMouseEnter=()=>{
         this.setState({mouseInside:true});
     }
+     /**
+     * event handler
+     
+     */
     onMouseLeave=()=>{
         this.setState({mouseInside:false});
     }
+     /**
+     * render method to show info
+     
+     */
     renderOptionsNologged(){
         const {starsNumber}= this.state;
         return(
@@ -72,6 +104,10 @@ class PinView extends Component{
             </div>
         );
     }
+    /**
+     * render method to show info
+     
+     */
     renderOptionsLogged(){
        
         const {starsNumber}= this.state;
@@ -112,6 +148,10 @@ class PinView extends Component{
             </div>
         );
     }
+    /**
+     * render method to show only action
+     
+     */
     renderActions=()=>{
         const {userInformation,imageInfo,isUserLogged}= this.props;
         if (isUserLogged){
@@ -121,6 +161,10 @@ class PinView extends Component{
         }
         return this.renderOptionsNologged();
     }
+    /**
+     * render method to show only infor
+     
+     */
     renderItemOption(){
         const {imageInfo,}=this.props;
         const {starsNumber}= this.state;
@@ -151,6 +195,10 @@ class PinView extends Component{
             
         );
     }
+    /**
+     * render method to show info
+     
+     */
     renderNormal(){
         const {imageInfo}=this.props;
         const {starsNumber}= this.state;
@@ -176,6 +224,10 @@ class PinView extends Component{
         </div>
         );
     }
+    /**
+     * render method
+     
+     */
     render(){
         const {mouseInside}= this.state;
         return(
