@@ -1,97 +1,88 @@
 @import url('https://fonts.googleapis.com/css?family=Merriweather');
 
-.GridError {
-    opacity: .5;
-    z-index: -1;
-}
 
 .containerApp {
-    background: #558C89;
+    background: #a5d6a7;
     
 }
-
-.containerElements {
+.containerResults{
     display: flex;
-    flex-direction: row wrap;
+    flex-direction:row;
     flex-wrap:wrap;
+    justify-content: space-evenly;
+    align-content: space-between;
+    
 }
+.containerPreview{
+    width: 90%;
+    height: 90%;
 
-.SearchErrorhidden {
-    display: none;
 }
-
-.SearchError {
-    text-align: center;
-    z-index: 3;
-    margin-left: 50vh;
-    margin-top: 4vh;
-    border-radius: 4vh;
-    border: 0.4vh solid;
-    width: 40vh;
-    height: 30vh;
-}
-
-.headerTextStock {
-    font-size: 4ex !important;
-    font-family: 'Merriweather', serif !important;
-    background-color: #558C89 !important;
-    color: white;
-}
-.textLabel{
-    color: white;
-}
-.cardInformation{
+.itemContainer{
     position: relative;
-    z-index: 1 !important;
-    box-shadow: 1vh 1vh 1vh #888888 !important;
-    color:white !important;
-    background-color: #74AFAD !important;
-    margin: 2vh;
+    background: #326d43;
+    width: 30vw;
+    margin: 40px auto;
+    text-align: center;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    
 }
-.cardCollapsed{
-    @extend .cardInformation;
-    width: 40vh;
+.searchContainer{
+    
+    top: 2vh;
+    
+    margin-left: auto;
+    margin-right: auto;
+}
+.dataItem{
+    display: inline-block;
+    width: 25vw;
+    margin: 40px auto 20px;
+    padding: 0 10px;
+}
+.closeItem{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    color: #e2e2e2
+    
+}
+.closeItem:hover{
+    cursor: pointer
+}
+.previewContainer{
+    position: relative;
+    background:#8de7a8;
+    width: 80vw;
+    height: 55vh;
+    margin: 2vh auto;
+    text-align: center;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+}
+
+.chartpreview{
+    width: 48vw;
+    height: 26vh;
+    margin-left: 2vw;
+    margin-top: 2vh;
+    margin-right: auto;
+}
+
+.textInfo{
+    font-size: 2rem ;
+    font-family: 'Merriweather', serif;
+    color: #6b3932;
+}
+
+.containersearchpreload{
+    width: 25vw;
     height: 20vh;
-    opacity: .7;
+    margin-left: auto;
+    margin-right: auto;
 }
-.cardExpanded{
-    @extend .cardInformation;
-    width: 100vh;
-    height: 60vh;
-    opacity: 1;
-}
-.chartInformation{
-    width: 90vh!important;
-    height: 50vh !important;
-    margin-left: 3vh!important;
-}
-.sticker{
-    position: relative;
-    width: 10vh !important;
-    height:3vh !important;
-    text-align: center;
-    top:3.5vh;
-    transition-duration: .8s;
-    background-color: #26C6DA !important;
-    z-index: 2 !important;
-    
-}
-.stickerCollapsed{
-    @extend .sticker;
-    left: 15vh !important;
-    
-}
-.stickerCollapsed:hover{
-    width: 40vh;
-    height: 20vh;  
-}
-.stickerExpanded{
-    @extend .sticker;
-   
-    left: 45vh !important;
-      
-}
-.stickerExpanded:hover{
-    width: 100vh;
-    height: 60vh; 
+.searchprogress{
+    display: block;
+    margin-top:2vh;
+    margin-left: 10vw;
+    margin-right: auto;
 }

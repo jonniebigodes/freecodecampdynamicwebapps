@@ -30,7 +30,7 @@ export default class AppHeader extends Component {
     render() {
         
         return (
-            <AppBar title={this.props.appName} className={this.setHeaderStyle(this.props.appStyle)}
+            <AppBar title={this.props.appName}
                     showMenuIconButton={this.props.hasLoginNeeds}
                     onLeftIconButtonTouchTap={this.showHideLogin}
                     iconElementRight={<IconButton onClick={this.handleHomeButtonClick}>
@@ -43,5 +43,5 @@ AppHeader.propTypes={
     appName:PropTypes.string.isRequired,
     appStyle:PropTypes.string.isRequired,
     hasLoginNeeds:PropTypes.bool.isRequired,
-    showLogin:PropTypes.func.isRequired
+    showLogin:PropTypes.func
 };

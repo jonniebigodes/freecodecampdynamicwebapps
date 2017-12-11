@@ -31,11 +31,11 @@ export const checkImage=value=>{
  * @return {Promise} a promise containing the result or fail of the call of the stock api
  */
 export const getStockInformation = value => {
-    let resultInfo = {
+    /* let resultInfo = {
         error: false,
         messageError: "",
         dataRecieved: {}
-    };
+    }; 
     let stockinfo = {
         stockName: "",
         stockCode: "",
@@ -43,7 +43,7 @@ export const getStockInformation = value => {
         stockQueryStart: "",
         StockQueryEnd: "",
         stockData: []
-    };
+    };*/
     return new Promise((resolve, reject) => {
         try {
             unirest
@@ -53,30 +53,44 @@ export const getStockInformation = value => {
                 .query({"end_date": value.endDate})
                 .end(result => {
                     if (result.status === 404) {
-                        resultInfo.error = true;
-                        reject(resultInfo);
-
+                        reject({messageError:result.body.quandl_error.message});
                     } else {
                         
-                        stockinfo.stockName = result.body.dataset.name;
-                        stockinfo.stockCode = result.body.dataset.dataset_code;
-                        stockinfo.refreshDate = result.body.dataset.refreshed_at;
-                        stockinfo.stockQueryStart = value.startDate;
-                        stockinfo.StockQueryEnd = value.endDate;
-                        for (let i = 0; i < result.body.dataset.data.length; i++) {
-                            stockinfo.stockData.push({stockDate: result.body.dataset.data[i][0], openPrice: result.body.dataset.data[i][1], highestPrice: result.body.dataset.data[i][2], lowestPrice: result.body.dataset.data[i][3], closePrice: result.body.dataset.data[i][4]});
+
+                        if (!result.body.dataset){
+                            reject({messageError:'Too many requests.\nTry again later'});
+                            return;
                         }
-                        resultInfo.dataRecieved = stockinfo;
-                        resolve(resultInfo);
+                        const queryResults=result.body.dataset;
+                        const stockInformation= queryResults.data;
+                        let stockData=[];
+                        for (let item of stockInformation){
+                            
+                            stockData.push({
+                                date:item[0],
+                                openingPrice:item[1],
+                                highestPrice:item[2],
+                                lowestPrice:item[3],
+                                closingPrice:item[4]
+                            });
+                        }
+                        resolve(
+                            {
+                                id:queryResults.id,
+                                code:queryResults.dataset_code,
+                                name:queryResults.name,
+                               
+                                start:value.startDate,end:value.endDate,
+                                data:stockData
+                            }
+                        );
 
                     }
                 });
 
         } catch (error) {
             console.log("ERROR HTTP SERVICE:\n" + error);
-            resultInfo.error = true;
-            resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO STOCK SERVER: " + error;
-            reject(resultInfo);
+            reject({messageError:`ERROR ON PROCESSING REQUEST TO STOCK SERVER:\n${error}`});
         }
 
     });

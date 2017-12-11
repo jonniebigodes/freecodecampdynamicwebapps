@@ -1,3 +1,8 @@
+//stocks endpoints
+export const getStocksLocalServer='http://localhost:5000/api/data/stocksearch?';
+export const getStocksExternalServer='https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?';
+//
+
 //pin clone api endpoints
 export const getPinslocalserver='http://localhost:5000/api/data/getpins';
 export const getPinsexternalserver='https://freecodecampdynprojects.herokuapp.com/api/data/getpins';

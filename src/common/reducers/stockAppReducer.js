@@ -1,10 +1,6 @@
 import {
     REQUEST_STOCKS,
     RECIEVE_STOCKS,
-    RECIEVE_STOCKS_NOK,
-    SET_STOCK_VALUE,
-    SET_DATA_START,
-    SET_DATA_END,
     APP_ERROR,
     APP_ERROR_RESET,
     DELETE_STOCK,
@@ -13,11 +9,11 @@ import {
 
 const StockAppReducer= (state = {
     isSearching:false,
-    didInvalidate:false,
     stockQuery:'',
     initialDate:'',
     finalDate:'',
-    items: [],
+    entities:{},
+    results: [],
     onError:false,
     errorMessage:''
 }, action) => {
@@ -27,47 +23,34 @@ const StockAppReducer= (state = {
             return {
                 ...state,
                 isSearching: true,
-                didInvalidate: false,
+                stockQuery:action.value.stockName,
+                initialDate:action.value.startDate,
+                finalDate:action.value.endDate
             };
             
         }
         case RECIEVE_STOCKS:{
-            //console.log("reducer RECIEVE_STOCKS: "+action.result.stockName);    
+          
             return {
                 ...state,
-                items: [...state.items, {searchIndex: action.result.stockCode+"-"+action.result.stockQueryStart+"-"+action.result.StockQueryEnd,searchResults:action.result}],
                 isSearching:false,
-                didInvalidate:false,
-                stockQuery:'',
-                initialDate:'',
-                finalDate:''
-            };
-            
-        }
-        case RECIEVE_STOCKS_NOK:{
-            //console.log("reducer RECIEVE_STOCKS_NOK: \n error: "+ action.error);
-            return{
-                ...state,
-                isSearching:false,
-                didInvalidate:false,
-                
                 stockQuery:'',
                 initialDate:'',
                 finalDate:'',
-                onError:true,
-                errorMessage:action.error
+                results:[...state.results,action.result.id],
+                entities:{
+                    ...state.entities,
+                    [action.result.id]:action.result.data[action.result.id]
+                }
+                
             };
             
         }
+        
         case APP_ERROR_RESET:{
              //console.log("reducer APP_ERROR_RESET");
              return{
                 ...state,
-                isSearching:false,
-                didInvalidate:false,
-                stockQuery:'',
-                initialDate:'',
-                finalDate:'',
                 onError:false,
                 errorMessage:''
             };
@@ -83,45 +66,16 @@ const StockAppReducer= (state = {
         }
         case DELETE_STOCK:{
             //console.log("reduce delete stock: "+ action.value);
+            delete state.entities[action.value];
+            const stockid= state.results.findIndex(x=>x==action.value);
             return {
                 ...state,
-                items:state.items.filter(item=>action.value!==item.searchIndex)
+                results:[...state.results.slice(0,stockid),...state.results.slice(stockid+1)]
+                // items:state.items.filter(item=>action.value!==item.searchIndex)
 
             };
         }
-        case SET_DATA_START:{
-            //console.log("reducer SET_DATA_START: "+action.valueDi);
-            return {
-                ...state,
-                isSearching:false,
-                didInvalidate:false,
-                initialDate:action.valueDi
-            };
-            
-            
-        }
-        case SET_STOCK_VALUE:{
-            //console.log("reducer SET_STOCK_VALUE: "+action.valueQuery);
-            return {
-                ...state,
-                isSearching:false,
-                didInvalidate:false,
-                stockQuery:action.valueQuery
-                
-            };
-            
-        }
-        case SET_DATA_END:{
-            //console.log("reducer SET_DATA_END: "+action.valueFD);
-            return {
-                ...state,
-                isSearching:false,
-                didInvalidate:false,
-                finalDate:action.valueFD
-
-            };
-            
-        }
+        
         case SET_STOCK_EXIT:{
             return{
                 ...state,
@@ -130,7 +84,8 @@ const StockAppReducer= (state = {
                 stockQuery:'',
                 initialDate:'',
                 finalDate:'',
-                items: [],
+                entities:{},
+                results: [],
                 onError:false,
                 errorMessage:''
             };

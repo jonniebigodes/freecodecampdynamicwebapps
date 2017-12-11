@@ -11,7 +11,7 @@ module.exports = {
         httpService.getStockInformation({queryStock: request.query.stockName, startDate: request.query.startdate, endDate: request.query.enddate, keyQuandl: request.app.KEY_QUANDL})
             .then(result=> {
                 response.writeHead(200, {'Content-Type': 'application/json'});
-                response.end(JSON.stringify(result.dataRecieved));
+                response.end(JSON.stringify({code: "fccda005", resultQuery:result}));
             })
             .catch(error => {
                 console.log('====================================');

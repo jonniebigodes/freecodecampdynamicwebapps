@@ -33,4 +33,28 @@ const pinTheme={
     }
 
 };
-export const dynamicThemes={pinTheme};
+const stockTheme={
+    palette:{
+        primary1Color: Colors.green400,
+        accent1Color: Colors.brown500,
+        primary2Color: Colors.green900,
+        pickerHeaderColor:Colors.green400
+    },
+    dialog:{
+        bodyColor: Colors.brown900
+    },
+    textField:{
+        hintColor: Colors.brown800,
+        errorColor: Colors.red900,
+        borderColor: Colors.green600,
+        focusColor: Colors.green800
+    },
+    raisedButton: {
+        secondaryColor: Colors.brown500,
+        primaryColor: Colors.green400
+    },
+    snackbar:{
+        backgroundColor:Colors.green400
+    }
+};
+export const dynamicThemes={pinTheme,stockTheme};

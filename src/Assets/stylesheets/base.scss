@@ -12,7 +12,8 @@
 }
 .footer-stocks{
     @extend .footer;
-    color: white;
+    position: relative;
+    color: #795548;
 }
 .footer-pins{
     @extend .footer;
@@ -28,10 +29,10 @@ a.linkPins:visited, .linkPins:hover,.linkPins:active{
     color: #CE93D8;
 }
 a.linksStocks:link{
-    color: white;
+    color: #795548;
 }
 a.linksStocks:visited, .linksStocks:hover,.linksStocks:active {
-    color:#FF9100;
+    color: #3e2723;
 }
 
 

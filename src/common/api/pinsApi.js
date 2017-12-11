@@ -28,7 +28,7 @@ class PinApi{
                 /* console.log('====================================');
                 console.log(`result of get all pins :${JSON.stringify(result,null,2)}`);
                 console.log('===================================='); */
-                result.code==='fccda005'?resolve(result.pindata):reject('Problem obtaining the polls');
+                result.code==='fccda005'?resolve(result.pindata):reject('Problem obtaining the pins');
             })
             .catch(error=>{
                 console.log('====================================');

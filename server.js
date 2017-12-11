@@ -9,8 +9,8 @@ if (process.env.NODE_ENV !== 'production') {
     let webpackDevMiddleware = require('webpack-dev-middleware');
     let webpackHotMiddleware = require('webpack-hot-middleware');
     let webpack = require('webpack');
-    //let config = require('../webpack.config');
-    let config = require('./webpack.config');
+    let config = require('../webpack.config');
+    //let config = require('./webpack.config');
     let compiler = webpack(config);
     let configEnv = require('dotenv').config();
     app.use(webpackDevMiddleware(compiler, {

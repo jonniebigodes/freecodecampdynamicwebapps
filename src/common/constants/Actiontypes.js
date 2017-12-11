@@ -3,12 +3,7 @@ export const APP_ERROR_RESET='RESET_APP_ERROR';
 // stocks challenge
 export const REQUEST_STOCKS='REQUEST_STOCKS';
 export const RECIEVE_STOCKS='RECIEVE_STOCKS';
-export const RECIEVE_STOCKS_NOK='RECIEVE_STOCKS_NOK';
 export const DELETE_STOCK='DELETE_STOCK';
-export const INVALIDATE_STOCK='INVALIDATE_STOCK';
-export const SET_DATA_START='DATA_START';
-export const SET_DATA_END='DATA_END';
-export const SET_STOCK_VALUE='STOCK_SET';
 export const SET_STOCK_EXIT='SET_STOCK_EXIT';
 //
 //auth events

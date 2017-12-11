@@ -50,14 +50,7 @@ export const AddBook=value=>({
     type:ADD_BOOK,
     value
 });
-/* export const DeleteBook=value=>({
-    type:types.DEL_BOOK,
-    value
-});
-export const EditBook=value=>({
-    type:types.EDIT_BOOK,
-    value
-}); */
+
 export const BookAppUserLogout=value=>({
     type:BOOK_USER_LOGOUT,
     value
