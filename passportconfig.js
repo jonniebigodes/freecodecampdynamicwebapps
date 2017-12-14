@@ -4,8 +4,8 @@ const TwitterStrategy= require('passport-twitter').Strategy;
 
 const localTwitterCallback='http://localhost:5000/api/login/twitter/connect/callback';
 const externalTwitterCallback='https://freecodecampdynprojects.herokuapp.com/api/login/twitter/connect/callback';
-const dbService = require('./dbFactory');
-//const dbService = require('./src/server/dbFactory');
+//const dbService = require('./dbFactory');
+const dbService =process.env.NODE_ENV !== 'production'?require('./src/server/dbFactory'):require('./dbFactory');
 module.exports=(app,passport)=>{
     
     passport.serializeUser((user, done) => {

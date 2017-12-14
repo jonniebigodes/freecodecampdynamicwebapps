@@ -249,9 +249,9 @@ export const sendToTwitter=(value)=>{
         client.post('statuses/update',
         {status:`check out the poll created at ${encodeURI(`https://freecodecampdynprojects.herokuapp.com/voting/poll/${value.token}`)}`})
         .then(result=>{
-            console.log('====================================');
-            console.log(`result twitter:${JSON.stringify(result,null,2)}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`result twitter:${JSON.stringify(result,null,2)}`);
+            // console.log('====================================');
             resolve(true);
         })
         .catch(error=>{

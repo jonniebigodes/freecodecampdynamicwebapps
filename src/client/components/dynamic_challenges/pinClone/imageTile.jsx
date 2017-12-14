@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {GridTile} from 'material-ui/GridList';
 import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import Star from 'material-ui/svg-icons/toggle/star';
-
 import IconButton from 'material-ui/IconButton';
 import '../../../../Assets/stylesheets/pinsApp.scss'; 
 class ImageTile extends Component{

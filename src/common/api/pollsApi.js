@@ -1,3 +1,18 @@
+import {
+    getPollsLocal,
+    getPollsExternal,
+    createPollLocal,
+    createPollExternal,
+    votePollLocal,
+    votePollExternal,
+    removePollLocal,
+    removePollExternal,
+    addPollOptionLocal,
+    addPollOptionExternal,
+    sharePollLocal,
+    sharePollExternal
+} from '../constants/ApiEndPoints';
+
 /**
  * class containing the api for the polls challenge
  */
@@ -9,14 +24,12 @@ class PollsApi{
     static getallPolls(){
         return new Promise((resolve,reject)=>{
             
-            fetch(`http://localhost:5000/api/data/getpolls`)
+            fetch(process.env.NODE_ENV !== 'production'?getPollsLocal:getPollsExternal)
             .then(response=>{
                 return response.json();
             })
             .then(result=>{
-                
                 result.code==='fccda005'?resolve(result.polldata):reject('Problem obtaining the polls');
-                
             })
             .catch(error=>{
                 console.log('====================================');
@@ -32,20 +45,16 @@ class PollsApi{
      * @returns {Promise} the result of the operation 
      */
     static createPoll(value){
-
-        /* console.log('====================================');
-        console.log(`create poll api: data${JSON.stringify(value,2,null)}`);
-        console.log('===================================='); */
         
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/createpoll`,{
+            fetch(process.env.NODE_ENV !== 'production'?createPollLocal:createPollExternal,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                     },
                     body:JSON.stringify({
-                        usertoken:value.pollUser,
+                        usertoken:value.pollcreator.userid,
                         pollname:value.pollname,
                         polldataoptions:value.polloptions
                     })
@@ -73,7 +82,7 @@ class PollsApi{
         console.log('===================================='); */
         //return;
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/pollvote`,{
+            fetch(process.env.NODE_ENV !== 'production'?votePollLocal:votePollExternal,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -83,6 +92,7 @@ class PollsApi{
             }).then(response=>{
                 return response.json();
             }).then(result=>{
+                
                 result.code==='fccda001'?reject(`error voting on poll:${result.reason}`):resolve(true);
             }).catch(error=>{
                 console.log('====================================');
@@ -99,7 +109,7 @@ class PollsApi{
      */
     static deletePoll(value){
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/delpoll`,{
+            fetch(process.env.NODE_ENV !== 'production'?removePollLocal:removePollExternal,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -112,9 +122,6 @@ class PollsApi{
             }).then(response=>{
                 return response.json();
             }).then(result=>{
-                console.log('====================================');
-                console.log(`RESULT API CALL:${JSON.stringify(result,null,2)}`);
-                console.log('====================================');
                 result.code=='fccda001'?reject(`There was an error deleting the poll:${result.reason}`):resolve(true);
                 
             }).catch(error=>{
@@ -131,11 +138,9 @@ class PollsApi{
      * @returns {Promise} the result of the operation 
      */
     static injectPollOption(value){
-        console.log('====================================');
-        console.log(`poll api injectPollOption:${JSON.stringify(value,null,2)}`);
-        console.log('====================================');
+        
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/addpolloption`,{
+            fetch(process.env.NODE_ENV !== 'production'?addPollOptionLocal:addPollOptionExternal,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -168,7 +173,7 @@ class PollsApi{
      */
     static shareSocialPoll(value){
         return new Promise((resolve,reject)=>{
-            fetch(`http://localhost:5000/api/data/pollshare`,{
+            fetch(process.env.NODE_ENV !== 'production'?sharePollLocal:sharePollExternal,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -183,11 +188,11 @@ class PollsApi{
                 return response.json();
             })
             .then(result=>{
-                result.code==='fccda001'?reject(`Error sharing the poll:${result.reason}`):result(true);
+                result.code==='fccda001'?reject(`Error sharing the poll:${result.reason}`):resolve(true);
             })
             .catch(error=>{
                 console.log('====================================');
-                console.log('There has been a problem with injectPollOption fetch operation: ' + error.message);
+                console.log('There has been a problem with shareSocialPoll fetch operation: ' + error.message);
                 console.log('====================================');
                 reject(error);
             });

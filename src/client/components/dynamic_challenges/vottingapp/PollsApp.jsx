@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
+import '../../../../Assets/stylesheets/votingApp.scss';
 import {
     pollAppExit,
     fetchPolls,
@@ -26,7 +30,6 @@ class PollApp extends Component{
     componentDidMount=()=>{
         // will get the books
         this.props.getPolls();
-       
         if (this.props.params.authToken){
             this.props.getSocialAuthData(this.props.params.authToken);
         }
@@ -34,7 +37,7 @@ class PollApp extends Component{
     }
     componentWillUnmount(){
         //this.props.pollAppExit(true);
-        this.props.pollsExit(true);
+        this.props.pollsExit();
     }
     handleLoginRegisterHandler=(value)=>{
         if (value.isLogin){
@@ -45,7 +48,7 @@ class PollApp extends Component{
         }
     }
     handleDisconnect=()=>{
-        this.props.unplugUser(this.props.pollsApploginData.id);
+        this.props.unplugUser();
     }
     castVoteHandler=(value)=>{
         
@@ -63,48 +66,50 @@ class PollApp extends Component{
     }
     
     handleNewPoll=(value)=>{
+        // fire the prop action let the action handle it
         
-        const pollExists=this.props.pollsData.find(x=>x.pollname.toLowerCase()==value.pollname.toLowerCase());
-       
-        if (pollExists){
-            this.props.setPollError(`The poll: ${value.pollname} was already added by someone else`);
-            return;
-        } 
         this.props.addnewPoll(value);
     }
     socialLoginLogin=()=>{
         this.props.socialConnect();
     }
     handleSocialShare=(value)=>{
-        this.props.shareOnSocial({pollToken:value,usertoken:this.props.votesUserInfo.id});
+        const {pollsApploginData,shareOnSocial}=this.props;
+       
+        shareOnSocial({pollToken:value,usertoken:pollsApploginData.id});
     }
     render(){
         return (
-            <PollsContainer 
-                pollItems={this.props.pollsData} 
-                isPollAppError={this.props.pollsAppIsError}
-                errorMessageApp={this.props.pollsAppErrorMessage}
-                userLoggedIn={this.props.pollsApploggedIn}
-                loginregister={this.handleLoginRegisterHandler}
-                sharePollSocial={(value)=>this.handleSocialShare(value)}
-                disconnectuser={this.handleDisconnect}
-                PollVote={(value)=>this.castVoteHandler(value)}
-                optionaddPoll={(value)=>this.addoptionToPoll(value)}
-                resetErrorApp={this.onPollResetError}
-                pollUser={this.props.pollsApploginData}
-                newPoll={(value)=>this.handleNewPoll(value)}
-                removePoll={(value)=>this.onRemovePollHandler(value)}
-                />
+            <MuiThemeProvider muiTheme={getMuiTheme(dynamicThemes.votesTheme)}>
+                <PollsContainer
+                    pollItems={this.props.pollsData}
+                    numberitems={this.props.polldataItems.length}
+                    isPollAppError={this.props.pollsAppIsError}
+                    errorMessageApp={this.props.pollsAppErrorMessage}
+                    gettingData={this.props.pollretrieve}
+                    userLoggedIn={this.props.pollsApploggedIn}
+                    loginregister={this.handleLoginRegisterHandler}
+                    sharePollSocial={this.handleSocialShare}
+                    disconnectuser={this.handleDisconnect}
+                    PollVote={this.castVoteHandler}
+                    optionaddPoll={this.addoptionToPoll}
+                    resetErrorApp={this.onPollResetError}
+                    pollUser={this.props.pollsApploginData}
+                    newPoll={this.handleNewPoll}
+                    removePoll={this.onRemovePollHandler}/>
+            </MuiThemeProvider>
         );
     }
 }
 const mapStateToProps=state=>{
     return{
-        pollsData:state.votes.items,
+        pollretrieve:state.votes.voteIsSearching,
+        pollsData:state.votes.polls,
         pollsAppIsError:state.votes.onError,
         pollsAppErrorMessage:state.votes.errorMessage,
         pollsApploggedIn:state.votes.votesisLoggedin,
-        pollsApploginData:state.votes.votesUserInfo
+        pollsApploginData:state.votes.votesUserInfo,
+        polldataItems:state.votes.results
     };
 };
 const mapDispatchToProps=dispatch=>{
@@ -115,8 +120,8 @@ const mapDispatchToProps=dispatch=>{
         resetErrorPoll:(value)=>{
             dispatch(resetPollAppError(value));
         },
-        pollsExit:(value)=>{
-            dispatch(pollAppExit(value));
+        pollsExit:()=>{
+            dispatch(pollAppExit());
         },
         getPolls:()=>{
             dispatch(fetchPolls());
@@ -124,8 +129,8 @@ const mapDispatchToProps=dispatch=>{
         castPollVote:(value)=>{
             dispatch(voteOnPoll(value));
         },
-        unplugUser:(value)=>{
-            dispatch(pollAppDisconnectUser(value));
+        unplugUser:()=>{
+            dispatch(pollAppDisconnectUser());
         },
         optionsPollAdd:(value)=>{
             dispatch(addPollOptionFold(value));

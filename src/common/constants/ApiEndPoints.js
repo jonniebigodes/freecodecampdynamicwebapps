@@ -3,6 +3,28 @@ export const getStocksLocalServer='http://localhost:5000/api/data/stocksearch?';
 export const getStocksExternalServer='https://freecodecampdynprojects.herokuapp.com/api/data/stocksearch?';
 //
 
+//votes endpoints
+export const getPollsLocal='http://localhost:5000/api/data/getpolls';
+export const getPollsExternal='https://freecodecampdynprojects.herokuapp.com/api/data/getpolls';
+
+export const createPollLocal='http://localhost:5000/api/data/createpoll';
+export const createPollExternal='https://freecodecampdynprojects.herokuapp.com/api/data/createpoll';
+
+export const votePollLocal='http://localhost:5000/api/data/pollvote';
+export const votePollExternal='https://freecodecampdynprojects.herokuapp.com/api/data/pollvote';
+
+export const removePollLocal='http://localhost:5000/api/data/delpoll';
+export const removePollExternal='https://freecodecampdynprojects.herokuapp.com/api/data/delpoll';
+
+export const addPollOptionLocal='http://localhost:5000/api/data/addpolloption';
+export const addPollOptionExternal='https://freecodecampdynprojects.herokuapp.com/api/data/addpolloption';
+
+export const sharePollLocal='http://localhost:5000/api/data/pollshare';
+export const sharePollExternal='https://freecodecampdynprojects.herokuapp.com/api/data/pollshare';
+
+export const getPollDetailsLocal='http://localhost:5000/api/data/getpolldetail?polltoken=';
+export const getPollDetailsExternal='https://freecodecampdynprojects.herokuapp.com/api/data/getpolldetail?polltoken=';
+//
 //pin clone api endpoints
 export const getPinslocalserver='http://localhost:5000/api/data/getpins';
 export const getPinsexternalserver='https://freecodecampdynprojects.herokuapp.com/api/data/getpins';
@@ -17,6 +39,8 @@ export const removePinexternalserver='https://freecodecampdynprojects.herokuapp.
 // auth api endpoints
 export const pintwitterloginlocalserver='http://localhost:5000/api/login/social?q=p';
 export const pintwitterloginexternalserver='https://freecodecampdynprojects.herokuapp.com/api/login/social?q=p';
+export const votesTwitterLoginLocalserver='http://localhost:5000/api/login/social?q=v';
+export const votesTwitterLoginExternalServer='https://freecodecampdynprojects.herokuapp.com/api/login/social?q=v';
 export const localUserAuth='http://localhost:5000/api/login/local/auth';
 export const externalUserAuth='https://freecodecampdynprojects.herokuapp.com/api/login/local/auth';
 export const localRegisterUser='http://localhost:5000/api/login/local/signup';

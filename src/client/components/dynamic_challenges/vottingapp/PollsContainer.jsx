@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {Table,TableBody,TableHeader,TableHeaderColumn,TableRow,TableRowColumn} from 'material-ui/Table';
+
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import AppHeader from '../../AppHeader';
@@ -9,6 +8,7 @@ import AppFooter from '../../AppFooter';
 import PollDetail from './PollDetail';
 import PollAppLogin from './PollAppLogin';
 import NewPoll from './NewPoll';
+import VotesTable from './VotingTable';
 class PollsContainer extends Component{
     constructor(props){
         super(props);
@@ -19,7 +19,6 @@ class PollsContainer extends Component{
             snackMessage:'',
             viewMode:false,
             selectedPoll:{},
-            selectedIndex:0,
             hideShowLogin:false
         };
     }
@@ -34,19 +33,7 @@ class PollsContainer extends Component{
     onresetError=()=>{
         this.props.resetErrorApp(true);
     }
-    populateTableBody=()=>{
-        let results=[];
-        for (let item of this.props.pollItems){
-            results.push(
-                <TableRow key={item.polltoken} >
-                    <TableRowColumn>{item.pollname}</TableRowColumn>
-                    <TableRowColumn>{item.pollcreator}</TableRowColumn>
-                    <TableRowColumn>{item.polloptions.length}</TableRowColumn>
-                </TableRow>
-            );
-        }
-        return results;
-    }
+    
     changeEdit=()=>{
         this.setState({viewMode:!this.state.viewMode});
     }
@@ -54,10 +41,13 @@ class PollsContainer extends Component{
         this.setState({adding:!this.state.adding});
     }
     onRowSelectedHandler=(selectedRows)=>{
-        this.setState({viewMode:!this.state.viewMode,selectedPoll:this.props.pollItems[selectedRows]});
+        const {viewMode}= this.state;
+        this.setState({viewMode:!viewMode,selectedPoll:selectedRows});
     }
     handleVotes=(value)=>{
+        const {viewMode}= this.state;
         this.props.PollVote(value);
+        this.setState({viewMode:!viewMode,selectedPoll:{}});
     }
     handleOptionPoll=(value)=>{
         this.props.optionaddPoll(value);
@@ -76,49 +66,44 @@ class PollsContainer extends Component{
    handleSocialLogin=(value)=>{
        this.props.sharePollSocial(value);
    }
-    renderTable=()=>{
-        if (this.state.viewMode){
-            return(
-                <PollDetail addPollOption={(value)=>this.handleOptionPoll(value)} 
-                    detailExit= {this.changeEdit} 
-                    pollInfo={this.state.selectedPoll} 
-                    votePoll={(value)=>this.handleVotes(value)} userInfo={this.props.pollUser}
-                    shareSocialNetwork={(value)=>this.handleSocialLogin(value)}
-                    pollRemoval={(value)=>this.handleRemovePoll(value)}/>
-            );
-        }
 
-        if (this.state.adding){
-            return (
-                <NewPoll newPollExit={this.changeAdd} addPollToCollection={(value)=>this.handleNewPoll(value)} pollUser={this.props.pollUser}/>
+   renderPollData=()=>{
+        const {viewMode,adding,selectedPoll}= this.state;
+        const {pollUser,numberitems,pollItems,gettingData}= this.props;
+        if (gettingData){
+            return(
+                <div className="preloadTextPosition">
+                    <div className="preloadText">
+                        Retrieving the poll information
+                    </div>
+                    <div className="preloadText">
+                       Please hold while the request is processed.
+                    </div>
+                </div>
             );
         }
-        if (this.props.pollItems){
-            
+        if (viewMode){
             return(
-                <div>
-                    <PollAppLogin islogged= {this.props.userLoggedIn} 
-                        loginreg={(value)=>this.handleLoginReg(value)} 
-                        userLogout={this.props.disconnectuser}
-                        userInformation={this.props.pollUser} 
-                        showLogin={this.showHideLogin} hasLoginNeeds={this.state.hideShowLogin} pollStart={this.handleNewPollInject}
-                        />
-                    <Table onRowSelection={this.onRowSelectedHandler}>
-                        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                            <TableHeaderColumn>Poll Name</TableHeaderColumn>
-                            <TableHeaderColumn>Poll Creator</TableHeaderColumn>
-                            <TableHeaderColumn>Number of Options</TableHeaderColumn>
-                        </TableHeader>
-                        <TableBody displayRowCheckbox={false}
-                                    deselectOnClickaway
-                                    showRowHover>
-                            {this.populateTableBody()}
-                        </TableBody>
-                    </Table>
-                    
-                    
-                </div>
-                
+                <PollDetail
+                    addPollOption={this.handleOptionPoll} 
+                    detailExit= {this.changeEdit} 
+                    pollInfo={selectedPoll} 
+                    votePoll={this.handleVotes} 
+                    userInfo={pollUser}
+                    shareSocialNetwork={this.handleSocialLogin}
+                    pollRemoval={this.handleRemovePoll}/>
+            );
+        }
+        if (adding){
+            return (
+                <NewPoll newPollExit={this.changeAdd} 
+                addPollToCollection={this.handleNewPoll} 
+                pollUser={pollUser}/>
+            );
+        }
+        if (numberitems){
+            return(
+                <VotesTable tableItems={pollItems} key={`votingTable`} selectionHandler={this.onRowSelectedHandler}/> 
             );
         }
         else{
@@ -126,13 +111,14 @@ class PollsContainer extends Component{
                 <div>
                     <h3>Now that's awkward looks like there's nothing to show to you</h3>
                     <h4>Login or register and try to add something to the collection</h4>
-                    
                 </div>
             );
         }
     }
    
     render(){
+        const {userLoggedIn,pollUser}= this.props;
+        const {hideShowLogin}= this.state;
         const actionsDialog = [
             <FlatButton key="dialogError_nightLife"
                 label="Ok"
@@ -141,30 +127,39 @@ class PollsContainer extends Component{
             />
             ];
         return (
-            <MuiThemeProvider>
-                <div className="container-fluid">
-                    <Dialog key="errorDialog"
-                            actions={actionsDialog}
-                            modal={false}
-                            open={this.props.isPollAppError}
-                            onRequestClose={this.onresetError}>
-                        <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
-                        <br/>
-                        <h4>{this.props.errorMessageApp}</h4>
-                    </Dialog> 
-                    <AppHeader appName="Supercalifragilistic Voting Machine" appStyle="poll" showLogin={this.showHideLogin} hasLoginNeeds/>
-                        {this.renderTable()}
-                    <AppFooter appName="book" lightordark={this.state.light}/>
-                </div>
-            </MuiThemeProvider>
+            <div className="container-fluid">
+                <Dialog key="errorDialog"
+                    actions={actionsDialog}
+                    modal={false}
+                    open={this.props.isPollAppError}
+                    onRequestClose={this.onresetError}>
+                    <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
+                    <br/>
+                    <h4>{this.props.errorMessageApp}</h4>
+                </Dialog> 
+                <AppHeader 
+                    appName="Supercalifragilistic Voting Machine" 
+                    appStyle="poll" 
+                    showLogin={this.showHideLogin} 
+                    hasLoginNeeds/>
+                <PollAppLogin islogged= {userLoggedIn} 
+                        loginreg={this.handleLoginReg} 
+                        userLogout={this.props.disconnectuser}
+                        userInformation={pollUser} 
+                        showLogin={this.showHideLogin} 
+                        hasLoginNeeds={hideShowLogin} 
+                        pollStart={this.handleNewPollInject}/>
+                {this.renderPollData()}
+                <AppFooter appName="book" lightordark={this.state.light}/>
+            </div>
         );
     }
 }
 PollsContainer.propTypes={
-    pollItems:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
+    pollItems:PropTypes.object.isRequired,
+    numberitems:PropTypes.number.isRequired,
     isPollAppError:PropTypes.bool,
+    gettingData:PropTypes.bool.isRequired,
     errorMessageApp:PropTypes.string,
     resetErrorApp:PropTypes.func,
     userLoggedIn:PropTypes.bool.isRequired,
@@ -173,9 +168,6 @@ PollsContainer.propTypes={
         email:PropTypes.string.isRequired,
         password:PropTypes.string.isRequired,
         name:PropTypes.string.isRequired,
-        city:PropTypes.string.isRequired,
-        countrystate:PropTypes.string.isRequired,
-        country:PropTypes.string.isRequired
     }).isRequired,
     loginregister:PropTypes.func.isRequired,
     disconnectuser:PropTypes.func.isRequired,

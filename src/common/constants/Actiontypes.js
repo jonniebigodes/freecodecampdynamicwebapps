@@ -48,6 +48,8 @@ export const DEL_POLL='POLL_DEL';
 export const ADD_POLL_OPTION='POLL_OPTION_ADD';
 export const EDIT_POLL_OPTION='POLL_OPTION_EDIT';
 export const VOTE_POLL='POLL_VOTE';
+export const POLL_APP_ERROR='ERROR_POLL_APP';
+export const POLL_APP_ERROR_RESET='ERROR_POLL_APP_RESET';
 //
 
 //books

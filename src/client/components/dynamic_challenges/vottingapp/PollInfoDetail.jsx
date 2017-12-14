@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import {Doughnut} from 'react-chartjs-2';
+import {
+    getPollDetailsLocal,
+    getPollDetailsExternal
+} from '../../../../common/constants/ApiEndPoints';
 class PollInfoDetail extends Component{
     constructor(props){
         super(props);
@@ -10,10 +14,7 @@ class PollInfoDetail extends Component{
         };
     }
     componentDidMount(){
-       /*  console.log('====================================');
-        console.log(`got the params:${this.props.params.idPoll}`);
-        console.log('===================================='); */
-        fetch(`http://localhost:5000/api/data/getpolldetail?polltoken=${this.props.params.idPoll}`)
+        fetch(process.env.NODE_ENV !== 'production'?`${getPollDetailsLocal}${this.props.params.idPoll}`:`${getPollDetailsExternal}${this.props.params.idPoll}`)
         .then(response=>{
             return response.json();
         })
@@ -30,6 +31,7 @@ class PollInfoDetail extends Component{
         );
     }
     generateChartData=()=>{
+        const {pollData}=this.state;
         let result={
             labels:[],
             datasets:[
@@ -48,14 +50,15 @@ class PollInfoDetail extends Component{
                 }
             ]
         };
-        this.state.pollData.polloptions.map(item=>{
+        pollData.polloptions.map(item=>{
             result.labels.push(item.optionname);
             result.datasets[0].data.push(item.votes);
         });
         return result;
     }
     renderData=()=>{
-        if (this.state.isloading){
+        const {isloading,pollData}=this.state;
+        if (isloading){
             return(<h4>still loading the data and setting all up, might take a minute or two, so smoke if you got them</h4>);
         }
         else{
@@ -65,10 +68,10 @@ class PollInfoDetail extends Component{
                         <div className="col-xs-6 col-md-4">
                             <div className="panel panel-success">
                                 <div className="panel-heading">
-                                    {this.state.pollData.pollname}
+                                    {pollData.pollname}
                                 </div>
                                 <div className="panel-body">
-                                   {this.state.pollData.polloptions.map(item=>{
+                                   {pollData.polloptions.map(item=>{
                                        return (
                                             <div key="containeroptions">
                                                 <div className="label label-success" key={`option_${item.idoption}`}>Poll option: {item.optionname}</div>
@@ -91,10 +94,11 @@ class PollInfoDetail extends Component{
         
     }
     render(){
+        const {isError}= this.state;
         return(
             <div>
                 {/* <h3>got to the detail with param:{this.props.params.idPoll}</h3> */}
-                {this.state.isError?this.renderError():this.renderData()}
+                {isError?this.renderError():this.renderData()}
             </div>
             
             

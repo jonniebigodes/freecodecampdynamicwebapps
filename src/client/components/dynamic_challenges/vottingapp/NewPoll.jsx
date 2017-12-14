@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
-import {List, ListItem} from 'material-ui/List';
+import {List} from 'material-ui/List';
 import TextField from 'material-ui/TextField';
 import Subheader from 'material-ui/Subheader';
 import Snackbar from 'material-ui/Snackbar';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
+import OptionPoll from './NewPollOption';
 import moment from 'moment';
+import VoteButton from './VotingButton';
 class NewPoll extends Component{
     constructor(props){
         super(props);
@@ -16,26 +16,30 @@ class NewPoll extends Component{
             PollName:'',
             polloptionId:'',
             polloptionName:'',
-            PollOptions:[]
+            PollOptions:[]            
         };
     }
     generateID=()=>{
         return `poll_option_${moment()}`;
     }
     updatePollName=(e)=>{
-        if (this.state.idPoll===''){
+        const {idPoll}= this.state;
+        if (idPoll===''){
             this.setState({idPoll:this.generateID('poll')});
         }
         this.setState({PollName:e.target.value});
     }
     updatePollOptionName=(e)=>{
-        if (this.state.polloptionId===''){
+        const {polloptionId}= this.state;
+        if (polloptionId===''){
             this.setState({polloptionId:this.generateID('optionpoll')});
         }
         this.setState({polloptionName:e.target.value});
     }
     addPoll=()=>{
-        if (this.state.PollName===''){
+        const {PollName}= this.state;
+        const {pollUser}=this.props;
+        if (PollName===''){
             this.setState({snackMessage:'Add a name to the poll first'});
             this.handleCloseSnack();
             return;
@@ -43,8 +47,10 @@ class NewPoll extends Component{
         this.props.addPollToCollection(
             {
                 pollname:this.state.PollName,
-                pollUser:this.props.pollUser.id,
-                pollcreatormail:this.props.pollUser.email,
+                pollcreator:{
+                    userid:pollUser.id,
+                    username:pollUser.name?pollUser.name:pollUser.email
+                },
                 polloptions:this.state.PollOptions
             }
         );
@@ -54,10 +60,11 @@ class NewPoll extends Component{
         this.props.newPollExit();
     }
     addOptionPoll=()=>{
-        if (this.state.PollOptions.length){
-            let tmpOp= this.state.PollOptions.find(x=>x.optionname.toLowerCase()===this.state.polloptionName.toLowerCase());
+        const{PollOptions,polloptionName}= this.state;
+        if (PollOptions.length){
+            let tmpOp= PollOptions.find(x=>x.optionname.toLowerCase()===polloptionName.toLowerCase());
             if (tmpOp){
-                this.setState({snackMessage:`There is already a option with the name:${this.state.polloptionName}`});
+                this.setState({snackMessage:`There is already a option with the name:${polloptionName}`});
                 this.handleCloseSnack();
                 return;
             }
@@ -73,17 +80,20 @@ class NewPoll extends Component{
                 )
             ,polloptionId:'',polloptionName:''});
     }
-    removePoll=(e)=>{
-        this.setState({PollOptions:this.state.PollOptions.filter(x=>x.idoption!=e)});
+    removePollOption=(e)=>{
+        let tmpArrayOptions= [...this.state.PollOptions.slice(0,e),...this.state.PollOptions.slice(e+1)];
+        this.setState({PollOptions:tmpArrayOptions});
     }
+    
     generateListOptions(){
         let result=[];
-        for (let item of this.state.PollOptions){
+        const {PollOptions}= this.state;
+        let indexOption=0;
+        for (let item of PollOptions){
             result.push(
-                <ListItem key={`option_poll_${item.idoption}`} 
-                    primaryText={item.optionname}
-                    leftIcon={<ContentInbox key={`icon_${item.idoption}`} />} onClick={()=>this.removePoll(item.idoption)}/>
+                <OptionPoll key={`option_${item.idoption}`} indexItem={indexOption} optionItem={item} actionClick={this.removePollOption}/>
             );
+            indexOption++;
         }
         return result;
     }
@@ -93,52 +103,67 @@ class NewPoll extends Component{
     handleCloseSnack=()=>{
         this.setState({snackOpen:!this.state.snackOpen});
     }
+
     renderFormPoll(){
+        const {PollOptions,PollName}= this.state;
         return(
             <form onSubmit={this.cancelFormSubmit}>
                 <div className="form-group">
                     <div className="col-sm-10">
-                        <TextField hintText="Write down the Poll name"
+                        <TextField hintText="Write down the poll name"
                                     floatingLabelText="Option name"
                                     floatingLabelFixed
-                                    value={this.state.PollName}
+                                    value={PollName}
                                     onChange={this.updatePollName}/>
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-offset-1 col-sm-10">
-                                        <RaisedButton label="Add" primary onClick={this.addPoll} disabled={this.state.PollOptions.length==0?true:false}/>
-                                        <RaisedButton label="Cancel" secondary onClick={this.cancelAdd}/>
+                    <div className="row">
+                        <div className="col-xs-6 col-sm-4 col-xs-offset-1">
+                            <VoteButton key="newPollAddPoll" 
+                                buttonText={"Add"} 
+                                hasHref={false} 
+                                hasSvg={false} 
+                                isDisabled={PollOptions.length==0?true:false}
+                                clickAction={this.addPoll}
+                                iconInfo={"save"}/>
+                        </div>
+                        <div className="col-xs-6 col-sm-4">
+                            <VoteButton key="newPollCancelButton"
+                                buttonText={"Cancel"}
+                                hasHref={false}
+                                isDisabled={false}
+                                hasSvg={false}
+                                iconInfo={"cancel"}
+                                clickAction={this.cancelAdd}/>
+                        </div>
                     </div>
                 </div>
             </form>   
         );
     }
     renderOptions(){
+        const{polloptionName}= this.state;
         return(
             <form onSubmit={this.cancelFormSubmit}>
                 <div className="form-group">
                     <div className="col-sm-10">
-                        <TextField hintText="poll Option Identifier"
-                            floatingLabelText="poll Option Identifier"
-                            floatingLabelFixed 
-                            disabled
-                            value={this.state.polloptionId}/>     
-                    </div>
-                </div>
-                <div className="form-group">
-                    <div className="col-sm-10">
-                        <TextField hintText="Write down the Poll name"
+                        <TextField hintText="Write down the option name"
                                     floatingLabelText="Option name"
                                     floatingLabelFixed
-                                    value={this.state.polloptionName}
+                                    value={polloptionName}
                                     onChange={this.updatePollOptionName}/>
                     </div>
                 </div>
                 <div className="form-group">
-                    <div className="col-sm-offset-1 col-sm-10">
-                        <RaisedButton label="Add Option" primary onClick={this.addOptionPoll} disabled={this.state.polloptionName==''?true:false}/>
-                        
+                    <div className="col-sm-offset-3 col-sm-10">
+                        <VoteButton buttonText={"Add Option"}
+                            hasHref={false}
+                            hasSvg={false}
+                            iconInfo={"addpoll"}
+                            clickAction={this.addOptionPoll}
+                            isDisabled={polloptionName==''?true:false}
+                            />
                     </div>
                 </div>
             </form>
@@ -146,6 +171,7 @@ class NewPoll extends Component{
     }
     
     render(){
+        const{snackOpen,snackMessage}= this.state;
         return (
            <div className="container-fluid">
                <div className="row">
@@ -168,7 +194,7 @@ class NewPoll extends Component{
                         </div>
                     </div>
                 </div>
-                <Snackbar open={this.state.snackOpen} message={this.state.snackMessage} autoHideDuration={4000}
+                <Snackbar open={snackOpen} message={snackMessage} autoHideDuration={4000}
                     onRequestClose={this.handleCloseSnack}/>
             </div>
 
@@ -180,10 +206,7 @@ NewPoll.propTypes={
         id:PropTypes.string.isRequired,
         email:PropTypes.string.isRequired,
         password:PropTypes.string.isRequired,
-        name:PropTypes.string.isRequired,
-        city:PropTypes.string.isRequired,
-        countrystate:PropTypes.string.isRequired,
-        country:PropTypes.string.isRequired
+        name:PropTypes.string.isRequired
     }).isRequired,
     newPollExit:PropTypes.func.isRequired,
     addPollToCollection:PropTypes.func.isRequired

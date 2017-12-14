@@ -2,49 +2,64 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-//import FontIcon from 'material-ui/FontIcon';
 import SvgIcon from 'material-ui/SvgIcon';
 import ActionEject from 'material-ui/svg-icons/action/eject';
+import ActionDone from 'material-ui/svg-icons/action/done';
 import ContentAddBox from 'material-ui/svg-icons/content/add-box';
-import ActionDelete from 'material-ui/svg-icons/action/delete';
 import NavigationArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import Star from 'material-ui/svg-icons/toggle/star';
-import StarBorder from 'material-ui/svg-icons/toggle/star-border';
-class PinButton extends Component{
-    /**
+import ActionDelete from 'material-ui/svg-icons/action/delete';
+import ActionAccountBox from 'material-ui/svg-icons/action/account-box';
+import ContentBlock from 'material-ui/svg-icons/content/block';
+import ContentSave from 'material-ui/svg-icons/content/save';
+import NavigationCancel from 'material-ui/svg-icons/navigation/cancel';
+import EditorInsertLink from 'material-ui/svg-icons/editor/insert-link';
+import ActionReorder from 'material-ui/svg-icons/action/reorder';
+class VoteButton extends Component{
+     /**
      * button class construtor
      * @param {*} props 
      */
     constructor(props){
         super(props);
         this.state={
-            showMessage:false
+            showButtonMessage:false
         };
     }
      /**
      * class property to handle the click on the button
      */
-    clickHandler=()=>{
+    handlerButtonClick=()=>{
         this.props.clickAction();
     }
-     /**
+
+    /**
      * class property to get the icon for the button
      */
     getIcon=value=>{
+       
         switch (value) {
             case "dc":
                 return <ActionEject/>;
-                //break;
-            case "addPin":
+            case "addpoll":
                 return <ContentAddBox/>;
             case "back":
                 return <NavigationArrowBack/>;
-            case "star":
-                return <Star/>;
-            case "starborder":
-                return <StarBorder/>;
             case "del":
                 return <ActionDelete/>;
+            case "local":
+                return <ActionAccountBox/>;
+            case "cancel":
+                return <ContentBlock/>;
+            case "save":
+                return <ContentSave/>;
+            case "vote":
+                return <ActionDone/>;
+            case "goback":
+                return <NavigationCancel/>;
+            case "share":
+                return <EditorInsertLink/>;
+            case "edit":
+                return <ActionReorder/>;
             default:
                 break;
         }
@@ -52,49 +67,40 @@ class PinButton extends Component{
      /**
      * render function for information
      */
-    renderInfo=()=>{
+    renderButtonInfo=()=>{
+
         const {buttonText,iconInfo,hasHref,hrefUrl,hasSvg,svgInfo,isDisabled}= this.props;
         
         if (hasHref){
             return (
-                
                 <RaisedButton label={buttonText} 
-                    primary
                     disabled={isDisabled}
                     href={hrefUrl}
                     labelPosition="before"
                     icon={hasSvg?<SvgIcon viewBox={svgInfo.viewBoxData}><path d={svgInfo.svgData}/></SvgIcon>:this.getIcon(iconInfo)}
-                    onClick={this.clickHandler}/>
+                    onClick={this.handlerButtonClick}/>
             );
         }
         else{
             return (
-                
                 <RaisedButton label={buttonText} 
+                    
                     disabled={isDisabled}
-                    primary
                     labelPosition="before"
                     icon={hasSvg?<SvgIcon viewBox={svgInfo.viewBoxData}><path d={svgInfo.svgData}/></SvgIcon>:this.getIcon(iconInfo)}
-                    onClick={this.clickHandler}/>
+                    onClick={this.handlerButtonClick}/>
             );
         }
-        /* return (
-            
-            <RaisedButton label={buttonText} 
-                primary
-                labelPosition="before"
-                icon={this.getIcon(iconInfo)}
-                onClick={this.clickHandler}/>
-        ); */
     }
      /**
      * render function normal
      */
-    renderNormal=()=>{
+    renderButtonNormal=()=>{
         const {iconInfo,hasHref,hasSvg,svgInfo,hrefUrl,isDisabled}= this.props;
+        
         if (hasHref){
             return(
-                <FloatingActionButton mini zDepth={1} href={hrefUrl} disabled={isDisabled} onClick={this.clickHandler}>
+                <FloatingActionButton mini zDepth={1} href={hrefUrl} disabled={isDisabled} onClick={this.handlerButtonClick}>
                     {
                         hasSvg?<SvgIcon viewBox={svgInfo.viewBoxData}><path d={svgInfo.svgData}/></SvgIcon>:this.getIcon(iconInfo)
                     }
@@ -103,45 +109,46 @@ class PinButton extends Component{
         }
         else{
             return(
-                <FloatingActionButton mini zDepth={1} onClick={this.clickHandler} disabled={isDisabled}>
+                <FloatingActionButton mini zDepth={1} onClick={this.handlerButtonClick} disabled={isDisabled}>
                     {
                         hasSvg?<SvgIcon viewBox={svgInfo.viewBoxData}><path d={svgInfo.svgData}/></SvgIcon>:this.getIcon(iconInfo)
+
                     }
+                    
                 </FloatingActionButton>
             );
         }
-        
-    }
-     /**
-     * mouse event handler
-     */
-    onMouseEnter=()=>{
-        this.setState({showMessage:true});
     }
     /**
      * mouse event handler
      */
-    onMouseLeave=()=>{
-        this.setState({showMessage:false});
+    handleOnMouseEnter=()=>{
+        this.setState({showButtonMessage:true});
+    }
+    /**
+     * mouse event handler
+     */
+    handleOnMouseLeave=()=>{
+        this.setState({showButtonMessage:false});
     }
     /**
      * render method
      */
     render(){
-       const {showMessage}= this.state;
-        return (
-            <div onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-                {showMessage?this.renderInfo():this.renderNormal()}
+        const {showButtonMessage}= this.state;
+        
+        return(
+            <div onMouseEnter={this.handleOnMouseEnter} onMouseLeave={this.handleOnMouseLeave}>
+                {showButtonMessage?this.renderButtonInfo():this.renderButtonNormal()}
             </div>
         );
-
     }
-}
 
-PinButton.propTypes={
+}
+VoteButton.propTypes={
     hasHref:PropTypes.bool.isRequired,
     hasSvg:PropTypes.bool.isRequired,
-    isDisabled:PropTypes.bool,
+    isDisabled:PropTypes.bool.isRequired,
     hrefUrl:PropTypes.string,
     svgInfo:PropTypes.shape({
         viewBoxData:PropTypes.string,
@@ -151,4 +158,5 @@ PinButton.propTypes={
     iconInfo:PropTypes.string,
     clickAction:PropTypes.func,
 };
-export default PinButton;
+
+export default VoteButton;

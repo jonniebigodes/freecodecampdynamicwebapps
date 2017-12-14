@@ -1,6 +1,6 @@
 import {
-    APP_ERROR,
-    APP_ERROR_RESET,
+    POLL_APP_ERROR,
+    POLL_APP_ERROR_RESET,
     POLL_LOGIN_REQUEST,
     POLL_SOCIAL_LOGIN_REQUEST_OK,
     POLL_LOGIN_OK,
@@ -10,6 +10,7 @@ import {
     POLL_REGISTER_OK,
     POLL_USER_LOGOUT,
     ADD_POLL,
+    REQUEST_POLLS,
     RECIEVE_POLLS,
     SET_POLL_EXIT,
     DEL_POLL,
@@ -29,8 +30,10 @@ const voteAppReducer=(state = {
         twittername:'',
         local:false
     },
+    voteIsSearching:false,
     votesisLoggedin: false,
-    items: [],
+    results:[],
+    polls:{},
     onError: false,
     errorMessage: ''
 }, action)=>{
@@ -71,37 +74,49 @@ const voteAppReducer=(state = {
                  /* ...state.items.slice(0,action.value),
                  ...state.items.slice(action.value,1) */
                  ...state,
-                 items:[...state.items,action.value]
-
+                 results:[...state.results,action.value.polltoken],
+                 polls:{
+                     ...state.polls,
+                     [action.value.polltoken]:action.value.data
+                 }
              };
+        }
+        case REQUEST_POLLS:{
+            return {
+                ...state,
+                voteIsSearching:true
+            };
         }
         case RECIEVE_POLLS:{
             return{
                 ...state,
-                items:action.value
+                voteIsSearching:false,
+                polls:action.value.entities.polls,
+                results:action.value.result
             };
         }
         case DEL_POLL:{
-            let votingIndex=state.items.findIndex(x=>x.polltoken==action.value);
+            let votingIndex=state.results.findIndex(x=>x.polltoken==action.value);
+            delete state.polls[action.value];
             return {
                 ...state,
-                items:[...state.items.slice(0,votingIndex),...state.items.slice(votingIndex+1)]
+                results:[...state.results.slice(0,votingIndex),...state.results.slice(votingIndex+1)]
             };
         }
         case ADD_POLL_OPTION:{
+            let tmpOptionsPoll= state.polls[action.value.pollid].polloptions;
+           
+            tmpOptionsPoll.push({
+                idoption:action.value.poll_option_id,
+                optionname:action.value.poll_option_name,
+                votes:0
+            });
+            state.polls[action.value.pollid]={
+                ...state.polls[action.value.pollid],
+                polloptions:tmpOptionsPoll
+            };
             return{
                 ...state,
-                items:state.items.map(itemPoll=>{
-                    if (itemPoll.polltoken!==action.value.pollid){
-                        return itemPoll;
-                    }
-                    itemPoll.polloptions.push({
-                        idoption:action.value.poll_option_id,
-                        optionname:action.value.poll_option_name,
-                        votes:0
-                    });
-                    return itemPoll;
-                })
             };
         }
         case EDIT_POLL_OPTION:{
@@ -110,23 +125,19 @@ const voteAppReducer=(state = {
             };
         }
         case VOTE_POLL:{
-           
+            
+            let optionsPoll=state.polls[action.value.polltoken].polloptions.map(item=>{
+                if (item.idoption==action.value.polloption){
+                    item.votes+=1;
+                }
+                return item;
+            });
+            state.polls[action.value.polltoken]={
+                ...state.polls[action.value.polltoken],
+                polloptions:optionsPoll
+            };
             return {
-                ...state,
-                items:state.items.map(itemPoll=>{
-                    if (itemPoll.polltoken!==action.value.polltoken){
-                        return itemPoll;
-                    }
-                    
-                    itemPoll.polloptions.forEach(element=>{
-                        if (element.idoption==action.value.polloption){
-                            
-                            element.votes+=1;
-                        }
-                    });
-                    
-                    return itemPoll;
-                })
+                ...state
             };
         }
         case SET_POLL_EXIT:{
@@ -144,9 +155,12 @@ const voteAppReducer=(state = {
                     local:false
                 },
                 votesisLoggedin: false,
-                items: [],
+                
                 onError: false,
-                errorMessage: ''
+                errorMessage: '',
+                voteIsSearching:false,
+                results:[],
+                polls:{}
              };
         }
         case POLL_REGISTER_REQUEST:{
@@ -187,6 +201,7 @@ const voteAppReducer=(state = {
              return {
                  ...state,
                  votesisLoggedin:true,
+                 local:true,
                  votesUserInfo:{
                      id:action.value,
                      email:state.votesUserInfo.email,
@@ -235,7 +250,7 @@ const voteAppReducer=(state = {
             };
             
         }
-        case APP_ERROR_RESET:{
+        case POLL_APP_ERROR_RESET:{
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
@@ -243,7 +258,7 @@ const voteAppReducer=(state = {
                 errorMessage: ''
             };
         }
-        case APP_ERROR:{
+        case POLL_APP_ERROR:{
             //console.log("reducer app error");
             return {
                 ...state,

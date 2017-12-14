@@ -1,7 +1,7 @@
 // import getMuiTheme from 'material-ui/styles/getMuiTheme';
 // import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import * as Colors from 'material-ui/styles/colors';
-// import { fade } from 'material-ui/utils/colorManipulator';
+import { fade } from 'material-ui/utils/colorManipulator';
 
 const pinTheme={
     palette:{
@@ -57,4 +57,38 @@ const stockTheme={
         backgroundColor:Colors.green400
     }
 };
-export const dynamicThemes={pinTheme,stockTheme};
+const votesTheme={
+    palette: {
+        primary1Color : Colors.blueGrey500,
+        accent1Color : Colors.indigoA200,
+        disabledColor : Colors.grey800,
+        canvasColor : Colors.grey50
+    },
+    tableHeaderColumn : {
+        height : 50,
+        spacing : 20
+    },
+     tableRow : {
+        stripeColor : fade(Colors.blueGrey500, 0.4),
+        height : 42
+    },
+    tabs : {
+        selectedTextColor : Colors.indigo900
+    },
+     textField : {
+        errorColor : Colors.red900
+    },
+     snackbar : {
+        backgroundColor : Colors.blueGrey600
+    },
+     raisedButton : {
+        primaryColor : Colors.blueGrey500,
+        color : Colors.blueGrey500,
+        textColor : fade(Colors.darkWhite, 0.87)
+    },
+    drawer:{
+        width:290,
+        
+    },
+};
+export const dynamicThemes={pinTheme,stockTheme,votesTheme};

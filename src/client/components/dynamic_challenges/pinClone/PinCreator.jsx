@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import Snackbar from 'material-ui/Snackbar';
-import RaisedButton from 'material-ui/RaisedButton';
+//import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import PinButton from './pinButton';
 import '../../../../Assets/stylesheets/pinsApp.scss';
 
 class PinCreator extends Component{
@@ -99,10 +100,16 @@ class PinCreator extends Component{
                         <div className="form-group animated fadeInUp">
                             <div className="row">
                                 <div className="col-xs-6">
-                                    <RaisedButton label="Add Pin" primary disabled={imageName==''?true:false} onClick={this.addPin}/>
+                                    <PinButton iconInfo={"addPin"} 
+                                        buttonText={"Add Pin"} disabled={imageName==''?true:false} clickAction={this.addPin}/>
+                                    {/* <RaisedButton label="Add Pin" primary disabled={imageName==''?true:false} onClick={this.addPin}/> */}
                                 </div>
                                 <div className="col-xs-6">
-                                    <RaisedButton label="Cancel Pin" primary onClick={this.cancelPinAdd} />
+                                    <PinButton iconInfo={"del"} 
+                                        buttonText={"Delete"} 
+                                        clickAction={this.deletePinCollection}
+                                         hasHref={false} isDisabled={false}/>
+                                    {/* <RaisedButton label="Cancel Pin" primary onClick={this.cancelPinAdd} /> */}
                                 </div>
                             </div>
                             

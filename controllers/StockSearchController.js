@@ -1,4 +1,4 @@
-const httpService = require('./httpService'); 
+const httpService =process.env.NODE_ENV !== 'production'?require('../src/server/httpService'):require('./httpService'); 
 //const httpService = require('../src/server/httpService');
 module.exports = {
     searchStockData(request, response) {

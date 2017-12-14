@@ -1,8 +1,8 @@
 import {
     REQUEST_POLLS,
     RECIEVE_POLLS,
-    APP_ERROR,
-    APP_ERROR_RESET,
+    POLL_APP_ERROR,
+    POLL_APP_ERROR_RESET,
     SET_POLL_EXIT,
     ADD_POLL,
     ADD_POLL_OPTION,
@@ -21,9 +21,12 @@ import {
 import authApi from '../api/authApi';
 import PollsApi from '../api/pollsApi';
 import ChallengesApi from '../api/challengesApi';
-export const requestPollData=value=>({
+import {normalize} from 'normalizr';
+import {VotesSchema} from '../constants/votesSchema';
+
+export const requestPollData=()=>({
     type:REQUEST_POLLS,
-    value
+    
 });
 export const recievePollsData=value=>({
     type:RECIEVE_POLLS,
@@ -31,16 +34,16 @@ export const recievePollsData=value=>({
 });
 
 export const setPollAppError=value=>({
-    type:APP_ERROR,
+    type:POLL_APP_ERROR,
     value
 });
 export const resetPollAppError=value=>({
-    type:APP_ERROR_RESET,
+    type:POLL_APP_ERROR_RESET,
     value
 });
-export const pollAppExit=value=>({
+export const pollAppExit=()=>({
     type:SET_POLL_EXIT,
-    value
+    
 });
 export const addPoll=value=>({
     type:ADD_POLL,
@@ -58,9 +61,8 @@ export const editPollOption=value=>({
     type:EDIT_POLL_OPTION,
     value
 });
-export const pollAppUserLogout=value=>({
+export const pollAppUserLogout=()=>({
     type:POLL_USER_LOGOUT,
-    value
 }); 
 export const setpollAppAuthServerData=value=>({
     type:POLL_LOGIN_REQUEST,
@@ -95,11 +97,11 @@ export const castVotePoll=value=>({
     value
 });
 
-export const pollAppDisconnectUser=authInformation=>dispatch=>{
-    authApi.userLogout(authInformation.id)
+export const pollAppDisconnectUser=()=>dispatch=>{
+    authApi.userLogout()
     .then(()=>{
         ChallengesApi.clearStorage();
-        dispatch(pollAppUserLogout(authInformation.id));
+        dispatch(pollAppUserLogout());
     }).catch(err=>{
         dispatch(setPollAppError(err));
     });
@@ -148,21 +150,18 @@ export const fetchSocialInfo=value=>dispatch=>{
 };
 export const shareOnSocialMedia=value=>dispatch=>{
     PollsApi.shareSocialPoll(value)
-    .then()
+    .then(()=>{
+        
+    })
     .catch(error=>{
         dispatch(setPollAppError(error));
     });
 };
 export const fetchPolls=()=>dispatch=>{
-    dispatch(requestPollData(true));
+    dispatch(requestPollData());
     let votesUserStorage=JSON.parse(ChallengesApi.getStorageData("votes_userinfo"));
-    console.log('====================================');
-    console.log(`dataUserStorage info:${JSON.stringify(votesUserStorage,null,2)}`);
-    console.log('====================================');
+    
     if (votesUserStorage){
-        console.log('====================================');
-        console.log(`1 data with value of :${votesUserStorage.email}`);
-        console.log('====================================');
         if (votesUserStorage.islocal){
             dispatch(setpollAppAuthServerData({email:votesUserStorage.email,password:votesUserStorage.password}));
             dispatch(pollAppAuthSucess({authToken:votesUserStorage.authToken,full_name:votesUserStorage.full_name}));
@@ -173,15 +172,18 @@ export const fetchPolls=()=>dispatch=>{
         
     }
     PollsApi.getallPolls().then(result=>{
-        dispatch(recievePollsData(result));
+        const pollsNormalized= normalize(result,VotesSchema.dataPolls);
+        
+        setTimeout(() => {
+            dispatch(recievePollsData(pollsNormalized));
+        }, 4500);
+        
     }).catch(err=>{
         dispatch(setPollAppError(err));
     });
 };
 export const voteOnPoll=pollInfo=>dispatch=>{
-    console.log('====================================');
-    console.log(`actions voteon poll data:${JSON.stringify(pollInfo,null,2)}`);
-    console.log('====================================');
+    
     PollsApi.votePoll(pollInfo.optionToken)
         .then(()=>{
             dispatch(castVotePoll({polltoken:pollInfo.polltoken,polloption:pollInfo.optionToken}));
@@ -190,32 +192,58 @@ export const voteOnPoll=pollInfo=>dispatch=>{
             dispatch(setPollAppError(err));
         });
 };
-export const addPollFold=pollData=>dispatch=>{
-    PollsApi.createPoll(pollData)
-        .then(result=>{
-            dispatch(addPoll({polltoken:result,pollcreator:pollData.pollcreatormail,pollname:pollData.pollname,polloptions:pollData.polloptions}));
-        })
-        .catch(err=>{
-            dispatch(setPollAppError(err));
-        });
-    
 
+const shouldaddPoll=(state,value)=>{
+
+    const dataInState= state.votes;
+    
+    if (!dataInState.results.length){
+        return true;
+    }
+    const votingItems= dataInState.polls;
+
+    for (const item in votingItems){
+        if (votingItems[item].pollname.toLowerCase()==value.pollname.toLowerCase()){
+            return false;
+        }
+    }
+    return true;
+};
+
+
+
+export const addPollFold=pollData=>(dispatch,getState)=>{
+    if (shouldaddPoll(getState(),pollData)){
+        PollsApi.createPoll(pollData)
+            .then(result=>{
+                dispatch(addPoll(
+                    {
+                        polltoken:result,
+                        data:{
+                            polltoken:result,
+                            pollcreator:pollData.pollcreator,
+                            pollname:pollData.pollname,
+                            polloptions:pollData.polloptions
+                        }
+                    }
+                ));
+            })
+            .catch(err=>{
+                dispatch(setPollAppError(err));
+            });
+    }
+    else{
+        dispatch(setPollAppError(`The poll named :${pollData.pollname} is already added`));
+    }
 };
 export const removePollFold=polldata=>dispatch=>{
-    console.log('====================================');
-    console.log(`removePollFold poll data: ${polldata}`);
-    console.log('====================================');
+    
     PollsApi.deletePoll(polldata)
-    .then(result=>{
-        console.log('====================================');
-        console.log(`removePollFold poll result`);
-        console.log('====================================');
+    .then(()=>{
         dispatch(removePoll(polldata));
     })
     .catch(errorDelPoll=>{
-        console.log('====================================');
-        console.log(`removePollFold poll error: ${errorDelPoll}`);
-        console.log('====================================');
+        
         dispatch(setPollAppError(errorDelPoll));
     });
     

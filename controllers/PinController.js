@@ -1,6 +1,6 @@
 // prod mode
-const dbService=require('./dbFactory');
-const httpService = require('./httpService');
+const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
+const httpService = process.env.NODE_ENV !== 'production'?require('../src/server/httpService'):require('./httpService');
 //
 //dev mode
 //const dbService = require('../src/server/dbFactory');

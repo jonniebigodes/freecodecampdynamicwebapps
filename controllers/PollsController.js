@@ -1,6 +1,6 @@
 // prod mode
-const dbService=require('./dbFactory');
-const httpService = require('./httpService');
+const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
+const httpService =process.env.NODE_ENV !== 'production'?require('../src/server/httpService'): require('./httpService');
 //
 // dev mode
 //const dbService = require('../src/server/dbFactory');
@@ -26,7 +26,10 @@ module.exports={
                         if (user){
                             results.push({
                                 polltoken:item._id,
-                                pollcreator:user.full_name==='0'?user.local_email:user.full_name,
+                                pollcreator:{
+                                    userid:item.user,
+                                    username:user.full_name?user.full_name:user.local_email,
+                                },
                                 pollname:item.name,
                                 polloptions:item.polloptions
                             });

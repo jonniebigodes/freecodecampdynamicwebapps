@@ -1,21 +1,22 @@
 // prod mode
-const AuthController= require('./AuthController');
+/* const AuthController= require('./AuthController');
 const NightsController=require('./NightLifeController');
 const StocksController=require('./StockSearchController');
 const BooksController=require('./BooksController');
 const PollsController= require('./PollsController');
 const PinsController= require('./PinController'); 
-const path = require('path');
+const path = require('path'); */
 //
 
 
 // dev mode
-/* const AuthController= require('./controllers/AuthController');
-const NightsController=require('./controllers/NightLifeController');
-const StocksController=require('./controllers/StockSearchController');
-const BooksController=require('./controllers/BooksController');
-const PollsController= require('./controllers/PollsController');
-const PinsController= require('./controllers/PinController'); */
+const AuthController= process.env.NODE_ENV !== 'production'?require('./controllers/AuthController'):require('./AuthController');
+const NightsController=process.env.NODE_ENV !== 'production'?require('./controllers/NightLifeController'):require('./NightLifeController');
+const StocksController=process.env.NODE_ENV !== 'production'?require('./controllers/StockSearchController'):require('./StockSearchController');
+const BooksController=process.env.NODE_ENV !== 'production'?require('./controllers/BooksController'):require('./BooksController');
+const PollsController= process.env.NODE_ENV !== 'production'?require('./controllers/PollsController'):require('./PollsController');
+const PinsController= process.env.NODE_ENV !== 'production'?require('./controllers/PinController'):require('./PinController');
+const path = require('path'); 
 //
 
 
@@ -135,8 +136,9 @@ module.exports=(app,passport)=>{
     app.post('/api/data/delimage',PinsController.deleteImage);
     app.post('/api/data/voteimage',PinsController.VoteImage);
     app.get('*',(request,response)=>{
+        process.env.NODE_ENV !== 'production'?response.sendFile(__dirname + '/dist/index.html'):response.sendFile('index.html',{root:path.join(__dirname,'../dist/')});
         //response.sendFile(__dirname + '/dist/index.html');
-        response.sendFile('index.html',{root:path.join(__dirname,'../dist/')});
+        //response.sendFile('index.html',{root:path.join(__dirname,'../dist/')});
     });
     
 };

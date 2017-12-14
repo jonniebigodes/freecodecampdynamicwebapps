@@ -1,5 +1,5 @@
-//const dbService = require('../src/server/dbFactory');
-const dbService=require('./dbFactory');
+const dbService = process.env.NODE_ENV !== 'production'? require('../src/server/dbFactory'):require('./dbFactory');
+//const dbService=;
 module.exports = {
 
     changeUserData(request, response) {
