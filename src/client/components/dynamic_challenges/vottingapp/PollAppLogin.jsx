@@ -17,9 +17,9 @@ class PollAppLogin extends Component{
             email:'',
             tabValue:'Login',
             password:'',
-            userFullName:'',
+            retype_pwd:'',
             local:false,
-            facebook:false,
+            
         };
     }
     componentWillReceiveProps(nextProps){
@@ -52,6 +52,7 @@ class PollAppLogin extends Component{
         const {loginreg}= this.props;
         if (tabValue==='Login'){
             loginreg({isLogin:true,email:this.state.email,password:this.state.password});
+            this.setState({email:'',password:'',local:false});
         }
         else{
             if (password!==retype_pwd){
@@ -59,6 +60,7 @@ class PollAppLogin extends Component{
                 return;
             }
             loginreg({isLogin:false,email:this.state.email,password:this.encrypwd()});
+            this.setState({email:'',password:'',retype_pwd:'',local:false});
         }
     }
     handleKeys=(e)=>{
@@ -73,7 +75,9 @@ class PollAppLogin extends Component{
     setPassword=(e)=>{
         this.setState({password:e.target.value});
     }
-    
+    setConfirmationPwd=(e)=>{
+        this.setState({retype_pwd:e.target.value});
+    }
     addPoll=()=>{
         this.props.pollStart();
     }
@@ -120,94 +124,88 @@ class PollAppLogin extends Component{
             <div>
                 <Tabs value={tabValue} onChange={this.handleChangeTab}>
                     <Tab label="Login" value="Login">
-                        <h4> Insert your credentials bellow</h4>
-                        <form onSubmit={this.cancelPostForm}>
-                            <div className="form-group">
-                                <TextField key="inputBookLoginEmail" 
-                                    hintText="Set your email here" 
-                                    floatingLabelText="Email"
-                                    floatingLabelFixed
-                                    value={email}
-                                    onChange={this.setEmail}/>
-                                
-                            </div>
-                            <div className="form-group">
-                                <TextField key="inputBookLoginPassword" 
-                                        hintText="Set your password here" 
-                                        floatingLabelText="Password"
+                        <div className="loginTabPos">
+                            <h4> Insert your credentials bellow</h4>
+                            <form onSubmit={this.cancelPostForm}>
+                                <div className="form-group">
+                                    <TextField key="inputBookLoginEmail" 
+                                        hintText="Set your email here" 
+                                        floatingLabelText="Email"
                                         floatingLabelFixed
-                                        type="password"
-                                        value={password}
-                                        onChange={this.setPassword}
-                                        onKeyPress={this.handleKeys}/>
-                            </div>
-                            <div className="form-group">
-                                <VoteButton key="btnLogin"
-                                     buttonText={"Login"} 
-                                     iconInfo={"local"}
-                                     clickAction={this.handleLoginRegisterRequest} 
-                                     hasHref={false} 
-                                     hasSvg={false}
-                                     isDisabled={false}/>
-                               
-                                <VoteButton key="btnLoginCancel"
-                                    buttonText={"Cancel"}
-                                    iconInfo={"cancel"}
-                                    clickAction={this.handleLocalCancel}
-                                    hasHref={false}
-                                    hasSvg={false}
-                                    isDisabled={false}/>
-                                
-                                
-                            </div>
+                                        value={email}
+                                        onChange={this.setEmail}/>
+                                    
+                                </div>
+                                <div className="form-group">
+                                    <TextField key="inputBookLoginPassword" 
+                                            hintText="Set your password here" 
+                                            floatingLabelText="Password"
+                                            floatingLabelFixed
+                                            type="password"
+                                            value={password}
+                                            onChange={this.setPassword}
+                                            onKeyPress={this.handleKeys}/>
+                                </div>
+                            </form>
+                        </div>
                         
-                        </form>
                     </Tab>
                     <Tab label="Signup" value="Signup">
-                        <form onSubmit={this.cancelPostForm}>
-                            <div className="form-group">
-                                <TextField key="inputBookRegisterEmail"
-                                    hintText="Set your email here"
-                                    floatingLabelFixed
-                                    floatingLabelText="Email"
-                                    value={email}
-                                    onChange={this.setEmail}/>
-                            </div>
-                            <div className="form-group">
-                                <TextField key="inputBookRegisterPassword"
-                                    hintText="Set your password here"
-                                    floatingLabelFixed
-                                    floatingLabelText="Password"
-                                    type="password"
-                                    value={password}
-                                    onChange={this.setPassword}/>
-                                <TextField key="RetypeinputBookRegisterPassword"
-                                    hintText="Re-type your password here"
-                                    floatingLabelFixed
-                                    type="password"
-                                    floatingLabelText="Re-type Password"
-                                    value={retype_pwd}
-                                    onChange={this.setConfirmationPwd}/>
-                                    
-                            </div>
-                            <div className="form-group">
-                                <VoteButton key="btnLoginRegister" 
-                                    buttonText={"Register"} 
-                                    iconInfo={"local"} 
-                                    hasHref={false}
-                                    hasSvg={false}
-                                    isDisabled={false}/>
-                                <VoteButton key="btnCancelRegister" 
-                                    hasHref={false} 
-                                    hasSvg={false}
-                                    isDisabled={false}
-                                    iconInfo={"cancel"} 
-                                    buttonText={"Cancel"} 
-                                    clickAction={this.openCloseDrawer}/>
-                            </div>
-                        </form>
+                        <div className="loginTabPos">
+                            <form onSubmit={this.cancelPostForm}>
+                                <div className="form-group">
+                                    <TextField key="inputBookRegisterEmail"
+                                        hintText="Set your email here"
+                                        floatingLabelFixed
+                                        floatingLabelText="Email"
+                                        value={email}
+                                        onChange={this.setEmail}/>
+                                </div>
+                                <div className="form-group">
+                                    <TextField key="inputBookRegisterPassword"
+                                        hintText="Set your password here"
+                                        floatingLabelFixed
+                                        floatingLabelText="Password"
+                                        type="password"
+                                        value={password}
+                                        onChange={this.setPassword}/>
+                                    <TextField key="RetypeinputBookRegisterPassword"
+                                        hintText="Re-type your password here"
+                                        floatingLabelFixed
+                                        type="password"
+                                        floatingLabelText="Re-type Password"
+                                        value={retype_pwd}
+                                        onChange={this.setConfirmationPwd}/>
+                                        
+                                </div>
+                            </form>
+                        </div>
+                        
                     </Tab>
                 </Tabs>
+                <div className="loginTabPos">
+                    <div className="row">
+                        <div className="col-xs-6 col-sm-4 col-xs-offset-1">
+                            <VoteButton key="btnLoginReg"
+                                buttonText={tabValue=='Login'?"Login":"Register"} 
+                                iconInfo={"local"}
+                                clickAction={this.handleLoginRegisterRequest} 
+                                hasHref={false} 
+                                hasSvg={false}
+                                isDisabled={false}/>
+                        </div>
+                        <div className="col-xs-6 col-sm-4 col-xs-offset-1">
+                            <VoteButton key="btnLoginCancel"
+                                buttonText={"Cancel"}
+                                iconInfo={"cancel"}
+                                clickAction={this.handleLocalCancel}
+                                hasHref={false}
+                                hasSvg={false}
+                                isDisabled={false}/>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         );
     }
@@ -223,8 +221,9 @@ class PollAppLogin extends Component{
         }
         return(
             <div>
-                <h4>Choose how you want to login</h4>
+                <h4 className="textLoginPos">Choose how to login</h4>
                 <div className="votingLoginButtonPos">
+                    
                     <VoteButton 
                         buttonText={"Local"} 
                         iconInfo={"local"} 
@@ -232,7 +231,7 @@ class PollAppLogin extends Component{
                         clickAction={this.setLocalLogin} 
                         hasHref={false} 
                         hasSvg={false}/>
-                    <hr/>
+                    <hr className="ruleLoginPos"/>
                     <VoteButton buttonText={"Twitter"}
                         hasHref
                         isDisabled={false}
