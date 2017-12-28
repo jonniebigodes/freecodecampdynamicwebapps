@@ -1,60 +1,57 @@
 import React, { Component } from 'react';
-import Cached from 'material-ui/svg-icons/action/cached';
-import AllOut from 'material-ui/svg-icons/action/all-out';
-import {GridList, GridTile} from 'material-ui/GridList';
-import IconButton from 'material-ui/IconButton';
+import {GridList} from 'material-ui/GridList';
 import PropTypes from 'prop-types';
+import BookItem from './BookItem';
+import BookDetail from './BookDetail';
 class BookItemsContainer extends Component{
 
     constructor(props){
         super(props);
-        
+        this.state={
+            isPreview:false,
+            selectedBook:{}
+        };
+    }
 
-    }
-    updateSnack=()=>{
-        this.setState({snackOpened:!this.state.snackOpened});
-    }
     itemTrade=(item)=>{
         console.log('====================================');
         console.log(`ITEM CLICKED:${JSON.stringify(item)}`);
         console.log('====================================');
-        let bookData= this.props.books.find(x=>x.booktoken==item);
+        const {books, tradeBook}= this.props;
+        tradeBook({tokenBook:item,traderToken:'',ownerToken:books[item].bookowner.token,ownercontact:books[item].bookowner.bookownercontact,tradercontact:''});
+        //let bookData= this.props.books.find(x=>x.booktoken==item);
         
-         if (bookData.bookisbeingtraded){
-             //show message;
-             console.log("BEING TRADED");
-             return;
-         }
-         this.props.tradeBook({tokenBook:bookData.booktoken,traderToken:'',ownerToken:bookData.bookowner,ownercontact:bookData.bookownercontact,tradercontact:''});
+        //  if (bookData.bookisbeingtraded){
+        //      //show message;
+        //      console.log("BEING TRADED");
+        //      return;
+        //  }
+        //  this.props.tradeBook({tokenBook:bookData.booktoken,traderToken:'',ownerToken:bookData.bookowner,ownercontact:bookData.bookownercontact,tradercontact:''});
+    }
+    handlePreview=(value)=>{
+        const {books}= this.props;
+        this.setState({isPreview:true,selectedBook:books[value]});
     }
     spawnItems=()=>{
-       
+       const {books}= this.props;
         const result=[];
-        for (let item of this.props.books){
+        for (const item in books){
             result.push(
-                <GridTile key={item.booktoken} title={`${item.bookname} by: ${item.bookauthor}`}
-                          subtitle={`added by: ${item.bookownercontact}\ntraded to:\n${item.bookisbeingtraded?item.bookbeingtradedto:'nobody'}`}
-                          actionIcon={<IconButton onClick={(e)=>this.itemTrade(item.booktoken)}>{item.bookisbeingtraded?<AllOut color="white"/>:<Cached color="white" key={item.booktoken}/>}</IconButton>}>
-                            <img src={item.bookcover===''?'https://image.freepik.com/free-vector/human-head-like-a-open-book_23-2147509213.jpg':item.bookcover}/>
-                </GridTile>
-            );
+                <BookItem key={`item_book_${books[item].booktoken}`} 
+                    bookInfo={books[item]} 
+                    bookTrade={this.itemTrade}
+                    previewBook={this.handlePreview}/>
+                );
         }
         return result;
     }
+    exitPreview=()=>{
+        this.setState({selectedBook:{},isPreview:false});
+    }
     render(){
-        const bookliststyles = {
-            root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-        },
-        listdata: {
-            width: 800,
-            height: 450,
-            overflowY: 'auto',
-            }
-        };
-        if (!this.props.books.length || !this.props.books[0]){
+        const {numberBookItems}= this.props;
+        const {isPreview,selectedBook}= this.state;
+        if (numberBookItems===0){
             return(
                 <div>
                     <h3>Now that's awkward looks like there's nothing to show to you</h3>
@@ -62,22 +59,25 @@ class BookItemsContainer extends Component{
                 </div>
             );
         }
+        if (isPreview){
+            return(
+                <BookDetail bookData={selectedBook} bookPreviewExit={this.exitPreview} itemTrade={this.itemTrade}/>
+            );
+        }
         return(
-            <div style={bookliststyles.root}>
-                <GridList key="containerBooks" cellHeight={180} style={bookliststyles.listdata} >
-                    {
-                        this.spawnItems()
-                    }
+            <GridList key="containerBooks" cols={3} cellHeight={'auto'} padding={6} >
+            {
+                this.spawnItems()
+            }
             </GridList>
-        </div>
         );
+        
     }
     
 }
 BookItemsContainer.propTypes={
-    books:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
-    tradeBook:PropTypes.func.isRequired
+    books:PropTypes.object.isRequired,
+    tradeBook:PropTypes.func.isRequired,
+    numberBookItems:PropTypes.number
 };
 export default BookItemsContainer;

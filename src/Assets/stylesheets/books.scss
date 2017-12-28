@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css?family=Mukta+Malar|Roboto');
 .containerDark{
     background-color: #303030;
 }
@@ -7,4 +8,31 @@
 .addbookcontainer{
     margin-left: 75vh;
     margin-top: 2vh;
+}
+.previewimg{
+    width: 30vw;
+    height: 50vh;
+}
+.posButtonsChange{
+    
+    margin-top: 12vh;
+}
+.textInfoPreview{
+    text-align: center;
+    font-family: 'Mukta Malar', sans-serif;
+}
+.preloader{
+    margin-top: 14vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.itemsPreloader{
+    margin: auto;
+}
+.preloaderText{
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 4rem;
+    
 }

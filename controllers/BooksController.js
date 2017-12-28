@@ -1,11 +1,6 @@
-//prod mode
+//sets the imports according to the flag in question
 const httpService=process.env.NODE_ENV !== 'production'?require('../src/server/httpService'):require('./httpService');
-//const httpService = require('./httpService'); 
 const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
-//
-// dev mode
-//const httpService = require('../src/server/httpService');
-//const dbService = require('../src/server/dbFactory');
 //
 const path = require('path');
 module.exports = {
@@ -46,7 +41,12 @@ module.exports = {
                                 }
                                 resultsbooks.push({
                                     booktoken: itemBook.idbook,
-                                    bookowner: item.user,
+                                    bookowner:{
+                                        token:item.user,
+                                        name:userindb.full_name==null?userindb.local_email:userindb.full_name,
+                                        bookownercontact: userindb.local_email
+                                    },
+                                    //bookowner: item.user,
                                     bookname: itemBook.name,
                                     bookauthor: itemBook.author,
                                     bookcover: itemBook.imgcover,
@@ -77,6 +77,11 @@ module.exports = {
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
     },
+    /**
+     * adds a book  to the collection
+     * @param {*} request express request sent from the client
+     * @param {*} response express response to be sent to the client
+     */
     addBookCollection(request, response) {
         if ((!request.body.usertoken) || (!request.body.bookName)) {
             response.writeHead(500, {'Content-Type': 'application/json'});
@@ -158,6 +163,11 @@ module.exports = {
             });
 
     },
+    /**
+     * starts the trade book process
+     * @param {*} request express request sent from the client
+     * @param {*} response express response to be sent to the client
+     */
     tradeBook(request, response) {
         let resultInfo={apiKey:request.app.BLUEKEY,infoowner:'',infotrader:'',book:'',token:''};
         dbService.setUrl(request.app.MONGODB);
@@ -193,7 +203,7 @@ module.exports = {
                 if (resultdatatrade[0].length) {
                     dbService.disconnect();
                     response.writeHead(500, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify({code: "fccda001", reason: "Book is currently being traded by another person"}));
+                    response.end(JSON.stringify({code: "fccda001", reason: "The item in question is currently being traded by another person"}));
                     return;
                 }
                 dbService.injectOneItem({
@@ -217,9 +227,7 @@ module.exports = {
                    
                     resultInfo.book= resultdatatrade[2].name;
                     resultInfo.token= resulttradeadd;
-                    /* console.log('====================================');
-                    console.log(`Mail DATA INFO:${JSON.stringify(resultInfo,null,2)}`);
-                    console.log('===================================='); */
+                   
                     httpService.sendMail(resultInfo).then(resultMail=>{
                         if (resultMail){
                             response.writeHead(200, {'Content-Type': 'application/json'});
@@ -262,6 +270,11 @@ module.exports = {
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
     },
+    /**
+     * rejects the book trade
+     * @param {*} request express request sent from the client
+     * @param {*} response express response to be sent to the client
+     */
     tradeReject(request, response) {
         if (!request.query.tokentrade) {
             response.writeHead(500, {'Content-Type': 'application/json'});
@@ -297,6 +310,11 @@ module.exports = {
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
     },
+     /**
+     * accepts the book trade
+     * @param {*} request express request sent from the client
+     * @param {*} response express response to be sent to the client
+     */
     tradeAccept(request, response) {
         if (!request.query.tokentrade) {
             response.writeHead(500, {'Content-Type': 'application/json'});
@@ -307,9 +325,6 @@ module.exports = {
         dbService.setUrl(request.app.MONGODB);
         dbService.connect().then(() => dbService.searchByID({collectionName: 'book_trades',queryParam: {_id: request.query.tokentrade}}))
             .then(resultsearchtrade => {
-               /*  console.log('====================================');
-                console.log(`tradebook accept result of query search trades:${JSON.stringify(resultsearchtrade, null, 2)}`);
-                console.log('====================================\n\n\n\n\n'); */
                 // checks if it exists
                 if (!resultsearchtrade.length) {
                     dbService.disconnect();
@@ -376,14 +391,8 @@ module.exports = {
                     })
 
                 ]).then(resultradedata => {
-                    /* console.log('====================================');
-                    console.log(`accept trade search books by id:${JSON.stringify(resultradedata, null, 2)}`);
-                    console.log('===================================='); */
                     const bookTraded = resultradedata[1];
                     const infoBookTraded = bookTraded[0];
-                    /* console.log('====================================');
-                    console.log(`book in question:${JSON.stringify(bookTraded, null, 2)} \n infoBook:${JSON.stringify(infoBookTraded, null, 2)}`);
-                    console.log('===================================='); */
                     if (resultradedata[0].length) {
                         // pushes a new subdocument
                         dbService.updateData({
@@ -405,9 +414,7 @@ module.exports = {
                                 }
                             }
                         }).then(() => {
-                            /* console.log('====================================');
-                            console.log(`data added:${JSON.stringify(resultupdate)}`);
-                            console.log('===================================='); */
+                            
                             response.sendFile('resulttrade.html',{root:path.join(__dirname,'../dist/')});
                         }).catch(erraddtonewuser => {
                             dbService.disconnect();
@@ -433,9 +440,7 @@ module.exports = {
                             }
                         })
                         .then(() => {
-                            /* console.log('====================================');
-                            console.log(`data added:${JSON.stringify(resultdata)}`);
-                            console.log('===================================='); */
+                           
                             response.status(200).send('../dist/resulttrade.html');
                         })
                         .catch(errInjectbook => {

@@ -2,15 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Snackbar from 'material-ui/Snackbar';
 import AppHeader from '../../AppHeader';
 import AppFooter from '../../AppFooter';
 import BookAppLogin from './BookAppLogin';
 import BookInfo from './BookInfo';
+import BookUserInfo from './BookUserInformation';
 import BookItemsContainer from './bookTradeItemsContainer';
 import '../../../../Assets/stylesheets/books.scss';
 import '../../../../Assets/stylesheets/base.scss';
@@ -23,10 +20,14 @@ class BookTradeContainer extends Component{
             adding:false,
             snackOpen:false,
             snackMessage:'',
-            hideShowLogin:false
+            hideShowLogin:false,
+            editUserData:false
         };
     }
-    
+    changeToEdit=()=>{
+        this.setState({editUserData:!this.state.editUserData});
+        
+    }
     changeTheme=()=>{
         this.setState({light:!this.state.light});
     }
@@ -36,7 +37,7 @@ class BookTradeContainer extends Component{
     }
     addbookcollection=(e)=>{
         this.changetoAdd();
-        this.setState({snackMessage:'Book added to the collection'});
+        this.setState({snackMessage:'Book being added to the collection'});
         this.openCloseSnackBar();
         this.props.bookAdd(e);
         
@@ -70,35 +71,32 @@ class BookTradeContainer extends Component{
         this.setState({hideShowLogin:!this.state.hideShowLogin});
     }
     renderNormal=()=>{
+        const {booklist,numberBooks,userData,changeInfoUser}= this.props;
+        if (this.state.editUserData){
+            return (<BookUserInfo userData={userData} cancelEdit={this.changeToEdit} changeDataUser={changeInfoUser}/>);
+        }
         return(
-            <div>
-                <BookAppLogin 
-                    islogged= {this.props.userLoggedIn} 
-                    loginreg={(value)=>this.handleLoginReg(value)} 
-                    userLogout={this.handleLogout} 
-                    userInformation={this.props.userData} 
-                    themeChange={this.changeTheme} 
-                    bookinject={this.changetoAdd}
-                    changeInfo={this.props.changeInfoUser}
-                    hasLoginNeeds={this.state.hideShowLogin}/>
-                <BookItemsContainer books={this.props.booklist}  
-                    userInformation={this.props.userData} 
-                    tradeBook={(e)=>this.tradeBookHandler(e)}/>
-                <Snackbar open={this.state.snackOpen} message={this.state.snackMessage}
-                            autoHideDuration={3000}
-                            onRequestClose={this.openCloseSnackBar}/>
-            </div>
+            <BookItemsContainer books={booklist}  
+                userInformation={userData} 
+                tradeBook={this.tradeBookHandler}
+                numberBookItems={numberBooks}/>
         );
     }
 
     renderAdding=()=>{
+        const {userData,booklist}= this.props;
         return (
-            <div>
-                <BookInfo listbooks={this.props.booklist} abortAdd={this.changetoAdd} userInformation={this.props.userData} bookAdd={(e)=>this.addbookcollection(e)} bookreject={(e)=>this.rejectBook(e)}/>
-            </div>
+            <BookInfo 
+                    listbooks={booklist} 
+                    abortAdd={this.changetoAdd} 
+                    userInformation={userData} 
+                    bookAdd={this.addbookcollection} 
+                    bookreject={this.rejectBook}/>
         );
     }
     render(){
+        const {isAppError,errorMessageApp,userLoggedIn,userData}= this.props;
+        const {hideShowLogin,snackOpen,snackMessage,light}= this.state;
         const actionsDialog = [
             <FlatButton key="dialogError_nightLife"
                 label="Ok"
@@ -107,32 +105,40 @@ class BookTradeContainer extends Component{
             />
             ];
         return (
-            <MuiThemeProvider muiTheme={getMuiTheme(this.state.light?lightBaseTheme:darkBaseTheme)}>
-                <div className={this.state.light?'container-fluid containerLight':'container-fluid containerDark'}>
+            <div className={'container-fluid'}>
                     <Dialog key="errorDialog"
                             actions={actionsDialog}
                             modal={false}
-                            open={this.props.isAppError}
+                            open={isAppError}
                             onRequestClose={this.onresetError}>
                         <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
                         <br/>
-                        <h4>{this.props.errorMessageApp}</h4>
+                        <h4>{errorMessageApp}</h4>
                     </Dialog> 
                     <AppHeader appName="Supercalifragilistic Book Coordinator" appStyle="books" showLogin={this.showHideLogin} hasLoginNeeds/>
+                    <BookAppLogin 
+                        islogged= {userLoggedIn} 
+                        loginreg={this.handleLoginReg} 
+                        userLogout={this.handleLogout} 
+                        userInformation={userData} 
+                        themeChange={this.changeTheme} 
+                        bookinject={this.changetoAdd}
+                        changeInfoUser={this.changeToEdit}
+                        hasLoginNeeds={hideShowLogin}/>
                     {
                         this.state.adding?this.renderAdding():this.renderNormal()
                     }
-                    
-                    <AppFooter appName="book" lightordark={this.state.light}/>
-                </div>
-            </MuiThemeProvider>
+                    <Snackbar open={snackOpen} message={snackMessage}
+                            autoHideDuration={3000}
+                            onRequestClose={this.openCloseSnackBar}/>
+                    <AppFooter appName="book" lightordark={light}/>
+            </div>
         );
     }
 }
 BookTradeContainer.propTypes={
-    booklist:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
+    booklist:PropTypes.object.isRequired,
+    numberBooks:PropTypes.number.isRequired,
     isAppError:PropTypes.bool.isRequired,
     errorMessageApp:PropTypes.string.isRequired,
     userData:PropTypes.object.isRequired,

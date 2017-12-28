@@ -91,4 +91,35 @@ const votesTheme={
         
     },
 };
-export const dynamicThemes={pinTheme,stockTheme,votesTheme};
+const booksTheme={
+    palette: {
+        primary1Color: fade(Colors.brown900, 0.76),
+        canvasColor: fade(Colors.brown200, 0.87)
+    },
+    appBar: {
+        height: 62
+    },
+    raisedButton: {
+        color: Colors.brown800,
+        textColor: fade(Colors.lightWhite, 0.54)
+    },
+    snackbar: {
+        backgroundColor: Colors.brown600
+    },
+    dialog: {
+        bodyColor: fade(Colors.black, 0.93)
+    },
+    floatingActionButton: {
+        secondaryColor: Colors.redA200
+    },
+    drawer:{
+        width:290
+    },
+    gridList:{
+        width:1280,
+        height:385,
+        margin:20,
+        overflowY: 'auto'
+    }
+}
+export const dynamicThemes={pinTheme,stockTheme,votesTheme,booksTheme};

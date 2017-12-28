@@ -31,19 +31,6 @@ export const checkImage=value=>{
  * @return {Promise} a promise containing the result or fail of the call of the stock api
  */
 export const getStockInformation = value => {
-    /* let resultInfo = {
-        error: false,
-        messageError: "",
-        dataRecieved: {}
-    }; 
-    let stockinfo = {
-        stockName: "",
-        stockCode: "",
-        refreshDate: "",
-        stockQueryStart: "",
-        StockQueryEnd: "",
-        stockData: []
-    };*/
     return new Promise((resolve, reject) => {
         try {
             unirest
@@ -208,7 +195,7 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
  * @returns {Promise} promise containing the result/fail of the operation
  */
 export const sendMail=(value)=>{
-    //const mailToBookOwner=constructMailNotificationBookOwner(value.infotrader,value.infoowner,value.token,value.name);
+    
     const mailToBookOwner={
         id:1,
         to:value.infoowner,
@@ -218,11 +205,9 @@ export const sendMail=(value)=>{
             BOOKNAME:value.name
         }
     };
-    /* console.log('====================================');
-    console.log(`mail to book owner data:${JSON.stringify(mailToBookOwner,null,2)}\n`);
-    console.log('====================================');
- */
-    const sendinObj= new sendBlue({apiKey:value.apiKey,timeout:5000});
+   
+    
+    const sendinObj= new sendBlue({apiKey:value.apiKey,timeout:7500});
 
      return new Promise((resolve,reject)=>{
          sendinObj.send_transactional_template(mailToBookOwner,(errorMail,response)=>{

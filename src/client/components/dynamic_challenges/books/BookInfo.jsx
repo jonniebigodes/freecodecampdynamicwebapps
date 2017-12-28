@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
 import Toggle from 'material-ui/Toggle';
 import moment from 'moment';
 import '../../../../Assets/stylesheets/books.scss';
 import '../../../../Assets/stylesheets/base.scss'; 
+import BookButton from './BookButton';
 class BookInfo extends Component{
 
     constructor(props){
@@ -29,9 +29,7 @@ class BookInfo extends Component{
     cancelFormSubmit=()=>{
         return false;
     }
-    bookPresent=()=>{
-        return this.props.listbooks.find(x=>x.bookname.toLowerCase()==this.state.bookname.toLowerCase());
-    }
+   
     generateIdBook=()=>{
         if (this.state.idbook){
             return;
@@ -39,34 +37,20 @@ class BookInfo extends Component{
         this.setState({idbook:`book_${moment()}`});
     }
     addbook=()=>{
+        const {userInformation}=this.props;
+        const{idbook,bookname,bookauthor,bookreview,bookcover}= this.state;
         
-        if(this.bookPresent()){
-            console.log(`book exists:`);
-            // set error
-            this.props.bookreject(this.state.bookname);
-        }
-        else{
-            let newBook={
-                usertoken:this.props.userInformation.id,
-                bookId:this.state.idbook,
-                bookName:this.state.bookname,
-                authorName:this.state.bookauthor,
-                userContact:this.props.userInformation.email
-            };
-            if (this.state.bookreview!=''){
-                //console.log("has review");
-                newBook.bookReview=this.state.bookreview;
+        this.props.bookAdd(
+            {
+                usertoken:userInformation.id,
+                bookId:idbook,
+                bookName:bookname,
+                authorName:bookauthor,
+                userContact:userInformation.email,
+                imgCoverLocation:bookcover!=''?bookcover:'',
+                bookReview:bookreview!=''?bookreview:''
             }
-            if (this.state.bookcover!=''){
-                //console.log("has review");
-                newBook.imgCoverLocation=this.state.bookcover;
-            }
-            if(newBook.bookName==='' && newBook.authorName===''){
-                this.props.bookreject(this.state.bookname);
-                return;
-            }
-            this.props.bookAdd(newBook);
-        }
+        );
     }
     updateBookTerm=(e)=>{
         this.generateIdBook();
@@ -82,6 +66,8 @@ class BookInfo extends Component{
         this.setState({bookreview:e.target.value});
     }
     render(){
+        const {bookname}= this.state;
+        const{abortAdd}= this.props;
         return (
             <div className="addbookcontainer animated slideInDown">
                 <form className="form-horizontal" onSubmit={this.cancelFormSubmit}>
@@ -91,7 +77,6 @@ class BookInfo extends Component{
                                         floatingLabelText="book name"
                                         floatingLabelFixed 
                                         onChange={this.updateBookTerm}/>
-                            
                         </div>
                     </div>
                     <div className="form-group">
@@ -116,39 +101,41 @@ class BookInfo extends Component{
                     </div>
                     <div className="form-group">
                         <div className="col-xs-9">
-                            <TextField hintText="Link to review of the book"
+                            <TextField hintText="Link for a review of the book"
                                         floatingLabelText="Book review location"
                                         floatingLabelFixed
                                         disabled={!this.state.reviewActive}
                                         onChange={this.updateSearchReview}/>
-                            
                         </div>
                         <div className="col-xs-4">
-                            <Toggle label="Add cover" onToggle={this.activateReview}/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="col-sm-10">
-                            <TextField hintText="Book id"
-                                    disabled value={this.state.idbook}/>
-                        </div>
-                    </div>
-                    <div className="form-group">
-                        <div className="col-sm-offset-1 col-sm-10">
-                            <RaisedButton label="Add" primary onClick={this.addbook}/>
-                            <RaisedButton label="Cancel" secondary onClick={this.props.abortAdd}/>
+                            <Toggle label="Add Review" onToggle={this.activateReview}/>
                         </div>
                     </div>
                 </form>
+                <div className="row">
+                    <div className="col-xs-6 col-sm-4">
+                        <BookButton key={'btnBookAdd'} 
+                                    hasHref={false} 
+                                    hasSvg={false} 
+                                    buttonText={"Add"} 
+                                    isDisabled={bookname===''?true:false}
+                                    iconInfo={"addbook"} clickAction={this.addbook}/>
+                    </div>
+                    <div className="col-xs-6 col-sm-4">
+                        <BookButton key={'btnBookCancel'} 
+                                    hasHref={false} 
+                                    hasSvg={false} 
+                                    buttonText={"Cancel"} 
+                                    isDisabled={false}
+                                    iconInfo={"cancel"} clickAction={abortAdd}/>
+                    </div>
+                </div>
             </div>
             
         );
     }
 }
 BookInfo.propTypes={
-    listbooks:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
     abortAdd:PropTypes.func.isRequired,
     bookAdd:PropTypes.func.isRequired,
     bookreject:PropTypes.func.isRequired,

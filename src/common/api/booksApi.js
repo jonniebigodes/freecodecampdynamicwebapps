@@ -1,3 +1,11 @@
+import {
+    externalGetBooks,
+    localGetBooks,
+    localAddBook,
+    externalAddBook,
+    localTradeBook,
+    externalTradeBook
+} from '../constants/ApiEndPoints';
 class BookApi{
     /**
      * get all the books
@@ -5,8 +13,7 @@ class BookApi{
      */
     static getAll(){
         return new Promise((resolve,reject)=>{
-            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/getbooks')
-            fetch(`http://localhost:5000/api/data/getbooks`)
+            fetch(process.env.NODE_ENV !== 'production'?localGetBooks:externalGetBooks)
             .then(response=>{
                 return response.json();
             })
@@ -18,13 +25,12 @@ class BookApi{
                 console.log('There has been a problem with getAll fetch operation: ' + error.message);
                 console.log('====================================');
                 reject(error.message);
-            })
+            });
         });
     }
     static addBook(value){
         return new Promise((resolve,reject)=>{
-            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/bookadd',{
-            fetch(`http://localhost:5000/api/data/bookadd`,{
+            fetch(process.env.NODE_ENV!=='production'?localAddBook:externalAddBook,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -49,7 +55,7 @@ class BookApi{
                 console.log('There has been a problem with add book fetch operation: ' + error.message);
                 console.log('====================================');
                 reject(error.message);
-            })
+            });
         });
     }
     static tradeBook(value){
@@ -58,8 +64,7 @@ class BookApi{
         console.log('====================================');
         
         return new Promise((resolve,reject)=>{
-            //fetch('https://freecodecampdynprojects.herokuapp.com/api/data/tradebook',{
-            fetch(`http://localhost:5000/api/data/tradebook`,{
+            fetch(process.env.NODE_ENV!=='production'?localTradeBook:externalTradeBook,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -67,7 +72,6 @@ class BookApi{
                     },
                     body:JSON.stringify(
                         {
-                           
                             bookid:value.tokenBook,
                             bookowner:value.bookowner,
                             tradeuser:value.tradeuser
@@ -79,7 +83,7 @@ class BookApi{
             })
             .then(result=>{
                 if (result.code==='fccda001'){
-                    reject(`There was an error trading the book:${result.reason}`);
+                    reject(`There was an error making the book trade\n${result.reason}`);
                 }
                 else{
                     resolve(true);
@@ -87,7 +91,7 @@ class BookApi{
             })
             .catch(error=>{
                 reject(error.message);
-            })
+            });
         });
     }
 }

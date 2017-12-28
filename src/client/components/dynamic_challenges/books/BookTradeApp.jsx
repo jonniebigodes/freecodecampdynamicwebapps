@@ -13,28 +13,30 @@ import {
     tradeBook,
     changeUserInformation
 } from '../../../../common/actions/booksAppActions';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
+import LinearProgress from 'material-ui/LinearProgress';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import BookTradeContainer from './BookTradeContainer';
+
 class BookTradeApp extends Component{
+
     componentWillMount(){
         injectTapEventPlugin();
     }
     componentDidMount=()=>{
         // will get the books
-        this.props.getBooks(true);
+        this.props.getBooks();
     }
-    onresetError=(e)=>{
-        e.preventDefault();
-        this.props.resetError(true);
+    onresetError=()=>{
+        this.props.resetError();
     }
     componentWillUnmount(){
-        console.log('====================================');
-        console.log('BOOK UNMOUNT');
-        console.log('====================================');
-        this.props.exitBookApp(true);
+        this.props.exitBookApp();
     }
     logoutUser=()=>{
-        this.props.unpluguser(true);
+        this.props.unpluguser();
     }
     loginRequestHandler=(value)=>{
         if (value.isLogin){
@@ -52,38 +54,64 @@ class BookTradeApp extends Component{
         this.props.addBookCollection(value);
     }
     bookTradeHandler=(value)=>{
-        if (!this.props.bookApploggedIn){
-            this.props.setError(`In order to trade any books, you must be logged in!`);
+        const {bookApploggedIn,setError,bookApploginData,tradebookwithuser}= this.props;
+        if (!bookApploggedIn){
+            setError(`In order to trade any books, you must be logged in!`);
             return;
         }
-        value.traderToken=this.props.bookApploginData.id;
-        value.tradercontact= this.props.bookApploginData.email;
-        console.log('====================================');
-        console.log(`BOOK APP TRADE:${JSON.stringify(value)}`);
-        console.log('====================================');
-        this.props.tradebookwithuser(value);
+        value.traderToken=bookApploginData.id;
+        value.tradercontact= bookApploginData.email;
+        // console.log('====================================');
+        // console.log(`BOOK APP TRADE:${JSON.stringify(value)}`);
+        // console.log('====================================');
+       tradebookwithuser(value);
+    }
+    showPreloader=()=>{
+        
+        return(
+            <div className="preloader">
+                <div className="preloaderText">
+                    <span>Getting items</span>
+                    <p/>
+                    <span>Please hold</span>
+                    <LinearProgress mode="indeterminate"/>
+                </div>
+                
+            </div>
+        );
+    }
+    showItems=()=>{
+        const {bookItems,listBooks,bookAppIsError,bookAppErrorMessage,bookApploginData,bookApploggedIn,userInfoChange}=this.props;
+        return(
+            <BookTradeContainer 
+                    booklist={bookItems}
+                    numberBooks={listBooks.length}
+                    isAppError={bookAppIsError}
+                    errorMessageApp={bookAppErrorMessage}
+                    userData={bookApploginData}
+                    userLoggedIn={bookApploggedIn}
+                    resetErrorApp={this.resetErrorHandler}
+                    loginregister={this.loginRequestHandler}
+                    disconnectuser={this.logoutUser}
+                    bookAdd={this.bookaddHandler}
+                    booktrade={this.bookTradeHandler}
+                    changeInfoUser={userInfoChange}/>
+        );
     }
     render(){
+        const{isSearchingBooks}= this.props;
         return(
-            <div>
-                <BookTradeContainer booklist={this.props.bookItems}
-                                    isAppError={this.props.bookAppIsError}
-                                    errorMessageApp={this.props.bookAppErrorMessage}
-                                    userData={this.props.bookApploginData}
-                                    userLoggedIn={this.props.bookApploggedIn}
-                                    resetErrorApp={this.resetErrorHandler}
-                                    loginregister={(e)=>this.loginRequestHandler(e)}
-                                    disconnectuser={this.logoutUser}
-                                    bookAdd={(e)=>this.bookaddHandler(e)}
-                                    booktrade={(value)=>this.bookTradeHandler(value)}
-                                    changeInfoUser={this.props.userInfoChange}/>
-            </div>
+           <MuiThemeProvider muiTheme={getMuiTheme(dynamicThemes.booksTheme)}>
+               {isSearchingBooks?this.showPreloader():this.showItems()}
+           </MuiThemeProvider>
         );
     }
 }
 const mapStateToProps=state=>{
     return {
-        bookItems:state.books.items,
+        isSearchingBooks:state.books.isSearching,
+        bookItems:state.books.booksData,
+        listBooks:state.books.results,
         bookAppIsError:state.books.onError,
         bookAppErrorMessage:state.books.errorMessage,
         bookApploggedIn:state.books.bookAppisLoggedin,
@@ -92,20 +120,20 @@ const mapStateToProps=state=>{
 };
 const mapDispatchToProps=dispatch=>{
     return {
-        exitBookApp:(value)=>{
-            dispatch(BookExit(value));
+        exitBookApp:()=>{
+            dispatch(BookExit());
         },
         setError:(value)=>{
             dispatch(setBookAppError(value));
         },
-        resetError:(value)=>{
-            dispatch(resetBookAppError(value));
+        resetError:()=>{
+            dispatch(resetBookAppError());
         },
         getBooks:()=>{
             dispatch(fetchDataBooks());
         },
-        unpluguser:(value)=>{
-            dispatch(BookAppDisconnectUser(value));
+        unpluguser:()=>{
+            dispatch(BookAppDisconnectUser());
         },
         logginApp:(value)=>{
             dispatch(BookAppaAuthenticateServer(value));

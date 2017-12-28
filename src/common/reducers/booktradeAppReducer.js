@@ -1,6 +1,6 @@
 import {
-    APP_ERROR,
-    APP_ERROR_RESET,
+    BOOK_APP_ERROR,
+    RESET_BOOK_APP_ERROR,
     BOOK_LOGIN_REQUEST,
     BOOK_LOGIN_OK,
     BOOK_LOGIN_NOK,
@@ -16,7 +16,6 @@ import {
     ADD_BOOK,
     BOOK_TRADE_NOK,
     BOOK_TRADE_OK
-    
 } from '../constants/Actiontypes';
 const bookAppReducer = (state = {
     bookuserInfo:{
@@ -27,10 +26,10 @@ const bookAppReducer = (state = {
         city:'',
         countrystate:'',
         country:''
-
     },
     bookAppisLoggedin: false,
-    items: [],
+    booksData:{},
+    results:[],
     onError: false,
     errorMessage: ''
 }, action) => {
@@ -39,16 +38,15 @@ const bookAppReducer = (state = {
             return {
                 ...state,
                 isSearching: true
-                
             };
-            
         }
         case RECIEVE_BOOKS:{
             //console.log(`recieve nigth index:${resultIndex}`);
             //console.log('====================================');
             return {
                 ...state,
-                items: state.items.concat(action.value),
+                results:action.value.result,
+                booksData:action.value.entities.books,
                 isSearching: false
             };
             
@@ -96,8 +94,7 @@ const bookAppReducer = (state = {
                     city:action.value.city,
                     countrystate:action.value.countrystate,
                     country:action.value.country
-                },
-                
+                }
             };
             
         }
@@ -125,7 +122,6 @@ const bookAppReducer = (state = {
                     password:''
                 }
             };
-            
         }
         case BOOK_REGISTER_NOK:{
             return {
@@ -135,8 +131,7 @@ const bookAppReducer = (state = {
                     email:'',
                     password:''
                 }
-            };
-            
+            }; 
         }
         case BOOK_USER_LOGOUT:{
             return {
@@ -166,7 +161,6 @@ const bookAppReducer = (state = {
                     countrystate:action.value.countrystate!==undefined?action.value.countrystate:'',
                     country:action.value.country!==undefined?action.value.country:''
                 }
-
             };
         }
         case RECIEVE_BOOKS_NOK:{
@@ -179,7 +173,7 @@ const bookAppReducer = (state = {
             };
             
         }
-        case APP_ERROR_RESET:{
+        case RESET_BOOK_APP_ERROR:{
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
@@ -187,28 +181,25 @@ const bookAppReducer = (state = {
                 onError: false,
                 errorMessage: ''
             };
-            
         }
-        case APP_ERROR:{
+        case BOOK_APP_ERROR:{
             //console.log("reducer app error");
-           
              return {
                 ...state,
                 onError: true,
                 errorMessage: action.value
-            }; 
-            
+            };
         }
         case SET_BOOK_EXIT:{
             return{
                 ...state,
                 bookuserInfo:{},
                 bookAppisLoggedin: false,
-                items: [],
+                booksData:{},
+                results:[],
                 onError: false,
                 errorMessage: ''
             };
-            
         }
         case ADD_BOOK:{
             /* console.log('====================================');
@@ -216,9 +207,12 @@ const bookAppReducer = (state = {
             console.log('===================================='); */
             return {
                 ...state,
-                items:[...state.items,action.value]
+                results:[...state.results,action.value.token],
+                booksData:{
+                    ...state.booksData,
+                    [action.value.token]:action.value.data
+                }
             };
-            
         }
         case BOOK_TRADE_NOK:{
             return{
@@ -226,20 +220,31 @@ const bookAppReducer = (state = {
                 onError: true,
                 errorMessage: action.value
             };
-            
         }
         case BOOK_TRADE_OK:{
+            let bookToTrade= state.booksData[action.value.tokenBook];
+            bookToTrade.bookisbeingtraded= true,
+            bookToTrade.bookbeingtradedto=action.value.tradercontact;
+
             return {
                 ...state,
-                items:state.items.map(item=>{
-                    if (item.booktoken!==action.value.tokenBook){
-                        return item;
-                    }
-                    item.bookisbeingtraded=true;
-                    item.bookbeingtradedto=action.value.tradercontact;
-                    return item;
+                // booksData:{
+                //     ...state.booksData,
+                //     [action.value.tokenBook]:{
+                //         ...action.value.tokenBook,
+                //         bookisbeingtraded= true,
+                //         bookbeingtradedto:action.value.tradercontact,
+                //     }
+                // }
+                // items:state.items.map(item=>{
+                //     if (item.booktoken!==action.value.tokenBook){
+                //         return item;
+                //     }
+                //     item.bookisbeingtraded=true;
+                //     item.bookbeingtradedto=action.value.tradercontact;
+                //     return item;
                     
-                })
+                // })
             };
         
         }

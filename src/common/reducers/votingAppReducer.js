@@ -208,7 +208,6 @@ const voteAppReducer=(state = {
                      password:state.votesUserInfo.password
                  }
              };
-             
          }
         case POLL_LOGIN_NOK:{
             return {

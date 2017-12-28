@@ -36,6 +36,17 @@ export const removePinlocalserver='http://localhost:5000/api/data/delimage';
 export const removePinexternalserver='https://freecodecampdynprojects.herokuapp.com/api/data/delimage';
 //
 
+// books endpoints
+export const localGetBooks='http://localhost:5000/api/data/getbooks';
+export const externalGetBooks='https://freecodecampdynprojects.herokuapp.com/api/data/getbooks';
+
+export const localAddBook='http://localhost:5000/api/data/bookadd';
+export const externalAddBook='https://freecodecampdynprojects.herokuapp.com/api/data/bookadd';
+
+export const localTradeBook='http://localhost:5000/api/data/tradebook';
+export const externalTradeBook='https://freecodecampdynprojects.herokuapp.com/api/data/tradebook';
+//
+
 // auth api endpoints
 export const pintwitterloginlocalserver='http://localhost:5000/api/login/social?q=p';
 export const pintwitterloginexternalserver='https://freecodecampdynprojects.herokuapp.com/api/login/social?q=p';

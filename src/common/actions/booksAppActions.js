@@ -1,6 +1,6 @@
 import {
-    APP_ERROR,
-    APP_ERROR_RESET,
+    BOOK_APP_ERROR,
+    RESET_BOOK_APP_ERROR,
     BOOK_LOGIN_REQUEST,
     BOOK_LOGIN_OK,
     BOOK_LOGIN_NOK,
@@ -21,9 +21,10 @@ import {
 import BookApi from '../api/booksApi';
 import authApi from '../api/authApi';
 import ChallengesApi from '../api/challengesApi';
-export const requestBooksData=value=>({
+import { normalize } from 'normalizr';
+import {BooksSchema} from '../constants/booksSchema';
+export const requestBooksData=()=>({
     type:REQUEST_BOOKS,
-    value
 });
 
 export const recieveBooksData=value=>({
@@ -35,25 +36,24 @@ export const recieveBooksDataNOK=value=>({
     value
 });
 export const setBookAppError=value=>({
-    type:APP_ERROR,
+    type:BOOK_APP_ERROR,
     value
 });
-export const resetBookAppError=value=>({
-    type:APP_ERROR_RESET,
-    value
+export const resetBookAppError=()=>({
+    type:RESET_BOOK_APP_ERROR,
 });
-export const BookExit=value=>({
+export const BookExit=()=>({
     type:SET_BOOK_EXIT,
-    value
+    
 });
 export const AddBook=value=>({
     type:ADD_BOOK,
     value
 });
 
-export const BookAppUserLogout=value=>({
+export const BookAppUserLogout=()=>({
     type:BOOK_USER_LOGOUT,
-    value
+    
 });
 
 export const setBookAppAuthServerData=value=>({
@@ -96,11 +96,11 @@ export const BookTradeNOK=value=>({
     type:BOOK_TRADE_NOK,
     value
 });
-export const BookAppDisconnectUser=authInformation=>dispatch=>{
-    authApi.userLogout(authInformation.id)
+export const BookAppDisconnectUser=()=>dispatch=>{
+    authApi.userLogout()
     .then(()=>{
         ChallengesApi.clearStorage();
-        dispatch(BookAppUserLogout(authInformation.id));
+        dispatch(BookAppUserLogout());
     }).catch(err=>{
         dispatch(setBookAppError(err));
     });
@@ -138,16 +138,25 @@ export const BookAppaAuthenticateServer=authData=>dispatch=>{
     });
 };
 export const changeUserInformation=authData=>dispatch=>{
-    /* console.log('====================================');
-    console.log(`informationchanged:${JSON.stringify(authData,null,2)}`);
-    console.log('====================================');
-    return; */
     if(!authData){
+        
         dispatch(setBookAppError('Try changing something first before trying to submit the data'));
         return;
     }
+    const savedUserData= JSON.parse(ChallengesApi.getStorageData("bookapp_userinfo"));
+    
     authApi.changeUserInformation(authData)
     .then(()=>{
+       
+       ChallengesApi.setStorageData("bookapp_userinfo",
+       {
+           authToken:authData.userToken,
+           full_name:authData.fullusername!=savedUserData.full_name?authData.fullusername:savedUserData.full_name,
+           city:authData.city!=savedUserData?authData.city:savedUserData.city,
+           countrystate:authData.countrystate!=savedUserData.countrystate?authData.countrystate:savedUserData.countrystate,
+           country:authData.country!=savedUserData.country?authData.country:savedUserData.country,
+           email:authData.email,password:authData.password
+        });
         // set data here also
         dispatch(BookUserInformationChange(authData));
     })
@@ -155,37 +164,78 @@ export const changeUserInformation=authData=>dispatch=>{
         dispatch(setBookAppError(err));
     });
 };
-export const addbookCollection=bookInfo=>dispatch=>{
-    BookApi.addBook(bookInfo).then(()=>{
-        dispatch(AddBook({
-            bookauthor:bookInfo.authorName,
-            bookbeingtradedto:"",
-            bookcover:bookInfo.imgCoverLocation===undefined?'':bookInfo.imgCoverLocation,
-            bookisbeingtraded:false,
-            bookname:bookInfo.bookName,
-            bookowner:bookInfo.usertoken,
-            bookownercontact:bookInfo.userContact,
-            bookreview:bookInfo.bookReview===undefined?'':bookInfo.bookReview,
-            booktoken:bookInfo.bookId
-        }));
-    })
-    .catch(err=>{
-        dispatch(setBookAppError(err));
-    });
+const shouldAddBook=(state,value)=>{
+    const stateData=state.books;
+    const bookdatainformation=stateData.booksData;
+    if (!stateData.results.length){
+        return true;
+    }
+    for (const item in bookdatainformation){
+        if(bookdatainformation[item].bookname.toLowerCase()==value.bookName.toLowerCase()){
+            return false;
+        }
+    }
+    return true;
+};
+export const addbookCollection=bookInfo=>(dispatch,getState)=>{
+
+    if (shouldAddBook(getState(),bookInfo)){
+        BookApi.addBook(bookInfo).then(()=>{
+            dispatch(AddBook(
+                {
+                    token:bookInfo.bookId,
+                    data:{
+                        bookauthor:bookInfo.authorName,
+                        bookbeingtradedto:"",
+                        //bookcover:bookInfo.imgCoverLocation===undefined?'':bookInfo.imgCoverLocation,
+                        bookcover:bookInfo.imgCoverLocation,
+                        bookisbeingtraded:false,
+                        bookname:bookInfo.bookName,
+                        bookowner:bookInfo.usertoken,
+                        bookownercontact:bookInfo.userContact,
+                        //bookreview:bookInfo.bookReview===undefined?'':bookInfo.bookReview,
+                        bookreview:bookInfo.bookreview,
+                        booktoken:bookInfo.bookId
+                    }
+                }));
+        })
+        .catch(err=>{
+            dispatch(setBookAppError(err));
+        });
+    }
+    else{
+        dispatch(setBookAppError(`The book ${bookInfo.bookName} by ${bookInfo.authorName} is already added to the book collection`));
+    }
+    
+};
+const shouldTradeBook=(value)=>{
+    
+    if (value.ownercontact.toLowerCase()===value.tradercontact.toLowerCase()){
+        return false;
+    }
+    return true;
 };
 export const tradeBook=tradeInfo=>dispatch=>{
-    dispatch(BookTradeRequest(tradeInfo));
-    BookApi.tradeBook({tokenBook:tradeInfo.tokenBook,tradeuser:tradeInfo.traderToken,bookowner:tradeInfo.ownerToken})
-            .then(()=>{
-                dispatch(BookTradeOK(tradeInfo));
-            })
-            .catch(err=>{
-                dispatch(BookTradeNOK(err));
-    });
+   
+    if (shouldTradeBook(tradeInfo)){
+      
+        dispatch(BookTradeRequest(tradeInfo));
+        BookApi.tradeBook({tokenBook:tradeInfo.tokenBook,tradeuser:tradeInfo.traderToken,bookowner:tradeInfo.ownerToken})
+        .then(()=>{
+            dispatch(BookTradeOK(tradeInfo));
+        })
+        .catch(err=>{
+            dispatch(BookTradeNOK(err));
+        });
+    }
+    else{
+        dispatch(setBookAppError(`Cannot trade books with yourself`));
+    }
+   
 };
 
 export const fetchDataBooks=()=>dispatch=>{
-    dispatch(requestBooksData(true));
+    dispatch(requestBooksData());
     let dataUserStorage=JSON.parse(ChallengesApi.getStorageData("bookapp_userinfo"));
     if (dataUserStorage){
        /*  console.log('====================================');
@@ -196,7 +246,12 @@ export const fetchDataBooks=()=>dispatch=>{
         dispatch(BookAppAuthSucess({authToken:dataUserStorage.authToken,full_name:dataUserStorage.full_name,city:dataUserStorage.city,country:dataUserStorage.country,countrystate:dataUserStorage.countrystate}));
     }
     BookApi.getAll().then(result=>{
-        dispatch(recieveBooksData(result));
+        const normalizedData=normalize(result,BooksSchema.dataBooks);
+        setTimeout(() => {
+            dispatch(recieveBooksData(normalizedData));
+        }, 2000);
+        
+
     }).catch(err=>{
         dispatch(recieveBooksDataNOK(err));
     });
