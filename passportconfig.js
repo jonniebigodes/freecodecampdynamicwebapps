@@ -4,9 +4,8 @@ const TwitterStrategy= require('passport-twitter').Strategy;
 
 const localTwitterCallback='http://localhost:5000/api/login/twitter/connect/callback';
 const externalTwitterCallback='https://freecodecampdynprojects.herokuapp.com/api/login/twitter/connect/callback';
-//const dbService = require('./dbFactory');
 const dbService =process.env.NODE_ENV !== 'production'?require('./src/server/dbFactory'):require('./dbFactory');
-module.exports=(app,passport)=>{
+module.exports=(app,passport,logging)=>{
     
     passport.serializeUser((user, done) => {
         done(null, user.id);
@@ -20,9 +19,10 @@ module.exports=(app,passport)=>{
             })
             .catch(err => {
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error deserializing user:${err}`);
-                console.log('====================================');
+                logging.error(`Error deserializing user:${err}`);
+                // console.log('====================================');
+                // console.log(`error deserializing user:${err}`);
+                // console.log('====================================');
                 return done(err, null);
             });
     });
@@ -73,9 +73,10 @@ module.exports=(app,passport)=>{
             })
             .catch(err => {
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error local-login err:${err}`);
-                console.log('====================================');
+                logging.error(`Error local-login err:${err}`);
+                // console.log('====================================');
+                // console.log(`error local-login err:${err}`);
+                // console.log('====================================');
                 return done(err);
             });
     }));
@@ -118,18 +119,18 @@ module.exports=(app,passport)=>{
                             return done(null, NewUser);
                         })
                         .catch(errInject => {
-                            console.log('====================================');
-                            console.log(`error strat inject data err:${errInject}`);
-                            console.log('====================================');
+                            // console.log('====================================');
+                            // console.log(`error strat inject data err:${errInject}`);
+                            // console.log('====================================');
+                            logging.error(`local-signup strat:${errInject}`);
                             return done(errInject, null);
                         });
                 }
             })
             .catch(err => {
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error local-login err:${err}`);
-                console.log('====================================');
+                logging.error(`Error local-signup err:${err}`);
+                
                 return done(err);
             });
     }));
@@ -211,17 +212,18 @@ module.exports=(app,passport)=>{
                                     }
                                 })
                                 .then(resultUpdatenoToken=>{
-                                    console.log('====================================');
-                                    console.log(`result no token:${JSON.stringify(resultUpdatenoToken,null,2)} \ndata user updated:${JSON.stringify(dataUser,null,2)}`);
-                                    console.log('====================================');
+                                    // console.log('====================================');
+                                    // console.log(`result no token:${JSON.stringify(resultUpdatenoToken,null,2)} \ndata user updated:${JSON.stringify(dataUser,null,2)}`);
+                                    // console.log('====================================');
                                     dbService.disconnect();
                                     return done(null,dataUser);
                                 })
                                 .catch(errUserUpdateExists=>{
                                     dbService.disconnect();
-                                    console.log('====================================');
-                                    console.log(`error fb-login err not logged in update data\n:${errUserUpdateExists}`);
-                                    console.log('====================================');
+                                    logging.error(`Error twitter-login err:${errUserUpdateExists}`);
+                                    // console.log('====================================');
+                                    // console.log(`error fb-login err not logged in update data\n:${errUserUpdateExists}`);
+                                    // console.log('====================================');
                                     return done(errUserUpdateExists);
                                 });
                         }
@@ -243,9 +245,10 @@ module.exports=(app,passport)=>{
                             })
                             .catch(errCreateUser=>{
                                 dbService.disconnect();
-                                console.log('====================================');
-                                console.log(`error tw-login err not logged in update data\n:${errCreateUser}`);
-                                console.log('====================================');
+                                logging.error(`Error twitter-login  err not logged in update data err:${errCreateUser}`);
+                                // console.log('====================================');
+                                // console.log(`error tw-login err not logged in update data\n:${errCreateUser}`);
+                                // console.log('====================================');
                                 return done(errCreateUser);
                             });
 
@@ -253,9 +256,10 @@ module.exports=(app,passport)=>{
                 })
                 .catch(errorFbConnect=>{
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error tw-login err:${errorFbConnect}`);
-                    console.log('====================================');
+                    logging.error(`Error twitter-login err:${errorFbConnect}`);
+                    // console.log('====================================');
+                    // console.log(`error tw-login err:${errorFbConnect}`);
+                    // console.log('====================================');
                     return done(errorFbConnect);
                 });
             }
@@ -284,17 +288,19 @@ module.exports=(app,passport)=>{
                          }
                 }}))
                 .then(resultUpdateInfoUserPresent=>{
-                    console.log('====================================');
-                    console.log(`result from resultUpdateInfoUserPresent:${JSON.stringify(resultUpdateInfoUserPresent,null,2)}`);
-                    console.log('====================================');
+                    
+                    // console.log('====================================');
+                    // console.log(`result from resultUpdateInfoUserPresent:${JSON.stringify(resultUpdateInfoUserPresent,null,2)}`);
+                    // console.log('====================================');
                     dbService.disconnect();
                     return done(null,dataUser);
                 })
                 .catch(errUpdateInfoLogged=>{
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error fb-login err already logged in update data\n:${errUpdateInfoLogged}`);
-                    console.log('====================================');
+                    logging.error(`Error twitter-login err already logged in update data:${errUpdateInfoLogged}`);
+                    // console.log('====================================');
+                    // console.log(`error fb-login err already logged in update data\n:${errUpdateInfoLogged}`);
+                    // console.log('====================================');
                     return done(errUpdateInfoLogged);
                 });
             }
@@ -359,17 +365,18 @@ module.exports=(app,passport)=>{
                                     }
                                 })
                                 .then(resultUpdatenoToken=>{
-                                    console.log('====================================');
-                                    console.log(`result no token:${JSON.stringify(resultUpdatenoToken,null,2)}`);
-                                    console.log('====================================');
+                                    // console.log('====================================');
+                                    // console.log(`result no token:${JSON.stringify(resultUpdatenoToken,null,2)}`);
+                                    // console.log('====================================');
                                     dbService.disconnect();
                                     return done(null,dataUser);
                                 })
                                 .catch(errUserUpdateExists=>{
                                     dbService.disconnect();
-                                    console.log('====================================');
-                                    console.log(`error fb-login err not logged in update data\n:${errUserUpdateExists}`);
-                                    console.log('====================================');
+                                    logging.error(`Error fb-login err not logged in update data:${errUserUpdateExists}`);
+                                    // console.log('====================================');
+                                    // console.log(`error fb-login err not logged in update data\n:${errUserUpdateExists}`);
+                                    // console.log('====================================');
                                     return done(errUserUpdateExists);
                                 });
                         }
@@ -382,17 +389,18 @@ module.exports=(app,passport)=>{
                         dataUser.facebook_display_name= profile.name.givenName + ' ' + profile.name.familyName;
                         dbService.injectOneItem({collectionName:'users',data:dataUser})
                             .then(resultCreateUser=>{
-                                console.log('====================================');
-                                console.log(`resultAdd fb user:${JSON.stringify(resultCreateUser,null,2)}`);
-                                console.log('====================================');
+                                // console.log('====================================');
+                                // console.log(`resultAdd fb user:${JSON.stringify(resultCreateUser,null,2)}`);
+                                // console.log('====================================');
                                 dataUser.id=resultCreateUser;
                                 return done(null,dataUser);
                             })
                             .catch(errCreateUser=>{
                                 dbService.disconnect();
-                                console.log('====================================');
-                                console.log(`error fb-login err not logged in update data\n:${errCreateUser}`);
-                                console.log('====================================');
+                                logging.error(`error fb-login err not logged in update data:${errCreateUser}`);
+                                // console.log('====================================');
+                                // console.log(`error fb-login err not logged in update data\n:${errCreateUser}`);
+                                // console.log('====================================');
                                 return done(errCreateUser);
                             });
 
@@ -400,9 +408,10 @@ module.exports=(app,passport)=>{
                 })
                 .catch(errorFbConnect=>{
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error fb-login err:${errorFbConnect}`);
-                    console.log('====================================');
+                    logging.error(`error fb-login err:${errorFbConnect}`);
+                    // console.log('====================================');
+                    // console.log(`error fb-login err:${errorFbConnect}`);
+                    // console.log('====================================');
                     return done(errorFbConnect);
                 });
             }
@@ -429,17 +438,18 @@ module.exports=(app,passport)=>{
                             }
                         }})
                 .then(resultUpdateInfoUserPresent=>{
-                    console.log('====================================');
-                    console.log(`result from resultUpdateInfoUserPresent:${JSON.stringify(resultUpdateInfoUserPresent,null,2)}`);
-                    console.log('====================================');
+                    // console.log('====================================');
+                    // console.log(`result from resultUpdateInfoUserPresent:${JSON.stringify(resultUpdateInfoUserPresent,null,2)}`);
+                    // console.log('====================================');
                     dbService.disconnect();
                     return done(null,dataUser);
                 })
                 .catch(errUpdateInfoLogged=>{
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error fb-login err already logged in update data\n:${errUpdateInfoLogged}`);
-                    console.log('====================================');
+                    logging.error(`error fb-login err already logged in update data\n${errUpdateInfoLogged}`);
+                    // console.log('====================================');
+                    // console.log(`error fb-login err already logged in update data\n:${errUpdateInfoLogged}`);
+                    // console.log('====================================');
                     return done(errUpdateInfoLogged);
                 });
             }

@@ -8,7 +8,7 @@ The challenges are the following
   - [Build a Nightlife coordination app]
   - [Chart the Stock Market]
   - [Manage a Book Trading Club]
-  - Build a Pinrest Clone
+  - [Build a Pinrest Clone]
 
 # Methodology used
 Instead of creating a single repo for each challenge and as i'm familiar with github i condensed the dynamic  challenges in one package/repo.  
@@ -56,7 +56,7 @@ This set of challenges uses a number of open source projects to work properly:
 * [yelp-fusion] - Yelp Fusion API client for Node.js with Promises
 * [Twitter-Client] - Twitter client package in order to be possible sharing some information in some challenges
 * [PASSPORT] - Authentication middleware for node(added normal passport and it's social variants twitter and facebook)
-
+* [Winston] - Great tool for logging, instead of good ol console.log
 And of course the implementation of the challenges themselves are open source with a [git-repo-url]
  on GitHub.
 
@@ -110,6 +110,7 @@ MIT
    [Chart the Stock Market]: <https://freecodecampdynprojects.herokuapp.com/stocks>
    [Manage a Book Trading Club]:<https://freecodecampdynprojects.herokuapp.com/books>
    [Build a Voting App]:<https://freecodecampdynprojects.herokuapp.com/voting/>
+   [Build a Pinrest Clone]:<https://freecodecampdynprojects.herokuapp.com/pinclone/>
    [React-Chart]: <https://github.com/gor181/react-chartjs-2>
    [React-Redux]: <https://github.com/reactjs/react-redux>
    [whatwg-fetch]: <https://github.com/github/fetch>
@@ -131,5 +132,5 @@ MIT
    [BLUESEND]:<http://www.sendinblue.com>
    [Twitter-Client]:<https://www.npmjs.com/package/twitter>
    [PASSPORT]:<http://www.passportjs.org/>
+   [Winston]:<https://github.com/winstonjs/winston>
    [PlGh]:  <https://github.com/jonniebigodes/freecodecampdynamicwebapps/tree/master/plugins/github/readme.md>
-   

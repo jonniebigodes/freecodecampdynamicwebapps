@@ -1,11 +1,7 @@
-// prod mode
+// prod mode/dev mode
 const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
 const httpService =process.env.NODE_ENV !== 'production'?require('../src/server/httpService'): require('./httpService');
-//
-// dev mode
-//const dbService = require('../src/server/dbFactory');
-//const httpService = require('../src/server/httpService');
-//
+const logger=  process.env.NODE_ENV!== 'production' ? require('../logger'):require('./logger');
 module.exports={
     getPolls(request,response){
         dbService.setUrl(request.app.MONGODB);
@@ -41,17 +37,19 @@ module.exports={
                 response.end(JSON.stringify({code:'fccda005',polldata:results}));
             }).catch(ErrorSearches=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error promise all poll:${ErrorSearches}`);
-                console.log('====================================');
+                logger.error(`Error Poll Controller get polls:${JSON.stringify(ErrorSearches,null,2)}`);
+                // console.log('====================================');
+                // console.log(`error promise all poll:${ErrorSearches}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
         })
         .catch(errConnect=>{
-            console.log('====================================');
-            console.log(`Polls Controller get polls error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Poll Controller get polls connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Polls Controller get polls error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -78,9 +76,10 @@ module.exports={
         })
         .catch(errConnect=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`Polls Controller delete Polls error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Poll Controller delete polls connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Polls Controller delete Polls error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -108,9 +107,10 @@ module.exports={
             response.end(JSON.stringify({code: "fccda005", token:resultPoll,reason: `Poll ${request.body.pollname} was added to the fold`}));
         })
         .catch(errConnect=>{
-            console.log('====================================');
-            console.log(`Polls Controller createPoll error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Poll Controller createPoll connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Polls Controller createPoll error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -144,16 +144,18 @@ module.exports={
 
             }).catch(errvote=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`Polls Controller voteOnPoll error on vote:${JSON.stringify(errvote,null,2)}`);
-                console.log('====================================');
+                // console.log('====================================');
+                // console.log(`Polls Controller voteOnPoll error on vote:${JSON.stringify(errvote,null,2)}`);
+                // console.log('====================================');
+                logger.error(`Error Poll Controller voteOnPoll on vote:${JSON.stringify(errvote,null,2)}`);
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
         }).catch(errConnect=>{
-            console.log('====================================');
-            console.log(`Polls Controller voteOnPoll error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`Polls Controller voteOnPoll error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            logger.error(`Error Poll Controller voteOnPoll connect:${JSON.stringify(errConnect,null,2)}`);
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -191,9 +193,10 @@ module.exports={
             response.end(JSON.stringify({code: "fccda005", reason: "poll updated"}));
         })
         .catch(errConnect=>{
-            console.log('====================================');
-            console.log(`Polls Controller addPollOption error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`Polls Controller addPollOption error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            logger.error(`Error Poll Controller addPollOption error on connect:${JSON.stringify(errConnect,null,2)}`);
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -227,9 +230,10 @@ module.exports={
                 ));
             })
             .catch(errConnect=>{
-                console.log('====================================');
-                console.log(`Polls Controller getPollDetails error on connect:${JSON.stringify(errConnect,null,2)}`);
-                console.log('====================================');
+                logger.error(`Error Poll Controller getPollDetails error on connect:${JSON.stringify(errConnect,null,2)}`);
+                // console.log('====================================');
+                // console.log(`Polls Controller getPollDetails error on connect:${JSON.stringify(errConnect,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -266,17 +270,20 @@ module.exports={
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda005", reason: "TweetOK"}));
                 })
-                .catch(()=>{
+                .catch(errorShareTwitter=>{
+                    logger.error(`Error poll controller Controller sharePoll:${JSON.stringify(errorShareTwitter,null,2)}`);
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
+                    
                 });
 
             }
         })
         .catch(errorUsers=>{
-            console.log('====================================');
-            console.log(`Polls Controller sharePoll error on errorUsers:${JSON.stringify(errorUsers,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error poll controller Controller sharePoll search info user:${JSON.stringify(errorUsers,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Polls Controller sharePoll error on errorUsers:${JSON.stringify(errorUsers,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });

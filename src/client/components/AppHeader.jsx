@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {browserHistory} from 'react-router';
 import { PropTypes } from 'prop-types';
 import IconButton from 'material-ui/IconButton';
 import AppBar from 'material-ui/AppBar';
 //import '../../../../Assets/stylesheets/stocksApp.scss';
 import '../../Assets/stylesheets/stocksApp.scss';
-export default class AppHeader extends Component {
+export default class AppHeader extends PureComponent {
     /**
      * event handler for the click 
      * 
@@ -32,7 +32,7 @@ export default class AppHeader extends Component {
         return (
             <AppBar title={this.props.appName}
                     showMenuIconButton={this.props.hasLoginNeeds}
-                    onLeftIconButtonTouchTap={this.showHideLogin}
+                    onLeftIconButtonClick={this.showHideLogin}
                     iconElementRight={<IconButton onClick={this.handleHomeButtonClick}>
                             <i className="material-icons md-24"> home</i>
                         </IconButton>} />  

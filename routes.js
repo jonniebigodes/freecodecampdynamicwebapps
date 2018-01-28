@@ -1,15 +1,5 @@
-// prod mode
-/* const AuthController= require('./AuthController');
-const NightsController=require('./NightLifeController');
-const StocksController=require('./StockSearchController');
-const BooksController=require('./BooksController');
-const PollsController= require('./PollsController');
-const PinsController= require('./PinController'); 
-const path = require('path'); */
-//
 
-
-// dev mode
+// sets the routes based on env variable
 const AuthController= process.env.NODE_ENV !== 'production'?require('./controllers/AuthController'):require('./AuthController');
 const NightsController=process.env.NODE_ENV !== 'production'?require('./controllers/NightLifeController'):require('./NightLifeController');
 const StocksController=process.env.NODE_ENV !== 'production'?require('./controllers/StockSearchController'):require('./StockSearchController');
@@ -41,7 +31,7 @@ module.exports=(app,passport)=>{
     app.get('/api/login/social',(req,res)=>{
         /* console.log('====================================');
         console.log(`social route query param :${req.query.q}`);
-        console.log('====================================') */;
+        console.log('====================================') */
         if(req.query.q=='v'){
             app.locals.APP_SWITCH='VOTES';
             res.redirect('/api/login/votting/twitter/connect');

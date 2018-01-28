@@ -1,14 +1,11 @@
-//import '../Assets/stylesheets/base.scss';
+import React,{PureComponent} from 'react';
 import '../../Assets/stylesheets/base.scss';
-import React,{Component} from 'react';
-import Jumbotron from 'react-bootstrap/lib/Jumbotron';
-import Panel from 'react-bootstrap/lib/Panel';
 import { browserHistory } from 'react-router';
 import AppFooter from './AppFooter';
 /**
  * base component for the app
  */
-class App extends Component {
+class App extends PureComponent {
 
  
  clickHandler(e){
@@ -36,48 +33,59 @@ class App extends Component {
  }
   render() {
     return(
-      <div className="App">
-            <div className="projectTitle">
+      <div className="container-fluid">
+        <div className="row">
+          <div className="projectTitle">
               FreecodeCamp Dynamic Challenges
             </div>
-            <div className="textBase voffset4">
-              <Jumbotron>
-                <div className="voffset4 row">
-                  <Panel className="col-xs-6 col-sm-4" header={<h3>Voting app</h3>} bsStyle="primary" id="pVoting" onClick={this.clickHandler}>
-                    <div className="panel-body">
-                      <span>click this to go to the voting app<br/> application challenge</span>
-                    </div>
-                  </Panel>
-                  <Panel className="col-xs-6 col-sm-4" header={<h3>Nightlife App</h3>} bsStyle="primary" id="pNight" onClick={this.clickHandler}>
-                    <div className="panel-body">
-                      <span>click this to go to the Nightlife<br/>Coordination challenge app</span>
-                    </div>
-                  </Panel>
-                  <Panel className="col-xs-6 col-sm-4" header={<h3>StockChart App</h3>} bsStyle="primary" id="pStock" onClick={this.clickHandler}>
-                    <div className="panel-body">
-                      <span>click this to go to the chart the stock <br/>market challenge app</span>
-                    </div>
-                  </Panel>
-                </div>
-                <div className="voffset2 row">
-                  <Panel className="col-xs-6 col-sm-4" header={<h3>Book trade App</h3>} bsStyle="primary" id="pBookTrade" onClick={this.clickHandler}>
-                    <div className="panel-body">
-                      <span>click this to go to the book trading<br/>Club challenge app</span>
-                    </div>
-                  </Panel>
-                  <Panel className="col-xs-6 col-sm-4" header={<h3>Pinrest Clone App</h3>} bsStyle="primary" id="pPin" onClick={this.clickHandler}>
-                    <div className="panel-body">
-                      <span>click this to go to the Pinrest clone<br/>challenge app</span>
-                    </div>
-                  </Panel>
-                </div>
-              </Jumbotron>
+        </div>  
+        <div className="containerFccApp">
+            <div className="panel panel-primary" id="pVoting" onClick={this.clickHandler}>
+              <div className="panel-heading">
+                <h3>Voting app</h3>
+              </div>
+              <div className="panel-body">
+                <span>click this to go to the voting app<br/> application challenge</span>
+              </div>
             </div>
-          
-          <hr/>
-          <AppFooter appName="none"/>
-          
-        </div>
+            <div className="panel panel-primary" id="pNight" onClick={this.clickHandler}>
+              <div className="panel-heading">
+                <h3>Nightlife App</h3>
+              </div>
+              <div className="panel-body">
+                <span>click this to go to the nightlife app<br/> application challenge</span>
+              </div>
+            </div>
+            <div className="panel panel-primary" id="pStock" onClick={this.clickHandler}>
+              <div className="panel-heading">
+                <h3>Stocks App</h3>
+              </div>
+              <div className="panel-body">
+                <span>click this to go to the chart the stock <br/> application challenge</span>
+              </div>
+            </div>
+            <div className="panel panel-primary" id="pBookTrade" onClick={this.clickHandler}>
+              <div className="panel-heading">
+                <h3>Book trade App</h3>
+              </div>
+              <div className="panel-body">
+                <span>click this to go to the book trading <br/> application challenge</span>
+              </div>
+            </div>
+            <div className="panel panel-primary" id="pPin" onClick={this.clickHandler}>
+              <div className="panel-heading">
+                <h3>Pinclone App</h3>
+              </div>
+              <div className="panel-body">
+                <span>click this to go to the Pinrest clone<br/> application challenge</span>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <hr/>
+            <AppFooter appName="none"/>
+          </div>
+      </div>
         
     );
   }

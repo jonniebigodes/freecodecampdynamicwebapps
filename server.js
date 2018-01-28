@@ -4,7 +4,7 @@ const passport = require('passport');
 const session = require('express-session');
 const bodyParse = require('body-parser');
 const app = express();
-
+const logger=  require('./logger');
 if (process.env.NODE_ENV !== 'production') {
     let webpackDevMiddleware = require('webpack-dev-middleware');
     let webpackHotMiddleware = require('webpack-hot-middleware');
@@ -75,11 +75,13 @@ else{
  */
 app.listen(app.get('port'), (error) => {
     if (error) {
-        console.log("error freecodecampdyn: " + error);
+        logger.error(`error freecodecampdyn:${error}`);
+        //console.log("error freecodecampdyn: " + error);
     } else {
         //dbService.setUrl(app.get('MONGODB'));
-        console.info("freecodecamp app is running on port", app.get('port'));
+        logger.info(`freecodecamp app is running on port ${app.get('port')}`);
+        //console.info("freecodecamp app is running on port", app.get('port'));
     }
 });
-const appPassport=require('./passportconfig')(app,passport);
+const appPassport=require('./passportconfig')(app,passport,logger);
 const appRoutes= require('./routes')(app,passport);

@@ -1,11 +1,8 @@
 // prod mode
 const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
 const httpService = process.env.NODE_ENV !== 'production'?require('../src/server/httpService'):require('./httpService');
-//
-//dev mode
-//const dbService = require('../src/server/dbFactory');
-//const httpService = require('../src/server/httpService');
-//
+const logger=  process.env.NODE_ENV!== 'production' ? require('../logger'):require('./logger');
+
 module.exports={
 
     getImages(request,response){
@@ -53,16 +50,18 @@ module.exports={
                 response.end(JSON.stringify({code:'fccda005',pindata:results}));
             }).catch(errorgetInfo=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error promise all pin:${errorgetInfo}`);
-                console.log('====================================');
+                logger.error(`Error Pin Controller promise all pin:${errorgetInfo}`);
+                // console.log('====================================');
+                // console.log(`error promise all pin:${errorgetInfo}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
         }).catch(errorconnectgetimages=>{
-            console.log('====================================');
-            console.log(`Pins Controller get pin error on connect:${JSON.stringify(errorconnectgetimages,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Pin Controller get pin error on connect:${JSON.stringify(errorconnectgetimages,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Pins Controller get pin error on connect:${JSON.stringify(errorconnectgetimages,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -94,17 +93,18 @@ module.exports={
         }))
         .then(resultRemove=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`result of remove image:${JSON.stringify(resultRemove,null,2)}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`result of remove image:${JSON.stringify(resultRemove,null,2)}`);
+            // console.log('====================================');
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda005", reason: "DEL_OK"}));
         })
         .catch(errorConnect=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`pin controller error of remove image:${JSON.stringify(errorConnect,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Pin Controller error of remove image:${JSON.stringify(errorConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`pin controller error of remove image:${JSON.stringify(errorConnect,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -116,9 +116,9 @@ module.exports={
             return;
         }
         httpService.checkImage(request.body.image).then(result=>{
-            console.log('====================================');
-            console.log(`Pin Controller check pin image result:${result}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`Pin Controller check pin image result:${result}`);
+            // console.log('====================================');
             
             dbService.setUrl(request.app.MONGODB);
             dbService.connect()
@@ -129,9 +129,9 @@ module.exports={
                 }
             }))
             .then(resultsearchUsers=>{
-                console.log('====================================');
-                console.log(`Pins Controller add pin dbupdate on connect:${JSON.stringify(resultsearchUsers,null,2)}`);
-                console.log('====================================');
+                // console.log('====================================');
+                // console.log(`Pins Controller add pin dbupdate on connect:${JSON.stringify(resultsearchUsers,null,2)}`);
+                // console.log('====================================');
                 if (resultsearchUsers.length){
                     dbService.updateData(
                         {
@@ -155,18 +155,19 @@ module.exports={
                     )
                     .then(resultupdateSet=>{
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`add image result update set:${JSON.stringify(resultupdateSet,null,2)}`);
-                        console.log('====================================');
+                        // console.log('====================================');
+                        // console.log(`add image result update set:${JSON.stringify(resultupdateSet,null,2)}`);
+                        // console.log('====================================');
                         response.writeHead(200, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda005", reason: "ImageOK"}));
                         return;
 
                     }).catch(errorupdateSet=>{
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`Pins Controller get pin error on update set:${JSON.stringify(errorupdateSet,null,2)}`);
-                        console.log('====================================');
+                        logger.error(`Pins Controller get pin error on update set:${JSON.stringify(errorupdateSet,null,2)}`);
+                        // console.log('====================================');
+                        // console.log(`Pins Controller get pin error on update set:${JSON.stringify(errorupdateSet,null,2)}`);
+                        // console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                     });
@@ -190,9 +191,9 @@ module.exports={
                         }
                     ).then(resultInject=>{
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`add image result inject item:${JSON.stringify(resultInject,null,2)}`);
-                        console.log('====================================');
+                        // console.log('====================================');
+                        // console.log(`add image result inject item:${JSON.stringify(resultInject,null,2)}`);
+                        // console.log('====================================');
                         response.writeHead(200, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify(
                             {
@@ -207,9 +208,10 @@ module.exports={
                         ));
                     }).catch(errorInject=>{
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`Pins Controller get pin error on inject item:${JSON.stringify(errorInject,null,2)}`);
-                        console.log('====================================');
+                        logger.error(`Pins Controller get pin error on inject item:${JSON.stringify(errorInject,null,2)}`);
+                        // console.log('====================================');
+                        // console.log(`Pins Controller get pin error on inject item:${JSON.stringify(errorInject,null,2)}`);
+                        // console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                     });
@@ -218,17 +220,19 @@ module.exports={
             })
             .catch(errorConnect=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`Pins Controller get pin error on connect:${JSON.stringify(errorConnect,null,2)}`);
-                console.log('====================================');
+                logger.error(`Pins Controller get pin error on search:${errorConnect}`);
+                // console.log('====================================');
+                // console.log(`Pins Controller get pin error on connect:${JSON.stringify(errorConnect,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
             
         }).catch(error=>{
-            console.log('====================================');
-            console.log(`Pin Controller check pin image error on connect:${JSON.stringify(error,null,2)}`);
-            console.log('====================================');
+            logger.error(`Pin Controller check pin image error on connect:${JSON.stringify(error,null,2)}`);
+            // console.log('====================================');
+            // console.log(`Pin Controller check pin image error on connect:${JSON.stringify(error,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -264,16 +268,18 @@ module.exports={
 
             }).catch(errvote=>{
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`pin controller vote image error on vote:${JSON.stringify(errvote,null,2)}`);
-                console.log('====================================');
+                logger.error(`pin controller vote image error on vote:${JSON.stringify(errvote,null,2)}`);
+                // console.log('====================================');
+                // console.log(`pin controller vote image error on vote:${JSON.stringify(errvote,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
         }).catch(errConnect=>{
-            console.log('====================================');
-            console.log(`pin controller vote image error on connect:${JSON.stringify(errConnect,null,2)}`);
-            console.log('====================================');
+            logger.error(`pin controller vote image error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`pin controller vote image error on connect:${JSON.stringify(errConnect,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });

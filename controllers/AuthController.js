@@ -1,4 +1,5 @@
 const dbService = process.env.NODE_ENV !== 'production'? require('../src/server/dbFactory'):require('./dbFactory');
+const logger=  process.env.NODE_ENV!== 'production' ? require('../logger'):require('./logger');
 //const dbService=;
 module.exports = {
 
@@ -37,26 +38,25 @@ module.exports = {
                     }
                 }).then(() => {
                     dbService.disconnect();
-                    /* console.log('====================================');
-                    console.log(`result update info user result:${JSON.stringify(resultupdateinfor, null, 2)}`);
-                    console.log('===================================='); */
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda005", reason: "Information updated"}));
 
                 }).catch(errorupdateinfo => {
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error Auth Controller change user data update info:${JSON.stringify(errorupdateinfo,null,2)}`);
-                    console.log('====================================');
+                    logger.error(`error Auth Controller change user data update info:${JSON.stringify(errorupdateinfo,null,2)}`);
+                    // console.log('====================================');
+                    // console.log(`error Auth Controller change user data update info:${JSON.stringify(errorupdateinfo,null,2)}`);
+                    // console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Internal Server Error"}));
                 });
             })
             .catch(errauthconnectchange => {
                 dbService.disconnect();
-                console.log('====================================');
-                console.log(`error Auth Controller change user data:${JSON.stringify(errauthconnectchange,null,2)}`);
-                console.log('====================================');
+                logger.error(`error Auth Controller change user data:${JSON.stringify(errauthconnectchange,null,2)}`);
+                // console.log('====================================');
+                // console.log(`error Auth Controller change user data:${JSON.stringify(errauthconnectchange,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Internal Server Error"}));
             });
@@ -95,9 +95,10 @@ module.exports = {
         })
         .catch(error=>{
             dbService.disconnect();
-            console.log('====================================');
-            console.log(`error Auth Controller change user data:${JSON.stringify(error,null,2)}`);
-            console.log('====================================');
+            logger.error(`Error Auth Controller change user data:${JSON.stringify(error,null,2)}`);
+            // console.log('====================================');
+            // console.log(`error Auth Controller change user data:${JSON.stringify(error,null,2)}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Internal Server Error"}));
         });

@@ -14,18 +14,12 @@ import{
     removePinfromWall,
     pinAppDisconnect
 } from '../../../../common/actions/pinAppActions';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import PinContainer from './pinContainer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
 class PinApp extends Component{
-    /**
-     * guard methods from the framework
-     */
-    componentWillMount(){
-        injectTapEventPlugin();
-    }
+   
     /**
      * guard methods from the framework
      */

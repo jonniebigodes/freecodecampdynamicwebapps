@@ -6,6 +6,7 @@ import moment from 'moment';
 import '../../../../Assets/stylesheets/books.scss';
 import '../../../../Assets/stylesheets/base.scss'; 
 import BookButton from './BookButton';
+import FccDynButton from '../../challengesUIComponents/FccDynButton';
 class BookInfo extends Component{
 
     constructor(props){

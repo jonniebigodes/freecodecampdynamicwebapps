@@ -51,40 +51,7 @@ export const connect = () => {
     });
 };
 
-/**
- * es6 fat arrow function exported and exposed to test the connection to the db
- 
-export const testConnection=()=>{
-    console.log(`Testing connection....`);
-    return new Promise((resolve,reject)=>{
-        connect(urlServer).then((result)=>{
-            disconnect();
-            resolve(result);
-            }).catch((error)=>{
-                reject(error);
-            })
-    });
-};
-*/
-/**
- * es6 fat arrow function exported and exposed to create collections
 
-export const createCollections=(collections)=>{
-    return new Promise((resolve,reject)=>{
-        if (!dbInstance){
-                reject(`Connect first to the database then create the collections`);
-        }
-        for (const item of collections){
-            console.log(`Creating item in collections: ${item}`);
-            dbInstance.createCollection(item,{autoIndexID:true},(err,db)=>{
-                if (err) reject(`Error creating collection:${item}\nReason:${err.code} \nstatus message:${err.message}`);
-
-            });
-        }
-        resolve(true); 
-    });
-};
- */
 /**
  * es6 fat arrow function exported and exposed to disconnect to the db
  */
@@ -187,24 +154,7 @@ export const updateData=value=>{
     });
 };
 
-/* export const increment=value=>{
-    return new Promise((resolve,reject)=>{
-        if (!dbInstance)reject(`Connect first to the database then search the data`);
-        dbInstance.collection(value.collectionName).update(
-            {
-                _id:new dbClient.ObjectId(value.queryParam.dataselect.item),
-                value.queryParam.dataselect.item
-            },
-            value.queryParam.datacriteria,(errorincrement,result)=>{
-                if(errorincrement){
-                    reject(`Error on querying data:${value.collectionName}\n${errorincrement.code}\nstatus message:${errorincrement.message}`);
-                }
-                
-                resolve(result);
-            }
-        );
-    });
-} */
+
 /**
  * method to update data by object id on the collections
  * @param {Object} value the object containing the data to be updated 
@@ -237,7 +187,7 @@ export const updateById=value=>{
 export const removeOne=value=>{
     return new Promise((resolve,reject)=>{
         if (!dbInstance) reject(`Connect first to the database then search the data`);
-        dbInstance.collection(value.collectionName).deleteOne(value.data,(err,result)=>{
+        dbInstance.collection(value.collectionName).deleteOne(value.queryParam,(err,result)=>{
             if (err) reject(`Error on removeOne item:${value.collectionName} \n${err.code} \nstatus message:${err.message}`);
             resolve(`the record with the following criteria was removed:${JSON.stringify(value.queryParam)}\nresult:${JSON.stringify(result)}`);
         });

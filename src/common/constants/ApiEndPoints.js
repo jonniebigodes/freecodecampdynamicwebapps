@@ -63,3 +63,23 @@ export const externalUserChangeInfo='https://freecodecampdynprojects.herokuapp.c
 export const localGetSocialInfo='http://localhost:5000/api/login/social/getuserinfo';
 export const externalGetSocialInfo='https://freecodecampdynprojects.herokuapp.com/api/login/social/getuserinfo';
 //
+
+// nightlife
+export const localgetToken='http://localhost:5000/api/data/nighttoken';
+export const externalgetToken='https://freecodecampdynprojects.herokuapp.com/api/data/nighttoken';
+
+export const localSearchNights='http://localhost:5000/api/data/nightsearch';
+export const externalSearchNights='https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch';
+
+export const localAddUserNight='https://freecodecampdynprojects.herokuapp.com/api/data/nightadd';
+export const externalAddUserNight='http://localhost:5000/api/data/nightadd';
+
+export const localRemoveUserNight='https://freecodecampdynprojects.herokuapp.com/api/data/nightremove';
+export const externalRemoveUserNight='http://localhost:5000/api/data/nightremove';
+
+export const localGetUserSearches='http://localhost:5000/api/data/usersearches?who=';
+export const externalGetUserSearches='https://freecodecampdynprojects.herokuapp.com/api/data/usersearches?who=';
+
+export const externalGetTokenYelp='https://freecodecampdynprojects.herokuapp.com/api/data/nighttoken';
+export const localGetTokenYelp ='http://localhost:5000/api/data/nighttoken';
+//

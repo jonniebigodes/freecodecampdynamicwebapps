@@ -1,9 +1,9 @@
 
 class ChallengeApi{
     static setStorageData(token,value){
-        console.log('====================================');
-        console.log(`data to storage token:${token}\ndata:${JSON.stringify(value,null,2)}`);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log(`data to storage token:${token}\ndata:${JSON.stringify(value,null,2)}`);
+        // console.log('====================================');
         localStorage.setItem(token,JSON.stringify(value));
     }
     static getStorageData(value){

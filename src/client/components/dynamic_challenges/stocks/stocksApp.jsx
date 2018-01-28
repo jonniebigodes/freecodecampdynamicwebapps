@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import {
     fetchStocksIfNeeded,
     resetAppError,
@@ -15,9 +14,7 @@ import StockContainer from './StockContainer';
 import '../../../../Assets/stylesheets/stocksApp.scss';
 class stocksApp extends Component{
     
-    componentWillMount(){
-        injectTapEventPlugin();
-    }
+    
     componentWillUnmount(){
         this.props.unloadStocksApp();
     }

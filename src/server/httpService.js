@@ -7,7 +7,7 @@ const unirest = require('unirest');
 const yelp = require('yelp-fusion');
 const sendBlue= require('sendinblue-api');
 const twitterClient= require('twitter');
-
+const logger=  process.env.NODE_ENV!== 'production' ? require('../../logger'):require('./logger');
 export const checkImage=value=>{
     return new Promise((resolve,reject)=>{
         try {
@@ -17,14 +17,15 @@ export const checkImage=value=>{
             });
             
         } catch (error) {
-            console.log('====================================');
-            console.log(`ERROR HTTPSERVICE CHECK IMAGE:\n${error}`);
-            console.log('====================================');
+            logger.error(`Error httpservice checkImage:${error}`);
+            // console.log('====================================');
+            // console.log(`ERROR HTTPSERVICE CHECK IMAGE:\n${error}`);
+            // console.log('====================================');
             
             reject(error);
         }
     });
-}
+};
 /**
  *
  * @param {object} value item to contain info to call the stock api service
@@ -76,7 +77,8 @@ export const getStockInformation = value => {
                 });
 
         } catch (error) {
-            console.log("ERROR HTTP SERVICE:\n" + error);
+            logger.error(`Error httpservice getstocks:${error}`);
+            //console.log("ERROR HTTP SERVICE:\n" + error);
             reject({messageError:`ERROR ON PROCESSING REQUEST TO STOCK SERVER:\n${error}`});
         }
 
@@ -95,30 +97,32 @@ export const getToken = (clientId, clientSecret) => {
         messageError: "",
         dataRecieved: {}
     };
-    console.log('====================================');
-    console.log(`httpservice yelp id:${clientId} yelp secret:${clientSecret}`);
-    console.log('====================================');
+    // console.log('====================================');
+    // console.log(`httpservice yelp id:${clientId} yelp secret:${clientSecret}`);
+    // console.log('====================================');
     return new Promise((resolve, reject) => {
         try {
             yelp.accessToken(clientId, clientSecret).then(response => {
-               console.log('====================================');
-               console.log(`token information:${JSON.stringify(response,null,2)}`);
-               console.log('====================================');
+            //    console.log('====================================');
+            //    console.log(`token information:${JSON.stringify(response,null,2)}`);
+            //    console.log('====================================');
                 resolve({token:response.jsonBody.access_token,expires:response.jsonBody.expires_in});
                 })
                 .catch(e => {
-                    console.log('====================================');
-                    console.log(`there was an error getting the goken:\n ${JSON.stringify(e,null,2)}`);
-                    console.log('====================================');
+                    logger.error(`Error httpservice getToken:${e}`);
+                    // console.log('====================================');
+                    // console.log(`there was an error getting the goken:\n ${JSON.stringify(e,null,2)}`);
+                    // console.log('====================================');
                     resultInfo.error = true;
                     resultInfo.messageError = e;
                     reject(resultInfo);
                 });
 
         } catch (error) {
-            console.log('====================================');
-            console.log(`there was in httpservice getting the goken:\n ${JSON.stringify(error,null,2)}`);
-            console.log('====================================');
+            logger.error(`There was an error in httpservice  getting the goken:${error}`);
+            // console.log('====================================');
+            // console.log(`there was in httpservice getting the goken:\n ${JSON.stringify(error,null,2)}`);
+            // console.log('====================================');
             resultInfo.error = true;
             resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + error;
             reject(resultInfo);
@@ -133,8 +137,6 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
         dataRecieved: {}
     };
     let resultData=[];
-
-   
     return new Promise((resolve, reject) => {
         try {
             const client= yelp.client(token);
@@ -147,7 +149,11 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                 for (let i=0; i<response.jsonBody.businesses.length;i++){
                     let itemresult={};
                     if (!response.jsonBody.businesses[i].is_closed){
-                        
+                        itemresult.infoquery={
+                            what:searchItem,
+                            where:searchLocation,
+                            ammount:numberOfItems
+                        };
                         itemresult.id=response.jsonBody.businesses[i].id;
                         itemresult.name=response.jsonBody.businesses[i].name;
                         itemresult.img=response.jsonBody.businesses[i].image_url;
@@ -160,7 +166,6 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                             itemresult.category= response.jsonBody.businesses[i].categories[0].alias;
                         }
                         resultData.push(itemresult);
-                        
                     }
                 }
                 resultInfo.dataRecieved.num_items_response= response.jsonBody.businesses.length;
@@ -168,16 +173,18 @@ export const searchYelp = (token, searchItem, searchLocation,numberOfItems) => {
                 resolve(resultInfo);
             })
             .catch(e=>{
-                console.log('====================================');
-                console.log(`ERROR ON PROCESSING REQUEST TO YELP SERVER:${e}`);
-                console.log('====================================');
+                logger.error(`ERROR httpservice ON PROCESSING REQUEST TO YELP SERVER:${e}`);
+                // console.log('====================================');
+                // console.log(`ERROR ON PROCESSING REQUEST TO YELP SERVER:${e}`);
+                // console.log('====================================');
                 resultInfo.error = true;
                 resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + e;
                 reject(resultInfo);
-            })
+            });
 
         } catch (error) {
-            console.log("ERROR HTTP SERVICE YELP SEARCH:\n" + error);
+            logger.error(`ERROR httpservice ON PROCESSING YELP SEARCH:${error}`);
+            //console.log("ERROR HTTP SERVICE YELP SEARCH:\n" + error);
             resultInfo.error = true;
             resultInfo.messageError = "ERROR ON PROCESSING REQUEST TO YELP SERVER: " + error;
             reject(resultInfo);

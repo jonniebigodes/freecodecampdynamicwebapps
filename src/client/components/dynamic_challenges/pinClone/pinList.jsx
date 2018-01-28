@@ -1,27 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {GridList} from 'material-ui/GridList';
 import ImageTile from './imageTile';
 
-class PinList extends Component{
-
-    /**
-     * class constructor for the list of pins
-     * @param {*} props 
-     */
-    constructor(props){
-        super(props);
-        this.pinVoteImage= this.pinVoteImage.bind(this);
-        
-        /* this.styles={
-            gridList:{
-                width:1280,
-                height:385,
-                margin:20,
-                overflowY: 'auto'
-            }
-        }; */
-    }
+class PinList extends PureComponent{
     /**
      * class property for handling pin vote
      * @param {Object} value object containing the pin information 

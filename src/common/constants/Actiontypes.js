@@ -11,6 +11,8 @@ export const SET_STOCK_EXIT='SET_STOCK_EXIT';
 //
 
 // nightlife
+export const NIGHT_ERROR='ERROR_NIGHT_APP';
+export const RESET_NIGHT_ERROR='NIGHT_APP_ERROR_RESET';
 export const LOGIN_REQUEST='REQUEST_LOGIN';
 export const LOGIN_OK='OK_LOGIN';
 export const LOGIN_NOK='NOK_LOGIN';

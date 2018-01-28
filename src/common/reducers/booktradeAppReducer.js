@@ -228,23 +228,6 @@ const bookAppReducer = (state = {
 
             return {
                 ...state,
-                // booksData:{
-                //     ...state.booksData,
-                //     [action.value.tokenBook]:{
-                //         ...action.value.tokenBook,
-                //         bookisbeingtraded= true,
-                //         bookbeingtradedto:action.value.tradercontact,
-                //     }
-                // }
-                // items:state.items.map(item=>{
-                //     if (item.booktoken!==action.value.tokenBook){
-                //         return item;
-                //     }
-                //     item.bookisbeingtraded=true;
-                //     item.bookbeingtradedto=action.value.tradercontact;
-                //     return item;
-                    
-                // })
             };
         
         }

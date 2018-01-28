@@ -20,13 +20,10 @@ import {
     fetchSocialInfo,
     shareOnSocialMedia
 } from '../../../../common/actions/VottingAppActions';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import PollsContainer from './PollsContainer';
 class PollApp extends Component{
 
-    componentWillMount(){
-        injectTapEventPlugin();
-    }
+    
     componentDidMount=()=>{
         // will get the books
         this.props.getPolls();

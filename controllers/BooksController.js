@@ -1,6 +1,7 @@
 //sets the imports according to the flag in question
 const httpService=process.env.NODE_ENV !== 'production'?require('../src/server/httpService'):require('./httpService');
 const dbService=process.env.NODE_ENV !== 'production'?require('../src/server/dbFactory'):require('./dbFactory');
+const logger=  process.env.NODE_ENV!== 'production' ? require('../logger'):require('./logger');
 //
 const path = require('path');
 module.exports = {
@@ -62,17 +63,19 @@ module.exports = {
                     response.end(JSON.stringify({code: 'fccda005', bookData: resultsbooks}));
                 }).catch(errSearches => {
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error promise all searches:${JSON.stringify(errSearches,null,2)}`);
-                    console.log('====================================');
+                    logger.error(`get books error promise all searches:${JSON.stringify(errSearches,null,2)}`);
+                    // console.log('====================================');
+                    // console.log(`error promise all searches:${JSON.stringify(errSearches,null,2)}`);
+                    // console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                 });
             })
             .catch(err => {
-                console.log('====================================');
-                console.log(`error getting the books:${err}`);
-                console.log('====================================');
+                logger.error(`error getting the books:${JSON.stringify(err,null,2)}`);
+                // console.log('====================================');
+                // console.log(`error getting the books:${err}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
@@ -116,9 +119,10 @@ module.exports = {
                         response.end(JSON.stringify({code: 'fccda005', reason: `The book:${request.body.bookName} was added to the collection`}));
                     }).catch(err => {
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`error adding the books:${err}`);
-                        console.log('====================================');
+                        logger.error(`error adding the books:${err}`);
+                        // console.log('====================================');
+                        // console.log(`error adding the books:${err}`);
+                        // console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                     });
@@ -146,18 +150,20 @@ module.exports = {
                     })
                     .catch(errInjectbook => {
                         dbService.disconnect();
-                        console.log('====================================');
-                        console.log(`error adding the books:${errInjectbook}`);
-                        console.log('====================================');
+                        logger.error(`error adding the books no collection:${JSON.stringify(errInjectbook,null,2)}`);
+                        // console.log('====================================');
+                        // console.log(`error adding the books:${errInjectbook}`);
+                        // console.log('====================================');
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                     });
                 }
             })
             .catch(errconnect => {
-                console.log('====================================');
-                console.log(`error connect adding the books:${JSON.stringify(errconnect,null,2)}`);
-                console.log('====================================');
+                logger.error(`error connect adding the books on connect:${errconnect}`);
+                // console.log('====================================');
+                // console.log(`error connect adding the books:${JSON.stringify(errconnect,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
@@ -237,35 +243,38 @@ module.exports = {
                        response.writeHead(500, {'Content-Type': 'application/json'});
                        response.end(JSON.stringify({code: "fccda001", reason: "ERROR NOTIFICATION"}));
                     }).catch(errsendmail=>{
-                        console.log('====================================');
-                        console.log(`error sendmail the books:${JSON.stringify(errsendmail,null,2)}`);
-                        console.log('====================================');
-                        
+                        // console.log('====================================');
+                        // console.log(`error sendmail the books:${JSON.stringify(errsendmail,null,2)}`);
+                        // console.log('====================================');
+                        logger.error(`Error sending mail:${errsendmail}`);
                         response.writeHead(500, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                     });
                 })
                 .catch(errorinjecttrade => {
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error errorinjecttrade the books:${JSON.stringify(errorinjecttrade,null,2)}`);
-                    console.log('====================================');
+                    logger.error(`Error injecting the book trade:${JSON.stringify(errorinjecttrade,null,2)}`);
+                    // console.log('====================================');
+                    // console.log(`error errorinjecttrade the books:${JSON.stringify(errorinjecttrade,null,2)}`);
+                    // console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                 });
             }).catch(errordatatrade => {
                     //dbService.disconnect();
-                console.log('====================================');
-                console.log(`error trading the books:${JSON.stringify(errordatatrade,null,2)}`);
-                console.log('====================================');
+                logger.error(`error trading the books:${JSON.stringify(errordatatrade,null,2)}`);
+                // console.log('====================================');
+                // console.log(`error trading the books:${JSON.stringify(errordatatrade,null,2)}`);
+                // console.log('====================================');
                 response.writeHead(500, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
             });
         })
         .catch(errorConnect => {
-            console.log('====================================');
-            console.log(`error trading the books:${errorConnect}`);
-            console.log('====================================');
+            logger.error(`error connect trading the books:${JSON.stringify(errorConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`error trading the books:${errorConnect}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -303,9 +312,10 @@ module.exports = {
             response.sendFile('rejecttrade.html',{root:path.join(__dirname,'../dist/')});
         })
         .catch(errConnect => {
-            console.log('====================================');
-            console.log(`error rejecting the books trade:${errConnect}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`error rejecting the books trade:${errConnect}`);
+            // console.log('====================================');
+            logger.error(`error rejecting the books trade::${JSON.stringify(errConnect,null,2)}`);
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });
@@ -321,7 +331,6 @@ module.exports = {
             response.end(JSON.stringify({code: "fccda005", reason: "NO TOKEN PROVIDED"}));
             return;
         }
-        
         dbService.setUrl(request.app.MONGODB);
         dbService.connect().then(() => dbService.searchByID({collectionName: 'book_trades',queryParam: {_id: request.query.tokentrade}}))
             .then(resultsearchtrade => {
@@ -414,13 +423,13 @@ module.exports = {
                                 }
                             }
                         }).then(() => {
-                            
                             response.sendFile('resulttrade.html',{root:path.join(__dirname,'../dist/')});
                         }).catch(erraddtonewuser => {
                             dbService.disconnect();
-                            console.log('====================================');
-                            console.log(`error accept trade of the books:${erraddtonewuser}`);
-                            console.log('====================================');
+                            logger.error(`error accept trade of the books:${JSON.stringify(erraddtonewuser,null,2)}`);
+                            // console.log('====================================');
+                            // console.log(`error accept trade of the books:${erraddtonewuser}`);
+                            // console.log('====================================');
                             response.writeHead(500, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                         });
@@ -440,31 +449,33 @@ module.exports = {
                             }
                         })
                         .then(() => {
-                           
                             response.status(200).send('../dist/resulttrade.html');
                         })
                         .catch(errInjectbook => {
                             dbService.disconnect();
-                            console.log('====================================');
-                            console.log(`error adding the books:${errInjectbook}`);
-                            console.log('====================================');
+                            logger.error(`Error injecting the book:${JSON.stringify(errInjectbook,null,2)}`);
+                            // console.log('====================================');
+                            // console.log(`error adding the books:${errInjectbook}`);
+                            // console.log('====================================');
                             response.writeHead(500, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                         });
                     }
                 }).catch(errupdatetrade => {
                     dbService.disconnect();
-                    console.log('====================================');
-                    console.log(`error accept trade of the books:${errupdatetrade}`);
-                    console.log('====================================');
+                    logger.error(`Error accept trade of the books:${JSON.stringify(errupdatetrade,null,2)}`);
+                    // console.log('====================================');
+                    // console.log(`error accept trade of the books:${errupdatetrade}`);
+                    // console.log('====================================');
                     response.writeHead(500, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
                 });
             })
         .catch(errorConnect => {
-            console.log('====================================');
-            console.log(`error BookController connect to db:${errorConnect}`);
-            console.log('====================================');
+            logger.error(`Error connect accept trade of the books:${JSON.stringify(errorConnect,null,2)}`);
+            // console.log('====================================');
+            // console.log(`error BookController connect to db:${errorConnect}`);
+            // console.log('====================================');
             response.writeHead(500, {'Content-Type': 'application/json'});
             response.end(JSON.stringify({code: "fccda001", reason: "Server Internal Error"}));
         });

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import '../../Assets/stylesheets/base.scss';
 import { PropTypes } from 'prop-types';
-class AppFooter extends Component{
+class AppFooter extends PureComponent{
     /**
      * function to inject the appropriate class on the component
      * could do a ternary but as this will be going all around so yeah...nothing beats a select case
@@ -11,7 +11,6 @@ class AppFooter extends Component{
             case "stocks":{
                 return "linksStocks";
             }
-                
             case "nights":{
                 return "linksNights";
             }
@@ -42,8 +41,6 @@ class AppFooter extends Component{
             default:{
                 return "footer";
             }
-                
-                
         }
     }
     /**

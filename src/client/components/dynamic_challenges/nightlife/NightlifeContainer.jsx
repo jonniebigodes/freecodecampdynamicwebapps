@@ -2,99 +2,69 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import '../../../../Assets/stylesheets/nightApp.scss';
 import '../../../../Assets/stylesheets/base.scss';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import SelectField from 'material-ui/SelectField';
-import TextField from 'material-ui/TextField';
-import MenuItem from 'material-ui/MenuItem';
-import FloatingActionButton  from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import NightItemsContainer from './NightItemsContainer';
 import NightLifeLoginContainer from './NightLifeLoginContainer';
+import NightLifeSearch from './NightLifeSearch';
 import AppHeader from '../../AppHeader';
 import AppFooter from '../../AppFooter';
+
 class NightLifeContainer extends Component {
     
     constructor(props){
         super(props);
         this.state={
-            hideShowLogin:false,
-            nightvenue:'default',
-            location:'',
-            itemsQueried:0
+            hideShowLogin:false,   
         };
     }
-    /**
-     * event handler for select field onChange
-     * @param {*} event the event triggered by the componentWillUnmount
-     * @param {String} index the index selected to be updated
-     * @param {String} value the value to be updated
-     */
-    handleChange = (event, index, value) =>{
-        this.setState({nightvenue:value});
-        //this.props.nightSetQueryItem(value);
-    }
-    /**
-     * event handler for select field onChange
-     * @param {*} event the event triggered by the componentWillUnmount
-     * @param {String} index the index selected to be updated
-     * @param {String} value the value to be updated
-     */
-    handleNumberChanged=(event,index,value)=>{
-        //this.props.nightsetNumberOfItemsToSearch(value);
-        this.setState({itemsQueried:value});
-    }
-    
+   
     /**
      * function to open/close drawer on the side
      */
     showHideLogin=()=>{
         this.setState({hideShowLogin:!this.state.hideShowLogin});
     }
-    /**
-     * @param {*} e html element that triggers the update(textinput)
-     */ 
-    updateSearchTerm=(e)=>{
-        //e.preventDefault();
-        //console.log("update term: "+ e.target.value);
-        //this.props.nightsetLocation(e.target.value);
-        this.setState({location:e.target.value});
-    }
+    
     /**
      * handler function to handle the query to the server via user input/selection
      */
-    searchNightInformation=()=>{
-        //e.preventDefault();
-        if (this.state.nightvenue=='default'){
-           this.props.nightSetError(`Don't you know cupcake that default is not a place to eat or drink????`);
+    searchNightInformation=value=>{
+        const {nightSetError,nightSearchItems,nightlifeUserLoggedIn,nightLifeUserInformation}= this.props;
+        
+        if (value.query=='default'){
+           nightSetError(`Don't you know cupcake that default is not a place to eat or drink????`);
            return;
         }
-        if (!this.state.location){
-            this.props.nightSetError(`Don't you know cupcake that we ain't psychics? we don't know where you wanna go`);
+        if (!value.where){
+            nightSetError(`Don't you know cupcake that we ain't psychics? we don't know where you wanna go`);
             return;
         }
-        if (!this.state.itemsQueried){
-
-            this.props.nightSetError(`Don't you know cupcake that 0 is not a number? Pick something else`);
+        if (!value.howMany){
+            nightSetError(`Don't you know cupcake that 0 is not a number? Pick something else`);
             return;
         }
-        let tmpNight={token:'',query:this.state.nightvenue,where:this.state.location,who:'',howMany:this.state.itemsQueried};
-        if (this.props.nightlifeUserLoggedIn){
-           /*  console.log('====================================');
-            console.log(`user token before query:${this.props.id}`);
-            console.log('===================================='); */
-            tmpNight.who= this.props.nightLifeUserInformation.id;
+        
+        if (nightlifeUserLoggedIn){
+            value.who= nightLifeUserInformation.id;
         }
-        this.props.nightSearchItems(tmpNight);
+        nightSearchItems(value);
     }
 
     onAddNight=(e)=>{
-        this.props.nightlifeUserLoggedIn?this.props.addToNightEvent({userToken:this.props.nightLifeUserInformation.id,idPlace:e}):this.props.nightSetError('You need to be authenticated on the server first before adding yourself to a event');
-        
+        // console.log('====================================');
+        // console.log(`add night container value:${JSON.stringify(e,null,2)}`);
+        // console.log('====================================');
+        const {nightlifeUserLoggedIn,addToNightEvent,nightSetError,nightLifeUserInformation}=this.props;
+        nightlifeUserLoggedIn?addToNightEvent({userToken:nightLifeUserInformation.id,idPlace:e}):nightSetError('You need to be authenticated on the server first before adding yourself to a event');
     }
 
     onRemoveNight=(e)=>{
-        this.props.nightlifeUserLoggedIn?this.props.removeFromNightEvent({userToken:this.props.nightLifeUserInformation.id,idPlace:e}):this.props.nightSetError('You need to be authenticated on the server first before adding yourself to a event');
+        // console.log('====================================');
+        // console.log(`remove night container value:${JSON.stringify(e,null,2)}`);
+        // console.log('====================================');
+        const {nightlifeUserLoggedIn,removeFromNightEvent,nightLifeUserInformation,nightSetError}= this.props;
+        nightlifeUserLoggedIn?removeFromNightEvent({userToken:nightLifeUserInformation.id,idPlace:e}):nightSetError('You need to be authenticated on the server first before adding yourself to a event');
     }
     /**
      * handler function to reset the errors on the app
@@ -116,121 +86,27 @@ class NightLifeContainer extends Component {
         this.props.nightUnloadUser();
     }
     //region render component
-    /**
-     * aux method for rendering the ui if no items are present(no queries done)
-     */
-    renderNoItems(){
+    renderSearchBar(){
+        
         return(
-            <div className="searchInit" key="containerSearch">
-                    <div className="row">
-                        <div className="col-xs-6 col-sm-4">
-                            <div className="col-xs-6">
-                                <SelectField key="itemSelector" 
-                                    floatingLabelText="What to search" 
-                                    value={this.state.nightvenue} 
-                                    className="selectFields"
-                                    onChange={(event, index, value)=>this.handleChange(event, index, value)}>
-                                    <MenuItem value={'default'} primaryText="default"/>
-                                    <MenuItem value={'restaurants'} primaryText="Restaurants"/>
-                                    <MenuItem value={'bars'} primaryText="Bars"/>
-                                </SelectField>
-                            </div>
-                            <div className="col-xs-6">
-                                <SelectField key="numberSelector" 
-                                    floatingLabelText="How many to search"
-                                    className="selectFields"
-                                    value={this.state.nightitemsQueried}
-                                    onChange={(event,index,value)=>this.handleNumberChanged(event,index,value)}>
-                                    <MenuItem value={0} primaryText="0"/>
-                                    <MenuItem value={5} primaryText="5"/>
-                                    <MenuItem value={10} primaryText="10"/>
-                                    <MenuItem value={15} primaryText="15"/>
-                                    <MenuItem value={20} primaryText="20"/>
-                                    <MenuItem value={30} primaryText="30"/>
-                                    <MenuItem value={40} primaryText="40"/>
-                                    <MenuItem value={50} primaryText="50"/>
-                                </SelectField>
-                            </div>
-                        </div>
-                        <div className="col-xs-6 col-sm-4">
-                        <TextField hintText="Fill in with a valid city"
-                                errorText="Try adding a city"
-                                floatingLabelText="Location"
-                                value={this.state.nightlocation}
-                                className="textSearch"
-                                onChange={this.updateSearchTerm}/>
-                        </div>
-                        <div className="col-xs-6 col-sm-4">
-                            <FloatingActionButton 
-                                mini
-                                key="btnSearch"
-                                className="searchButton"
-                                onClick={this.searchNightInformation}>
-                                <i className="material-icons md-18">search</i>
-                            </FloatingActionButton>
-                        </div>
-                    </div>
-            </div>
+            <NightLifeSearch key="searchBar" onSearchAction={this.searchNightInformation}/>
         );
     }
+    
     /**
      * aux method for rendering the ui if items are present(queried)
      */
     renderItems=()=>{
+        const {nightLifeItems,nightLifeSearchResults,nightlifeUserLoggedIn}= this.props;
         return(
             <div key="ContainerApp">
-                    <div className="searchItemsResult" key="containerSearch">
-                        <div className="row">
-                            <div className="col-xs-6 col-sm-4">
-                                <div className="col-xs-6">
-                                    <SelectField key="itemSelector" 
-                                        floatingLabelText="What to search" 
-                                        value={this.state.nightvenue} 
-                                        className="selectFields"
-                                        onChange={(event, index, value)=>this.handleChange(event, index, value)}>
-                                        <MenuItem value={'default'} primaryText="default"/>
-                                        <MenuItem value={'restaurants'} primaryText="Restaurants"/>
-                                        <MenuItem value={'bars'} primaryText="Bars"/>
-                                    </SelectField>
-                                </div>
-                                <div className="col-xs-6">
-                                    <SelectField key="numberSelector" 
-                                        floatingLabelText="How many to search"
-                                        className="selectFields"
-                                        value={this.state.itemsQueried}
-                                        onChange={(event,index,value)=>this.handleNumberChanged(event,index,value)}>
-                                        <MenuItem value={0} primaryText="0"/>
-                                        <MenuItem value={5} primaryText="5"/>
-                                        <MenuItem value={10} primaryText="10"/>
-                                        <MenuItem value={15} primaryText="15"/>
-                                        <MenuItem value={20} primaryText="20"/>
-                                        <MenuItem value={30} primaryText="30"/>
-                                        <MenuItem value={40} primaryText="40"/>
-                                        <MenuItem value={50} primaryText="50"/>
-                                    </SelectField>
-                                </div>
-                            </div>
-                            <div className="col-xs-6 col-sm-4">
-                            <TextField hintText="Fill in with a valid city"
-                                    errorText="Try adding a city"
-                                    floatingLabelText="Location"
-                                    value={this.state.nightlocation}
-                                    className="textSearch"
-                                    onChange={this.updateSearchTerm}/>
-                            </div>
-                            <div className="col-xs-6 col-sm-4">
-                                <FloatingActionButton 
-                                    mini
-                                    key="btnSearch"
-                                    className="searchButton"
-                                    onClick={this.searchNightInformation}>
-                                    <i className="material-icons md-18">search</i>
-                                </FloatingActionButton>
-                            </div>
-                        </div>
+                <div className="row">
+                    {this.renderSearchBar()}
                 </div>
                 <div className="voffset3"/>
-                <NightItemsContainer items={this.props.nightLifeSearchResults} onAddNight={(e)=>this.onAddNight(e)} onRemoveNight={(e)=>this.onRemoveNight(e)} userLogged={this.props.nightlifeUserLoggedIn}/>
+                <div className="row">
+                    <NightItemsContainer items={nightLifeItems} onAddNight={this.onAddNight} onRemoveNight={this.onRemoveNight} itemsNumber={nightLifeSearchResults} isUserLogged={nightlifeUserLoggedIn}/>
+                </div>
             </div>
             
         );
@@ -239,30 +115,30 @@ class NightLifeContainer extends Component {
      * react render method
      */
     render() {
+        const{nightLifeSearchResults,nightlifeUserLoggedIn,nightLifeUserInformation,nightLifeItems}= this.props;
         const actionsDialog = [
             <FlatButton key="dialogError_nightLife"
                 label="Ok"
                 primary
-                onTouchTap={this.OnResetError}
-            />
-            ];
+                onClick={this.OnResetError}
+            />];
         return (
-            <MuiThemeProvider>
-               <div className="container-fluid">
+               <div className="container-fluid nightAppContainer">
                     <Dialog key="errorDialog"
-                                        actions={actionsDialog}
-                                        modal={false}
-                                        open={this.props.nightLifeAppError}
-                                        onRequestClose={this.OnResetError}>
-                                        <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
-                                        <br/>
-                                        <h4>{this.props.nighterrorMessageApp}</h4>
-                                </Dialog>
-                        <AppHeader appName="Supercalifragilistic NightLife Coordinator" appStyle="books" showLogin={this.showHideLogin} hasLoginNeeds/>
-                        <NightLifeLoginContainer islogged={this.props.nightlifeUserLoggedIn} loginreg={(e)=>this.loginRegSend(e)} userInformation={this.props.nightLifeUserInformation} userLogout={this.logoutHandler} dataItems={this.props.nightLifeSearchResults} hasLoginNeeds={this.state.hideShowLogin}/>
-                        {this.props.nightLifeSearchResults.length?this.renderItems():this.renderNoItems()}
+                        actions={actionsDialog}
+                         modal={false}
+                        open={this.props.nightLifeAppError}
+                        onRequestClose={this.OnResetError}>
+                            <h3>Ups!!!!<br/> Something went wrong or someone did something wrong!<br/>Check out the problem bellow</h3>
+                            <br/>
+                            <h4>{this.props.nighterrorMessageApp}</h4>
+                    </Dialog>
+                    <AppHeader appName="Supercalifragilistic NightLife Coordinator" appStyle="books" showLogin={this.showHideLogin} hasLoginNeeds/>
+                    <NightLifeLoginContainer islogged={nightlifeUserLoggedIn} loginreg={this.loginRegSend} userInformation={nightLifeUserInformation} userLogout={this.logoutHandler} hasLoginNeeds={this.state.hideShowLogin} dataItems={nightLifeItems} numberItems={nightLifeSearchResults}/>
+                    {nightLifeSearchResults===0?this.renderSearchBar('search'):this.renderItems()}
+                    <AppFooter appName={"nights"}/>    
                 </div>
-            </MuiThemeProvider>
+            
             
         );
     }
@@ -279,9 +155,8 @@ NightLifeContainer.propTypes={
         password:PropTypes.string.isRequired
     }).isRequired,
     nightlifeUserLoggedIn:PropTypes.bool.isRequired,
-    nightLifeSearchResults:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
+    nightLifeSearchResults:PropTypes.number.isRequired,
+    nightLifeItems:PropTypes.object.isRequired,
     nightLifeLoginRegister:PropTypes.func.isRequired,
     nightUnloadUser:PropTypes.func.isRequired,
     nightConnectUser:PropTypes.func.isRequired,

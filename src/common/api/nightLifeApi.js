@@ -1,4 +1,5 @@
 
+import {localSearchNights,externalSearchNights,localAddUserNight,externalAddUserNight,localRemoveUserNight,externalRemoveUserNight,localGetUserSearches,externalGetUserSearches, localGetTokenYelp, externalGetTokenYelp} from '../constants/ApiEndPoints';
 class nightApi{
     /**
      * function to call the api on the server and get the results
@@ -9,11 +10,12 @@ class nightApi{
      */
     static search(value){
         return new Promise((resolve,reject)=>{
-            console.log('====================================');
-            console.log(`data query:${JSON.stringify(value,null,2)}`);
-            console.log('====================================');
+            // console.log('====================================');
+            // console.log(`data query:${JSON.stringify(value,null,2)}`);
+            // console.log('====================================');
              //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightsearch`) 
-            fetch(`http://localhost:5000/api/data/nightsearch`,{
+            //fetch(`http://localhost:5000/api/data/nightsearch`,{
+              fetch(process.env.NODE_ENV!=='production'?localSearchNights:externalSearchNights,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -24,7 +26,7 @@ class nightApi{
                     what:value.query,
                     where:value.where,
                     ammount:value.howMany,
-                    userId:value.who
+                    tokenUser:value.who
                 })
             })
             .then(response=>{
@@ -62,7 +64,8 @@ class nightApi{
         return new Promise((resolve,reject)=>{
             
             //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightadd`,{
-            fetch(`http://localhost:5000/api/data/nightadd`,{
+            //fetch(`http://localhost:5000/api/data/nightadd`,{
+            fetch(process.env.NODE_ENV!=='production'?localAddUserNight:externalAddUserNight,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -83,7 +86,7 @@ class nightApi{
             })
             .catch(err=>{
                 reject(err.message);
-            })
+            });
         });
     }
     /**
@@ -94,7 +97,8 @@ class nightApi{
     static removeUserNight(value){
         return new Promise((resolve,reject)=>{
             //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nightremove`,{
-            fetch(`http://localhost:5000/api/data/nightremove`,{
+            //fetch(`http://localhost:5000/api/data/nightremove`,{
+            fetch(process.env.NODE_ENV!=='production'?localRemoveUserNight:externalRemoveUserNight,{
                 method:'post',
                 headers:{
                     'Accept': 'application/json',
@@ -114,7 +118,7 @@ class nightApi{
             })
             .catch(err=>{
                 reject(err.message);
-            })
+            });
         });
     }
     /**
@@ -125,15 +129,16 @@ class nightApi{
     static getUserSearches(userToken){
         return new Promise((resolve,reject)=>{
             //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/usersearches?who=${userToken}`)
-            fetch(`http://localhost:5000/api/data/usersearches?who=${userToken}`)
+            //fetch(`http://localhost:5000/api/data/usersearches?who=${userToken}`)
+            fetch(process.env.NODE_ENV!=='production'?`${localGetUserSearches}${userToken}`:`${externalGetUserSearches}${userToken}`)
             .then(response=>{
                 return response.json();
             })
             .then(result=>{
-                console.log('====================================');
-                console.log(`result data: ${JSON.stringify(result)}`);
-                console.log('====================================');
-                result.code==='fccda001'?reject(result.reason):resolve(result.userData);
+                // console.log('====================================');
+                // console.log(`result data: ${JSON.stringify(result)}`);
+                // console.log('====================================');
+                result.code==='fccda001'?reject(result.reason):resolve(result.data);
                 
             })
             .catch(err=>{
@@ -141,18 +146,18 @@ class nightApi{
                 console.log(`error getting the user searches:${err.reason}`);
                 console.log('====================================');
                 reject(err);
-            })
+            });
         });
     }
     static getTokenYelp(){
         return new Promise((resolve,reject)=>{
             //fetch(`https://freecodecampdynprojects.herokuapp.com/api/data/nighttoken`)
-            fetch(`http://localhost:5000/api/data/nighttoken`)
+            //fetch(`http://localhost:5000/api/data/nighttoken`)
+            fetch(process.env.NODE_ENV!=='production'?localGetTokenYelp:externalGetTokenYelp)
             .then(response=>{
                 return response.json();
             })
             .then(result=>{
-               
                 resolve (result.userToken);
             })
             .catch(err=>{
@@ -160,7 +165,7 @@ class nightApi{
                 console.log(`error getting the user searches:${err.reason}`);
                 console.log('====================================');
                 reject(err);
-            })
+            });
         });
     }
 }

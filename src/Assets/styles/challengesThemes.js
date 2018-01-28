@@ -1,12 +1,12 @@
 // import getMuiTheme from 'material-ui/styles/getMuiTheme';
-// import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import * as Colors from 'material-ui/styles/colors';
 import { fade } from 'material-ui/utils/colorManipulator';
 
 const pinTheme={
     palette:{
         primary1Color:Colors.deepPurple300,
-        accent3Color:Colors.indigo300
+        accent3Color:Colors.indigo300,
+        canvasColor : Colors.deepPurple300
     },
     snackbar:{
         backgroundColor:Colors.indigo300
@@ -35,7 +35,8 @@ const pinTheme={
 };
 const stockTheme={
     palette:{
-        primary1Color: Colors.green400,
+        primary1Color: Colors.green500,
+        canvasColor: Colors.green500,
         accent1Color: Colors.brown500,
         primary2Color: Colors.green900,
         pickerHeaderColor:Colors.green400
@@ -121,5 +122,27 @@ const booksTheme={
         margin:20,
         overflowY: 'auto'
     }
-}
-export const dynamicThemes={pinTheme,stockTheme,votesTheme,booksTheme};
+    
+};
+const themeNight={
+    palette: {
+        primary1Color: Colors.blueGrey400,
+        canvasColor: Colors.blueGrey800,
+        accent1Color: Colors.blueA200,
+        disabledColor: fade(Colors.lightWhite, 0.54),
+        accent2Color: Colors.indigoA200
+    },
+    appBar: {
+        textColor: fade(Colors.lightWhite, 0.54),
+        height: 50
+    },
+    textField: {
+        errorColor: Colors.indigoA100,
+        focusColor: Colors.blueGrey800
+    }
+};
+//const nightTheme={...darkBaseTheme,...themeNight};
+// console.log(`original dark:\n${JSON.stringify(darkBaseTheme,null,2)}`);
+// console.log(`themeNight dark:\n${JSON.stringify(themeNight,null,2)}`);
+// console.log(`merged dark:\n${JSON.stringify(nightTheme,null,2)}`);
+export const dynamicThemes={pinTheme,stockTheme,votesTheme,booksTheme,themeNight};

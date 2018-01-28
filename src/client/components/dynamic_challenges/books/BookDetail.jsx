@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import BookButton from './BookButton';
+//import BookButton from './BookButton';
+import FccDynButton from '../../challengesUIComponents/FccDynButton';
 class BookDetail extends Component{
 
     constructor(props){
@@ -46,14 +47,14 @@ class BookDetail extends Component{
                     </div>
                     <div className="col-xs-6 col-md-4">
                         <div className="posButtonsChange">
-                            <BookButton 
+                            <FccDynButton 
                                 hasHref={false}
                                 hasSvg={false}
                                 isDisabled={false}
                                 buttonText={'Go back'}
                                 iconInfo={'goback'}
                                 clickAction={this.itemPreviewExit}/>
-                            <BookButton 
+                            <FccDynButton 
                                 hasHref={false}
                                 hasSvg={false}
                                 isDisabled={bookData.bookisbeingtraded?true:false}

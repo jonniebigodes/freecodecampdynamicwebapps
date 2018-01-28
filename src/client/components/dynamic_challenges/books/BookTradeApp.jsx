@@ -17,14 +17,11 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
 import LinearProgress from 'material-ui/LinearProgress';
-import injectTapEventPlugin from 'react-tap-event-plugin';
 import BookTradeContainer from './BookTradeContainer';
 
 class BookTradeApp extends Component{
 
-    componentWillMount(){
-        injectTapEventPlugin();
-    }
+    
     componentDidMount=()=>{
         // will get the books
         this.props.getBooks();

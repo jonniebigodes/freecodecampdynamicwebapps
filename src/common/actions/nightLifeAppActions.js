@@ -2,11 +2,8 @@ import {
     REQUEST_NIGHT,
     RECIEVE_NIGHT,
     RECIEVE_NIGHT_NOK,
-    APP_ERROR,
-    APP_ERROR_RESET,
-    SET_LOCATION_NIGHT,
-    SET_NIGHT_SEARCH,
-    SET_NIGHT_NUMBER,
+    NIGHT_ERROR,
+    RESET_NIGHT_ERROR,
     SET_NIGHT_EXIT,
     LOGIN_REQUEST,
     LOGIN_OK,
@@ -23,7 +20,10 @@ import {
 import nightApi from '../api/nightLifeApi';
 import authApi from '../api/authApi';
 import ChallengesApi from '../api/challengesApi';
-const moment = require('moment');
+//const moment = require('moment');
+import {fccUtilities} from '../Utils/Utilities';
+import {normalize} from 'normalizr';
+import {NightsSchema} from '../constants/nightsSchema';
 export const requestNightData=value=>({
     type:REQUEST_NIGHT,
     value
@@ -37,17 +37,15 @@ export const recieveNightDataNOK=error=>({
     error
 });
 export const setNightAppError=value=>({
-    type:APP_ERROR,
+    type:NIGHT_ERROR,
     value
 });
-export const resetNightAppError=value=>({
-    type:APP_ERROR_RESET,
-    value
+export const resetNightAppError=()=>({
+    type:RESET_NIGHT_ERROR
 });
 
-export const nightExit=value=>({
-    type:SET_NIGHT_EXIT,
-    value
+export const nightExit=()=>({
+    type:SET_NIGHT_EXIT
 });
 
 export const setauthServerData=value=>({
@@ -97,11 +95,11 @@ export const setYelpServiceToken=value=>({
     type:RECIEVE_YELP_TOKEN,
     value
 });
-export const disconnectUser=authInformation=>dispatch=>{
+export const disconnectUser=()=>dispatch=>{
     
-    authApi.userLogout(authInformation.id)
+    authApi.userLogout()
     .then(()=>{
-        dispatch(userLogout(authInformation.id));
+        dispatch(userLogout());
     })
     .catch(err=>{
         dispatch(setNightAppError(err));
@@ -120,9 +118,7 @@ export const registerServer=authData=>dispatch=>{
 };
 
 export const addUserToNight=value=>dispatch=>{
-    console.log('====================================');
-    console.log(`adding to night action: user:${value.userToken} place:${value.idPlace}`);
-    console.log('====================================');
+    
     nightApi.addUserNight(value)
     .then(result=>{
         dispatch(addUserNight(value));
@@ -132,6 +128,7 @@ export const addUserToNight=value=>dispatch=>{
     });
 };
 export const removeUserFromNight=value=>dispatch=>{
+    
     nightApi.removeUserNight(value)
             .then(result=>{
                 dispatch(removeUserNight(value));
@@ -144,11 +141,9 @@ export const authenticateServer=authData=>dispatch=>{
     dispatch(setauthServerData(authData));
     authApi.authUserLocal(authData.email,authData.password)
     .then(result=>{
-        dispatch(authSucess(result));
-        console.log('====================================');
-        console.log(`auth success action result:${result}`);
-        console.log('====================================');
-        dispatch(fetchUserSearches(result));
+        dispatch(authSucess(result.authToken));
+       
+        dispatch(fetchUserSearches(result.authToken));
     })
     .catch(err=>{
         dispatch(authFailure(err));
@@ -156,15 +151,11 @@ export const authenticateServer=authData=>dispatch=>{
     });
 };
 const localsetservertoken=value=>dispatch=>{
-    console.log('====================================');
-    console.log('local token');
-    console.log('====================================');
+    
     dispatch(setYelpServiceToken(value));
 };
 const fetchyelpservertoken=()=>dispatch=>{
-    console.log('====================================');
-    console.log('server token');
-    console.log('====================================');
+    
     nightApi.getTokenYelp().then(result=>{
         dispatch(setYelpServiceToken(result));
         ChallengesApi.setStorageData("yelp_token_info",result);
@@ -179,46 +170,31 @@ export const fetchAuthToken=()=>dispatch=>{
         dispatch(fetchyelpservertoken());
     }
     else{
-        //let systemcurrentDate=moment().format("DD-MM-YYYY");
-        //let forwardtime= moment().add(9,'days');
-        
-        //let tokencurrentDate=moment().unix(yelpInfo.expires).format("MM-DD HH:mm:ss");
-        //let tokencurrentDate= moment().unix().format("MM-DD HH:mm:ss");
-        //let dateexpiration= moment(parsedTokenDate).format("DD-MM-YYYY");
-        //let datediff= moment.duration(systemcurrentDate.diff(dateexpiration,'days',true));
-        //let datediff= moment(forwardtime).isSame(dateexpiration,'day');
-        //let istokenlegit=moment(forwardtime).isAfter(dateexpiration);
-        /* console.log('====================================');
-        console.log(`System current moment:${systemcurrentDate}\nyelp expiration date:${dateexpiration} datediff :${datediff}`);
-        console.log('===================================='); */
-        let systemcurrentDate= moment();
-        let parsedTokenDate= moment().milliseconds(yelpInfo.expires);
-        let datediff= parsedTokenDate.diff(systemcurrentDate,'days');
-        console.log(`date diff:${datediff} systemcurrentDate:${systemcurrentDate} parsedTokenDate:${parsedTokenDate}`);
-        datediff>0?dispatch(localsetservertoken(yelpInfo)):dispatch(fetchyelpservertoken());
-        
 
+        // console.log('====================================');
+        // console.log(`data from utils${fccUtilities.calculateTokenTime(yelpInfo.expires)}`);
+        // console.log('====================================');
+        // let systemcurrentDate= moment();
+        // let parsedTokenDate= moment().milliseconds(yelpInfo.expires);
+        //let datediff= parsedTokenDate.diff(systemcurrentDate,'days');
+        let datediff= fccUtilities.calculateTokenTime(yelpInfo.expires);
+        //console.log(`date diff:${datediff} systemcurrentDate:${systemcurrentDate} parsedTokenDate:${parsedTokenDate}`);
+        datediff>0?dispatch(localsetservertoken(yelpInfo)):dispatch(fetchyelpservertoken());
     }
     
 };
 const fetchUserSearches=token=>dispatch=>{
-    console.log('====================================');
-    console.log(`got to fetch user searches with token:${token}`);
-    console.log('====================================');
+    // console.log('====================================');
+    // console.log(`got to fetch user searches with token:${JSON.stringify(token,null,2)}`);
+    // console.log('====================================');
     nightApi.getUserSearches(token)
     .then(result=>{
-        console.log(`result fetchusersearches:${result}`);
-        if (result!=='NO DATA'){
-            for (let item of result){
-                console.log('====================================');
-                console.log(`got result:${JSON.stringify(item,null,2)}`);
-                console.log('====================================');
-                dispatch(recieveUserSearch(item));
-            }
+       
+        if (result!=='NO_DATA'){
+            const userSearchesNormalized= normalize(result,NightsSchema.dataNights);
+            dispatch(recieveUserSearch(userSearchesNormalized));
         }
-        else{
-            console.log("NO DATA FOR USER");
-        }
+        
     })
     .catch(err=>{
         dispatch(setNightAppError(err));
@@ -229,7 +205,13 @@ const fetchDataNight=nightData=>dispatch=>{
     
     nightApi.search(nightData)
     .then(result=>{
-        dispatch(recieveNightData(result));
+        // console.log('====================================');
+        // console.log(`result fetch night data:\n${JSON.stringify(result,null,2)}`);
+        // console.log('====================================');
+        const dataNormalized= normalize(result.results,NightsSchema.dataNights);
+       
+        dispatch(recieveNightData(dataNormalized));
+    
     })
     .catch(err=>{
         dispatch(recieveNightDataNOK(err));
@@ -237,14 +219,18 @@ const fetchDataNight=nightData=>dispatch=>{
 };
 
 const shouldFetchData=(state,nightData)=>{
-    if (!state.items){
+    const nightsData= state.night;
+    if (!nightsData.searchResults.length){
         return true;
     }
-    const items= state.items[nightData.query+"-"+nightData.where];
-    if (!items){
-        return true;
+
+    for (const item in nightsData.searchResultsEntities){
+        const queryItem= nightsData.searchResultsEntities[item].infoquery;
+        if ((queryItem.what===nightData.query)&&(queryItem.where===nightData.where)){
+            return false;
+        }
     }
-    return false;
+    return true;
 };
 export const fetchNightDataIfNeeded=nightData=>(dispatch,getState)=>{
     if (shouldFetchData(getState(),nightData)){

@@ -1,6 +1,6 @@
 import {
-    APP_ERROR,
-    APP_ERROR_RESET,
+    NIGHT_ERROR,
+    RESET_NIGHT_ERROR,
     LOGIN_REQUEST,
     LOGIN_OK,
     LOGIN_NOK,
@@ -15,8 +15,7 @@ import {
     REMOVE_FROM_NIGHT,
     SET_NIGHT_EXIT,
     RECIEVE_USER_SEARCH,
-    RECIEVE_YELP_TOKEN,
-    SET_NIGHT_INFO
+    RECIEVE_YELP_TOKEN
 } from '../constants/Actiontypes';
 
 
@@ -31,10 +30,8 @@ const nightAppReducer = (state = {
         expires:0
     },
     nightisLoggedin: false,
-    nightvenueQuery: 'default',
-    numberOfItems:0,
-    location:'',
-    items: [],
+    searchResults:[],
+    searchResultsEntities:{},
     onError: false,
     errorMessage: ''
 }, action) => {
@@ -43,65 +40,52 @@ const nightAppReducer = (state = {
             //console.log("reducer REQUEST_STOCKS: "+action.value);
             return {
                 ...state,
-                isSearching: true,
-                nightvenueQuery:action.value.query,
-                numberOfItems:action.value.howMany,
-                location:action.value.where
+                isSearching: true
             };
         }
-        
         case ADD_TO_NIGHT:{
+            let addedToNight=state.searchResultsEntities[action.value.idPlace];
+            addedToNight.isGoing= true;
+
             return{
                 ...state,
+                searchResultsEntities:{
+                    ...state.searchResultsEntities,
+                    [action.value.idPlace]:addedToNight
+                }
             }; 
         }
         case REMOVE_FROM_NIGHT:{
+            let removedFromNight=state.searchResultsEntities[action.value.idPlace];
+            removedFromNight.isGoing= false;
             return{
                 ...state,
+                searchResultsEntities:{
+                    ...state.searchResultsEntities,
+                    [action.value.idPlace]:removedFromNight
+                }
+                
             };
         }
         case RECIEVE_USER_SEARCH:{
+            
             return {
                 ...state,
-                items:[
-                    ...state.items,
-                    {
-                        searchIndex:state.nightuserInfo.id+"-"+action.value.what+"-"+action.value.where,
-                        searchQuery:{
-                            where:action.value.where,
-                            what:action.value.what,
-                            howmany:action.value.howmany
-                        },
-                        searchResults:action.value.searchResults
-                    }
-                ]
+                searchResults:action.value.result,
+                searchResultsEntities:action.value.entities.nights
             };
             
         }
         case RECIEVE_NIGHT:{
-            let resultIndex=state.nightisLoggedin?state.nightuserInfo.id+'-'+state.nightvenueQuery+"-"+state.location:'anon-'+state.nightvenueQuery+"-"+state.location;
-            //console.log(`recieve nigth index:${resultIndex}`);
-            //console.log('====================================');
-            
+            let newData= state.searchResults.concat(action.result.result);
+            //let newEntities=Object.assign(state.searchResultsEntities,action.value,action.result.entities.nights);
+            let newEntities=Object.assign(state.searchResultsEntities,action.result.entities.nights);
             return {
                 ...state,
-                items: [
-                    ...state.items, 
-                    {
-                        searchQuery:{
-                            where:state.location,
-                            howmany:state.numberOfItems,
-                            what:state.nightvenueQuery
-                        },
-                        searchIndex: resultIndex,
-                        searchResults: action.result
-                    }
-                ],
-                isSearching: false,
-                nightvenueQuery: 'default',
-                location:'',
-                numberOfItems:0
+                searchResults:newData,
+                searchResultsEntities:newEntities,
                 
+                isSearching: false
             };
         }
         case LOGIN_REQUEST:{
@@ -135,7 +119,7 @@ const nightAppReducer = (state = {
                     email:state.nightuserInfo.email,
                     password:state.nightuserInfo.password
                 },
-                items:[]
+                
             };
             
         }
@@ -182,7 +166,8 @@ const nightAppReducer = (state = {
                     email:'',
                     password:''
                 },
-                items:[],
+                searchResults:[],
+                searchResultsEntities:{},
                 nightisLoggedin:false
             };
         }
@@ -191,14 +176,11 @@ const nightAppReducer = (state = {
             return {
                 ...state,
                 isSearching: false,
-                nightvenueQuery: 'default',
-                location:'',
-                numberOfItems:0,
                 onError: true,
                 errorMessage: action.error
             };
         }
-        case APP_ERROR_RESET:{
+        case RESET_NIGHT_ERROR:{
             //console.log("reducer APP_ERROR_RESET");
             return {
                 ...state,
@@ -207,7 +189,7 @@ const nightAppReducer = (state = {
                 errorMessage: ''
             };
         }
-        case APP_ERROR:{
+        case NIGHT_ERROR:{
             //console.log("reducer app error");
             return {
                 ...state,
@@ -225,10 +207,8 @@ const nightAppReducer = (state = {
                     password:''
                 },
                 nightisLoggedin: false,
-                nightvenueQuery: 'default',
-                numberOfItems:0,
-                location:'',
-                items: [],
+                searchResults:[],
+                searchResultsEntities:{},
                 onError: false,
                 errorMessage: '',
                 yelpToken:{}

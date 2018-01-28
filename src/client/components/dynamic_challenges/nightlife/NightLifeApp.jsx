@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import darkBaseTheme  from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import {dynamicThemes} from '../../../../Assets/styles/challengesThemes';
 import {
     fetchNightDataIfNeeded, 
     setNightAppError,
@@ -13,28 +17,22 @@ import {
     fetchAuthToken
 } from '../../../../common/actions/nightLifeAppActions';
 import NightlifeContainer from './NightlifeContainer';
-import injectTapEventPlugin from 'react-tap-event-plugin';
  class NightlifeApp extends Component{
-
-    componentWillMount(){
-        injectTapEventPlugin();
-    }
+     
     /**
      * component render method
      */
     componentDidMount(){
-        this.props.generateToken(true);
+        this.props.generateToken();
         
     }
     /**
      * react guard method to handle the component unload
      */
     componentWillUnmount(){
-        this.props.exitNight(true);
+        this.props.exitNight();
     }
-    onAppErrorReset=()=>{
-        this.props.resetError(true);
-    }
+    
     onUserLogoutHandler=()=>{
         this.props.unpluguser(this.props.loginData.id);
     }
@@ -55,43 +53,49 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
         this.props.setError(value);
     }
     onAppresetErrorHandler=()=>{
-        this.props.resetError(true);
+        this.props.resetError();
     }
     render(){
+        const {isError,errorMessageApp,loginData,loggedIn,searchresults,searchitems}= this.props;
         return(
-            <NightlifeContainer 
-                nightLifeAppError={this.props.isError}
-                nighterrorMessageApp={this.props.errorMessageApp}
-                nightSetError={(value)=>this.onAppErrorHandler(value)}
-                nightLifeResetAppError={this.onAppresetErrorHandler}
-                nightLifeUserInformation={this.props.loginData}
-                nightlifeUserLoggedIn={this.props.loggedIn}
-                nightLifeSearchResults={this.props.items}
-                nightLifeLoginRegister={(value)=>this.onLoginRegisterHandler(value)}
-                nightUnloadUser={this.onUserLogoutHandler}
-                addToNightEvent={(value)=>this.onaddUserToNightEventHandler}
-                removeFromNightEvent={(value)=>this.onremoveUserFromNightEventHandler(value)}
-                nightSearchItems={(value)=>this.onSearchItemsHandler(value)}
-                nightConnectUser={(value)=>this.onLoginRegisterHandler(value)}/>
+           <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme,dynamicThemes.themeNight)}>
+                <NightlifeContainer 
+                    nightLifeAppError={isError}
+                    nighterrorMessageApp={errorMessageApp}
+                    nightSetError={this.onAppErrorHandler}
+                    nightLifeResetAppError={this.onAppresetErrorHandler}
+                    nightLifeUserInformation={loginData}
+                    nightlifeUserLoggedIn={loggedIn}
+                    nightLifeLoginRegister={this.onLoginRegisterHandler}
+                    nightUnloadUser={this.onUserLogoutHandler}
+                    addToNightEvent={this.onaddUserToNightEventHandler}
+                    removeFromNightEvent={this.onremoveUserFromNightEventHandler}
+                    nightSearchItems={this.onSearchItemsHandler}
+                    nightConnectUser={this.onLoginRegisterHandler}
+                    nightLifeSearchResults={searchresults.length}
+                    nightLifeItems={searchitems}/>
+            </MuiThemeProvider>
+            
         );
     }
 }
 //region redux connect
 const mapStateToProps = state => {
     return {
-        items: state.night.items,
         isError: state.night.onError, 
         errorMessageApp: state.night.errorMessage,
         loggedIn:state.night.nightisLoggedin,
         loginData:state.night.nightuserInfo,
-        tokenYelp:state.night.yelpToken
+        tokenYelp:state.night.yelpToken,
+        searchitems:state.night.searchResultsEntities,
+        searchresults:state.night.searchResults
     };
 
 };
 const mapDispatchToProps = dispatch => {
     return {
-        generateToken:(value)=>{
-            dispatch(fetchAuthToken(value));
+        generateToken:()=>{
+            dispatch(fetchAuthToken());
         },
         searchItems: (value) => {
             dispatch(fetchNightDataIfNeeded(value));
@@ -105,11 +109,11 @@ const mapDispatchToProps = dispatch => {
         setError:(value)=>{
             dispatch(setNightAppError(value));
         },
-        resetError:(value)=>{
-            dispatch(resetNightAppError(value));
+        resetError:()=>{
+            dispatch(resetNightAppError());
         },
-        exitNight:(value)=>{
-            dispatch(nightExit(value));
+        exitNight:()=>{
+            dispatch(nightExit());
         },
         setLogin:(value)=>{
             dispatch(authenticateServer(value));
@@ -117,8 +121,8 @@ const mapDispatchToProps = dispatch => {
         setRegistry:(value)=>{
             dispatch(registerServer(value));
         },
-        unpluguser:(value)=>{
-            dispatch(disconnectUser(value));
+        unpluguser:()=>{
+            dispatch(disconnectUser());
         }
     };
 };

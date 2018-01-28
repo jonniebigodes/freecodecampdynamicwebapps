@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as cryptoModule from 'bcrypt-nodejs';
+//import * as cryptoModule from 'bcrypt-nodejs';
 import Drawer from 'material-ui/Drawer';
-import RaisedButton from 'material-ui/RaisedButton';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
 import {Tabs,Tab} from 'material-ui/Tabs';
 import Chip from 'material-ui/Chip';
 import TextField from 'material-ui/TextField';
 import '../../../../Assets/stylesheets/nightApp.scss';
+import FccDynButton from '../../challengesUIComponents/FccDynButton';
+
+import {fccUtilities} from'../../../../common/Utils/Utilities';
 class NightLifeLoginContainer extends Component{
     /**
      * component constructor
@@ -39,9 +39,9 @@ class NightLifeLoginContainer extends Component{
         this.setState({openDrawer:this.props.hasLoginNeeds});
     }
     componentWillReceiveProps(nextProps){
-        console.log('====================================');
-        console.log(`componentWillRecieveProps current prop:${this.props.hasLoginNeeds} next Props:${nextProps.hasLoginNeeds}`);
-        console.log('====================================');
+        // console.log('====================================');
+        // console.log(`componentWillRecieveProps current prop:${this.props.hasLoginNeeds} next Props:${nextProps.hasLoginNeeds}`);
+        // console.log('====================================');
         if (nextProps.hasLoginNeeds!==this.props.hasLoginNeeds){
             this.openCloseDrawer();
         }   
@@ -64,19 +64,29 @@ class NightLifeLoginContainer extends Component{
     handleLogout=()=>{
         this.props.userLogout();
     }
-    encrypwd=()=>{
-        return cryptoModule.hashSync(this.state.password);
-    }
+    // encrypwd=()=>{
+        
+
+    //     return cryptoModule.hashSync(this.state.password);
+    // }
     handleLoginRegisterRequest=()=>{
+        const {email,password,retype_pwd}=this.state;
+        // console.log('====================================');
+        // console.log(`data enc utils:${fccUtilities.encriptPassword(password)}`);
+        // console.log('====================================');
         if (this.state.tabValue==='Login'){
-            this.props.loginreg({isLogin:true,email:this.state.email,password:this.state.password});
+            this.props.loginreg({isLogin:true,email:email,password:password});
         }
         else{
-            if (this.state.password!==this.state.retype_pwd){
+            if (password!==retype_pwd){
                 return;
             }
-            this.props.loginreg({isLogin:false,email:this.state.email,password:this.encrypwd()});
+            this.props.loginreg({isLogin:false,email:email,password:fccUtilities.encriptPassword(password)});
         }
+
+        setTimeout(() => {
+            this.setState({email:'',password:'',retype_pwd:''});
+        }, 2500);
     }
     setEmail=(e)=>{
         this.setState({email:e.target.value});
@@ -97,30 +107,23 @@ class NightLifeLoginContainer extends Component{
      * function to render the content of the drawer
      */
     addChips=()=>{
-        if (this.props.dataItems.length){
-            const chipInState=this.state.chipdata;
-            
-            for (let resultItem of this.props.dataItems){
-                for (let resultItemSearch of resultItem.searchResults.results){
-                    
-                    if (!chipInState.length){
-                        chipInState.push(
-                            {
-                                key:`chip_${resultItemSearch.category}`,
-                                label:resultItemSearch.category
-                            }
-                        );
-                    }
-                    else{
-                        let itemStored= chipInState.find(x=>x.label===resultItemSearch.category);
-                        if(!itemStored){
-                            chipInState.push(
-                                {
-                                    key:`chip_${resultItemSearch.category}`,label:resultItemSearch.category
-                                }
-                            );
-                        }
-                    }
+        const {numberItems,dataItems}= this.props;
+        const {chipdata}= this.state;
+        if (numberItems){
+           
+            for (const resultItem in dataItems){
+                if (!chipdata.length){
+                    chipdata.push({
+                        key:`chip_${dataItems[resultItem].category}`,
+                        label:dataItems[resultItem].category
+                    });
+                }
+                let isStored= chipdata.find(x=>x.label===dataItems[resultItem].category);
+                if (!isStored){
+                    chipdata.push({
+                        key:`chip_${dataItems[resultItem].category}`,
+                        label:dataItems[resultItem].category
+                    });
                 }
             }
         }
@@ -134,15 +137,21 @@ class NightLifeLoginContainer extends Component{
         );
     }
     renderDrawerContent=()=>{
+        const {tabValue,email,password,retype_pwd}=this.state;
         if (this.props.islogged){
             this.addChips();
             
             return (
-                <div>
+                <div className="containerLoggedIn">
                     <h3 className="textLoggedIn">Logged in as :</h3>
                     <h4 className="textLoggedIn">{this.props.userInformation.email}</h4>
-                    {/* <button type="button" className="btn btn-link" onClick={this.handleLogout}>Logout</button> */}
-                    <FlatButton label="Logout" onClick={this.handleLogout} primary fullWidth/>
+                    <FccDynButton key={'btnLogout'}
+                            hasHref={false}
+                            hasSvg={false}
+                            isDisabled={false}
+                            buttonText={'Disconnect'} 
+                            iconInfo={'dc'}
+                            clickAction={this.handleLogout}/>
                     <hr/>
                     <div style={this.styles.wrapper}>
                         {
@@ -155,7 +164,7 @@ class NightLifeLoginContainer extends Component{
         }
         return(
             <div>
-                <Tabs value={this.state.tabValue} onChange={this.handleChangeTab}>
+                <Tabs value={tabValue} onChange={this.handleChangeTab}>
                     <Tab label="Login" value="Login">
                         <h4> Insert your credentials bellow</h4>
                         <form onSubmit={this.cancelPostForm}>
@@ -164,7 +173,7 @@ class NightLifeLoginContainer extends Component{
                                     hintText="Set your email here" 
                                     floatingLabelText="Email"
                                     floatingLabelFixed
-                                    value={this.state.email}
+                                    value={email}
                                     onChange={this.setEmail}/>
                                 
                             </div>
@@ -174,22 +183,10 @@ class NightLifeLoginContainer extends Component{
                                         floatingLabelText="Password"
                                         floatingLabelFixed
                                         type="password"
-                                        value={this.state.password}
+                                        value={password}
                                         onChange={this.setPassword}
                                         onKeyPress={this.handleKeys}/>
-                                    
-                                    
                             </div>
-                            <div className="form-group">
-                                <RaisedButton label="login"
-                                    primary
-                                    icon={<FontIcon className="muidocs-icon-custom-github"/>}
-                                    onClick={this.handleLoginRegisterRequest} fullWidth/>
-                                
-                                <FlatButton label="Cancel" secondary onClick={this.openCloseDrawer} fullWidth/>
-                                
-                            </div>
-                        
                         </form>
                     </Tab>
                     <Tab label="Signup" value="Signup">
@@ -199,7 +196,7 @@ class NightLifeLoginContainer extends Component{
                                     hintText="Set your email here"
                                     floatingLabelFixed
                                     floatingLabelText="Email"
-                                    value={this.state.email}
+                                    value={email}
                                     onChange={this.setEmail}/>
                             </div>
                             <div className="form-group">
@@ -207,28 +204,36 @@ class NightLifeLoginContainer extends Component{
                                     hintText="Set your password here"
                                     floatingLabelFixed
                                     floatingLabelText="Password"
-                                    value={this.state.password}
+                                    value={password}
                                     onChange={this.setPassword}/>
                                 <TextField key="RetypeinputBookRegisterPassword"
                                     hintText="Re-type your password here"
                                     floatingLabelFixed
                                     floatingLabelText="Re-type Password"
-                                    value={this.state.retype_pwd}
-                                    onChange={this.setConfirmationPwd}
-                                    />
-                                    
-                            </div>
-                            <div className="form-group">
-                                <RaisedButton label="Register"
-                                    primary
-                                    icon={<FontIcon className="muidocs-icon-custom-github"/>}
-                                    onClick={this.handleLoginRegisterRequest} fullWidth/>
-                                
-                                <FlatButton label="Cancel" onClick={this.openCloseDrawer} fullWidth/>
+                                    value={retype_pwd}
+                                    onChange={this.setConfirmationPwd}/>
                             </div>
                         </form>
                     </Tab>
                 </Tabs>
+                <div className="containerButtonsLogin">
+                    <FccDynButton key={'btnRegisterLogin'}
+                            hasHref={false}
+                            hasSvg={false}
+                            isDisabled={false}
+                            buttonText={tabValue=='Login'?"Login":"Create"} 
+                            iconInfo={'register'}
+                            clickAction={this.handleLoginRegisterRequest}/>
+                    <FccDynButton key={'btnRegisterCancel'}
+                            hasHref={false}
+                            hasSvg={false}
+                            isDisabled={false}
+                            buttonText={'Cancel'}
+                            iconInfo={'goback'}
+                            clickAction={this.openCloseDrawer}/>       
+                </div>
+                
+                
             </div>
         );
         
@@ -237,25 +242,19 @@ class NightLifeLoginContainer extends Component{
     * render function for the component
     */
     render(){
+        const{openDrawer}=this.state;
         return(
-            <div className={this.state.openDrawer?'containerTriangleExpanded':'containerTriangleDrawer'}>
-                   {/*  <svg onClick={this.openCloseDrawer} width="100" height="100">
-                        <polygon points="0 0, 0 100, 100 0" className="triangle" />    
-                    </svg> */}
-                    <Drawer 
-                        open={this.state.openDrawer}
-                        containerStyle={{height: 'calc(100% - 64px)', top: 64,left:10}}
-                        width={265}>
-                        {this.renderDrawerContent()}
-                    </Drawer>
-                </div>
+            <Drawer open={openDrawer}
+                    docked={false}
+                    onRequestChange={this.openCloseDrawer}>
+                    {this.renderDrawerContent()}
+            </Drawer>
         );
     }
 }
 NightLifeLoginContainer.propTypes={
-    dataItems:PropTypes.arrayOf(
-        PropTypes.object.isRequired
-    ).isRequired,
+    dataItems:PropTypes.object.isRequired,
+    numberItems:PropTypes.number.isRequired,
     islogged:PropTypes.bool.isRequired,
     loginreg:PropTypes.func.isRequired,
     userLogout:PropTypes.func.isRequired,

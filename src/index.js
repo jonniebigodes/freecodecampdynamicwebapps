@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Router,Route,browserHistory} from 'react-router';
 import {Provider} from "react-redux";
+import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 import store from "./common/store/store";
 import App from './client/components/App';
 import PollsApp from './client/components/dynamic_challenges/vottingapp/PollsApp';
@@ -11,9 +12,6 @@ import stocksApp from './client/components/dynamic_challenges/stocks/stocksApp';
 import BookTradeApp from './client/components/dynamic_challenges/books/BookTradeApp';
 import PinApp from './client/components/dynamic_challenges/pinClone/pinApp';
 import NotFound from './client/components/notFound';
-
-
-import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 
 render(
     <Provider store={store}>
