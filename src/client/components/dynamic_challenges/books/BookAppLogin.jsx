@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import * as cryptoModule from 'bcrypt-nodejs';
+//import * as cryptoModule from 'bcrypt-nodejs';
 import Drawer from 'material-ui/Drawer';
 import {Tabs,Tab} from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
-import BookButton from './BookButton';
+//import BookButton from './BookButton';
+import FccDynButton from '../../challengesUIComponents/FccDynButton';
+import {fccUtilities} from '../../../../common/Utils/Utilities';
 class BookAppLoginContainer extends Component{
     constructor(props){
         super(props);
@@ -39,18 +41,17 @@ class BookAppLoginContainer extends Component{
     handleLogout=()=>{
         this.props.userLogout();
     }
-    encrypwd=()=>{
-        return cryptoModule.hashSync(this.state.password);
-    }
+    
     handleLoginRegisterRequest=()=>{
-        if (this.state.tabValue==='Login'){
-            this.props.loginreg({isLogin:true,email:this.state.email,password:this.state.password});
+        const {email,password,retype_pwd,tabValue}=this.state;
+        if (tabValue==='Login'){
+            this.props.loginreg({isLogin:true,email:email,password:password});
         }
         else{
-            if (this.state.password!==this.state.retype_pwd){
+            if (password!==retype_pwd){
                 return;
             }
-            this.props.loginreg({isLogin:false,email:this.state.email,password:this.encrypwd()});
+            this.props.loginreg({isLogin:false,email:this.state.email,password:fccUtilities.encriptPassword(password)});
         }
     }
     setEmail=(e)=>{
@@ -86,21 +87,42 @@ class BookAppLoginContainer extends Component{
     renderLogin=()=>{
         const {userInformation}= this.props;
         return (
-            <div>
+            <div className="containerLoggedInBooks">
                 <h3 className="textLoggedIn">Logged in as :</h3>
                 <h4 className="textLoggedIn">{userInformation.name?userInformation.name:userInformation.email}</h4>
-                <div className="posButtonsLogin">
-                    <BookButton key={'logoutbtn'} 
+                <div>
+                    <FccDynButton key={'logoutbtn'} 
                         hasHref={false} 
                         hasSvg={false} 
                         isDisabled={false}
                         buttonText={'Disconnect'} 
                         iconInfo={'dc'}
                         clickAction={this.handleLogout}/>
+                    {/* <BookButton key={'logoutbtn'} 
+                        hasHref={false} 
+                        hasSvg={false} 
+                        isDisabled={false}
+                        buttonText={'Disconnect'} 
+                        iconInfo={'dc'}
+                        clickAction={this.handleLogout}/> */}
                 </div>
                 <hr/>
-                <div className="posButtonsLogin">
-                    <BookButton key={'btnAddBook'} 
+                <div>
+                    <FccDynButton key={'btnAddBook'} 
+                            hasHref={false} 
+                            hasSvg={false} 
+                            isDisabled={false}
+                            buttonText={'Add'} 
+                            iconInfo={'addbook'}
+                            clickAction={this.setBookAdd}/>
+                    <FccDynButton key={'btnViewInfo'} 
+                            hasHref={false} 
+                            hasSvg={false} 
+                            isDisabled={false}
+                            buttonText={'View User'} 
+                            iconInfo={'viewuser'}
+                            clickAction={this.onEditHandler}/>
+                    {/* <BookButton key={'btnAddBook'} 
                         hasHref={false} 
                         hasSvg={false} 
                         isDisabled={false}
@@ -113,7 +135,7 @@ class BookAppLoginContainer extends Component{
                         isDisabled={false}
                         buttonText={'View User'} 
                         iconInfo={'viewuser'}
-                        clickAction={this.onEditHandler}/>
+                        clickAction={this.onEditHandler}/> */}
                 </div>
                 
             </div>
@@ -178,8 +200,22 @@ class BookAppLoginContainer extends Component{
                         </form>
                     </Tab>
                 </Tabs>
-                <div className="loginTabPos">
-                    <div className="row">
+                <div className="containerButtonsLoginBook">
+                    <FccDynButton key={'btnRegisterLogin'}
+                                hasHref={false} 
+                                hasSvg={false} 
+                                isDisabled={email==='' || password===''?true:false}
+                                buttonText={tabValue=='Login'?"Login":"Create"} 
+                                iconInfo={'register'}
+                                clickAction={this.handleLoginRegisterRequest} />
+                    <FccDynButton key={'btnRegisterCancel'}
+                                hasHref={false}
+                                hasSvg={false}
+                                isDisabled={false}
+                                buttonText={'Cancel'}
+                                iconInfo={'goback'}
+                                clickAction={this.cancelLogin}/>
+                    {/* <div className="row">
                         <div className="col-xs-6 col-sm-4 col-xs-offset-1">
                             <BookButton key={'btnRegisterLogin'}
                                 hasHref={false} 
@@ -200,7 +236,7 @@ class BookAppLoginContainer extends Component{
                                 iconInfo={'goback'}
                                 clickAction={this.cancelLogin}/>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         );

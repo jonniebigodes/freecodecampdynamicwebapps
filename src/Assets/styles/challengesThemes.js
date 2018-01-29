@@ -139,7 +139,11 @@ const themeNight={
     textField: {
         errorColor: Colors.indigoA100,
         focusColor: Colors.blueGrey800
-    }
+    },
+    drawer:{
+        width:290,
+        
+    },
 };
 //const nightTheme={...darkBaseTheme,...themeNight};
 // console.log(`original dark:\n${JSON.stringify(darkBaseTheme,null,2)}`);

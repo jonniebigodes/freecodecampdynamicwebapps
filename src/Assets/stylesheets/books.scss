@@ -6,16 +6,25 @@
     background-color: white;
 }
 .addbookcontainer{
-    margin-left: 75vh;
+    //margin-left: 75vh;
     margin-top: 2vh;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+
 }
 .previewimg{
     width: 30vw;
     height: 50vh;
 }
 .posButtonsChange{
-    
-    margin-top: 12vh;
+    display: inline-flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: baseline;
+   // margin-top: 12vh;
 }
 .textInfoPreview{
     text-align: center;
@@ -34,6 +43,80 @@
     text-align: center;
     font-family: 'Roboto', sans-serif;
     font-size: 4rem; 
+}
+
+.containerLoggedInBooks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: center;
+
+}
+.containerButtonsLoginBook{
+    margin-left: 5px;
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+}
+.containerDetail{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.bookCreatePosButtons{
+    display: inline-flex;
+    flex-flow: row;
+    align-content: space-around;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+}
+@media all and (max-width: 700px) {
+    .containerButtonsLoginBook{
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 5px;
+        flex-direction: column;
+      }
+      .containerDetail{
+        display: flex;
+        flex-direction: column;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      .textInfoPreview{
+        text-align: center;
+        font-family: 'Mukta Malar', sans-serif;
+        font-size: 1rem;
+    }
+    .previewimg{
+        width: 128px;
+        height: 128px;
+        margin-left: 20vw;
+    }
+    .posButtonsChange{
+        display: inline-flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        margin-left: 25vw;
+       // margin-top: 12vh;
+    }
+    .bookCreatePosButtons{
+        display: inline-flex;
+        flex-flow: column;
+        align-content: flex-start;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        
+    }
 }
 // body{
 //     background-color: #37474F;

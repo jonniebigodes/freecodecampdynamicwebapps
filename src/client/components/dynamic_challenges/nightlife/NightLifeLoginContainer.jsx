@@ -70,7 +70,7 @@ class NightLifeLoginContainer extends Component{
     //     return cryptoModule.hashSync(this.state.password);
     // }
     handleLoginRegisterRequest=()=>{
-        const {email,password,retype_pwd}=this.state;
+        const {email,password,retype_pwd,tabValue}=this.state;
         // console.log('====================================');
         // console.log(`data enc utils:${fccUtilities.encriptPassword(password)}`);
         // console.log('====================================');
@@ -143,8 +143,8 @@ class NightLifeLoginContainer extends Component{
             
             return (
                 <div className="containerLoggedIn">
-                    <h3 className="textLoggedIn">Logged in as :</h3>
-                    <h4 className="textLoggedIn">{this.props.userInformation.email}</h4>
+                    <h3>Logged in as :</h3>
+                    <h4>{this.props.userInformation.email}</h4>
                     <FccDynButton key={'btnLogout'}
                             hasHref={false}
                             hasSvg={false}

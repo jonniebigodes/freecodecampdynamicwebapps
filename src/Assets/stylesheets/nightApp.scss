@@ -106,9 +106,9 @@ a.linksNights:link{
   
 }
 .containerButtonsLogin{
-  margin-left: 1vw;
+  margin-left: 5px;
   display: inline-flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   flex-direction: row;
 }
@@ -120,6 +120,7 @@ a.linksNights:link{
   flex-direction: column;
   flex-wrap: wrap;
   text-align: center;
+  
 }
 
 
@@ -207,7 +208,7 @@ a.linksNights:link{
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    margin-left: 2vw;
+    margin-left: 5px;
     flex-direction: column;
   }
 

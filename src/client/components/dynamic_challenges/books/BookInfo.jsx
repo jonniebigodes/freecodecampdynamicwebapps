@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import PropTypes from 'prop-types';
 import Toggle from 'material-ui/Toggle';
-import moment from 'moment';
+//import moment from 'moment';
+import {fccUtilities} from '../../../../common/Utils/Utilities';
 import '../../../../Assets/stylesheets/books.scss';
 import '../../../../Assets/stylesheets/base.scss'; 
-import BookButton from './BookButton';
+//import BookButton from './BookButton';
 import FccDynButton from '../../challengesUIComponents/FccDynButton';
 class BookInfo extends Component{
 
@@ -35,7 +36,8 @@ class BookInfo extends Component{
         if (this.state.idbook){
             return;
         }
-        this.setState({idbook:`book_${moment()}`});
+        //this.setState({idbook:`book_${moment()}`});
+        this.setState({idbook:`book_${fccUtilities.getTimeStamp()}`});
     }
     addbook=()=>{
         const {userInformation}=this.props;
@@ -113,9 +115,24 @@ class BookInfo extends Component{
                         </div>
                     </div>
                 </form>
-                <div className="row">
+                <div className="bookCreatePosButtons">
+                    <FccDynButton key={'btnBookAdd'} 
+                                    hasHref={false} 
+                                    hasSvg={false} 
+                                    buttonText={"Add"} 
+                                    isDisabled={bookname===''?true:false}
+                                    iconInfo={"addbook"} clickAction={this.addbook}/>
+                    <FccDynButton key={'btnBookCancel'} 
+                                    hasHref={false} 
+                                    hasSvg={false} 
+                                    buttonText={"Cancel"} 
+                                    isDisabled={false}
+                                    iconInfo={"cancel"} clickAction={abortAdd}/>
+                   
+                </div>
+                {/* <div className="row">
                     <div className="col-xs-6 col-sm-4">
-                        <BookButton key={'btnBookAdd'} 
+                        <FccDynButton key={'btnBookAdd'} 
                                     hasHref={false} 
                                     hasSvg={false} 
                                     buttonText={"Add"} 
@@ -123,14 +140,14 @@ class BookInfo extends Component{
                                     iconInfo={"addbook"} clickAction={this.addbook}/>
                     </div>
                     <div className="col-xs-6 col-sm-4">
-                        <BookButton key={'btnBookCancel'} 
+                        <FccDynButton key={'btnBookCancel'} 
                                     hasHref={false} 
                                     hasSvg={false} 
                                     buttonText={"Cancel"} 
                                     isDisabled={false}
                                     iconInfo={"cancel"} clickAction={abortAdd}/>
                     </div>
-                </div>
+                </div> */}
             </div>
             
         );

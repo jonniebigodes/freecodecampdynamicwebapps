@@ -22,9 +22,8 @@ class BookDetail extends Component{
         //const urlBookNoCover='https://image.freepik.com/free-vector/human-head-like-a-open-book_23-2147509213.jpg';
         const urlBookNoCover=require('../../../../Assets/images/dummybook.jpg');
         return(
-            <div>
-                <div className="row">
-                    <div className="col-xs-6 col-md-4">
+                <div className="containerDetail">
+                    <div>
                         <div className="textInfoPreview">
                             <h3>{bookData.bookname}</h3>
                             <h4>By:{bookData.bookauthor}</h4>
@@ -37,15 +36,13 @@ class BookDetail extends Component{
                         </div>
                         
                     </div>
-                    <div className="col-xs-6 col-md-4">
+                    <div>
                         <div>
-                            <img 
-                                src={bookData.bookcover?bookData.bookcover:urlBookNoCover}
-                                className="previewimg"/>
+                            <img src={bookData.bookcover?bookData.bookcover:urlBookNoCover} className="previewimg"/>
                         </div>
                         
                     </div>
-                    <div className="col-xs-6 col-md-4">
+                    <div>
                         <div className="posButtonsChange">
                             <FccDynButton 
                                 hasHref={false}
@@ -64,9 +61,6 @@ class BookDetail extends Component{
                         </div>
                     </div>
                 </div>
-                
-            </div>
-            
         );
     }
 }
